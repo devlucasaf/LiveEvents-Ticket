@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "B+33MdTuPBE=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\lucas\\RiderProjects\\LiveEvents-Ticket\\SGI.Backend\\SGI.Backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lucas\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.15\\microsoft.aspnetcore.openapi.9.0.15.nupkg.sha512",
+    "C:\\Users\\lucas\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
