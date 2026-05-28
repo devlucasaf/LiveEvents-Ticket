@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LiveEvents-Ticket.Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0dbd07041ab157f863ef79727f3f5f56304d320")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c2f6982aecf2b1b3e34f50950021b269497a2f60")]
 [assembly: System.Reflection.AssemblyProductAttribute("LiveEvents-Ticket.Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LiveEvents-Ticket.Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
