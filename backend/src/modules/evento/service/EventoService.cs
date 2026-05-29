@@ -35,7 +35,8 @@ public class EventoService
             Categoria = dto.Categoria,
             Local = dto.Local,
             DataEvento = dto.DataEvento,
-            Descricao = dto.Descricao
+            Descricao = dto.Descricao,
+            ImagemUrl = dto.ImagemUrl
         };
 
         await _repository.AdicionarAsync(evento, cancellationToken);
@@ -49,6 +50,7 @@ public class EventoService
         Categoria = evento.Categoria,
         Local = evento.Local,
         DataEvento = evento.DataEvento,
-        Descricao = evento.Descricao
+        Descricao = evento.Descricao,
+        ImagemUrl = evento.ImagemUrl
     };
 }
