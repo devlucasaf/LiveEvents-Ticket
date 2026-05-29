@@ -1,0 +1,74 @@
+.admin-page {
+    max-width: 800px;
+    margin: 1rem auto;
+}
+
+.admin-page h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.admin-page__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.admin-page__stat-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-page__stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.admin-page__stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--brand);
+    margin-top: 0.3rem;
+}
+
+.admin-page__table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.admin-page__table th,
+.admin-page__table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--line-light);
+}
+
+.admin-page__table th {
+    background: var(--bg-secondary);
+    font-weight: 700;
+    color: var(--ink-secondary);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+}
+
+.admin-page__table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-page__table tr:hover td {
+    background: var(--panel-hover);
+}

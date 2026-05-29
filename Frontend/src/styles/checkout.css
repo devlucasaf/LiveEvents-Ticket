@@ -1,0 +1,93 @@
+.checkout-page {
+    max-width: 500px;
+    margin: 1rem auto;
+}
+
+.checkout-page__card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.checkout-page__card h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.checkout-page__field {
+    margin-bottom: 1rem;
+}
+
+.checkout-page__field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.4rem;
+}
+
+.checkout-page__select,
+.checkout-page__input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    color: var(--ink);
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.checkout-page__select:focus,
+.checkout-page__input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.checkout-page__btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--brand);
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: var(--radius-md);
+    margin-top: 1rem;
+    transition: background 0.2s;
+}
+
+.checkout-page__btn:hover {
+    background: var(--brand-hover);
+}
+
+.checkout-page__result {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+}
+
+.checkout-page__result h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.checkout-page__result p {
+    font-size: 0.85rem;
+    color: var(--ink-secondary);
+    margin-bottom: 0.3rem;
+}
+
+.checkout-page__result img {
+    width: min(220px, 100%);
+    margin-top: 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+}
