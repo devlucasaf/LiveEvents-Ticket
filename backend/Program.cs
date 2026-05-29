@@ -81,6 +81,21 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    var frontendPath = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, "..", "Frontend"));
+    var npmProcess = new System.Diagnostics.Process
+    {
+        StartInfo = new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = "/c npm run dev",
+            WorkingDirectory = frontendPath,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        }
+    };
+    npmProcess.Start();
+    app.Lifetime.ApplicationStopping.Register(() => { try { npmProcess.Kill(entireProcessTree: true); } catch { } });
 }
 
 app.UseCors("Frontend");
@@ -90,5 +105,31 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.SeedDataAsync();
+
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine(@"
+    ██╗     ██╗██╗   ██╗███████╗    ███████╗██╗   ██╗███████╗███╗   ██╗████████╗███████╗    ████████╗██╗ ██████╗██╗  ██╗███████╗████████╗
+    ██║     ██║██║   ██║██╔════╝    ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝██╔════╝    ╚══██╔══╝██║██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝
+    ██║     ██║██║   ██║█████╗      █████╗  ██║   ██║█████╗  ██╔██╗ ██║   ██║   ███████╗       ██║   ██║██║     █████╔╝ █████╗     ██║   
+    ██║     ██║╚██╗ ██╔╝██╔══╝      ██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║   ╚════██║       ██║   ██║██║     ██╔═██╗ ██╔══╝     ██║   
+    ███████╗██║ ╚████╔╝ ███████╗    ███████╗ ╚████╔╝ ███████╗██║ ╚████║   ██║   ███████║       ██║   ██║╚██████╗██║  ██╗███████╗   ██║   
+    ╚══════╝╚═╝  ╚═══╝  ╚══════╝    ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝       ╚═╝   ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝ 
+    ");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine($@"
+        Aplicação:     LiveEvents-Ticket
+        .NET:          {Environment.Version}
+        Ambiente:      {app.Environment.EnvironmentName}
+        Backend:       http://localhost:5000
+        Frontend:      http://localhost:5173
+        Swagger:       http://localhost:5000/swagger
+        Desenvolvedor: Lucas Freitas
+        GitHub:        https://github.com/devlucasaf/LiveEvents-Ticket
+        ========================================================================================
+    ");
+    Console.ResetColor();
+});
 
 app.Run();
