@@ -1,0 +1,12 @@
+# .NET
+backend/bin/
+backend/obj/
+
+# Node
+Frontend/node_modules/
+Frontend/dist/
+
+# IDE
+.vs/
+*.user
+*.suo
