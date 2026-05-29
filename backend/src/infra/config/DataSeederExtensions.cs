@@ -33,7 +33,8 @@ public static class DataSeederExtensions
                 Categoria = "SHOW NACIONAL",
                 Local = "Allianz Parque - SP",
                 DataEvento = DateTime.UtcNow.AddDays(40),
-                Descricao = "Grandes nomes da música nacional."
+                Descricao = "Grandes nomes da música nacional.",
+                ImagemUrl = "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800"
             };
 
             var evento2 = new Evento
@@ -42,7 +43,8 @@ public static class DataSeederExtensions
                 Categoria = "SHOW INTERNACIONAL",
                 Local = "Jeunesse Arena - RJ",
                 DataEvento = DateTime.UtcNow.AddDays(60),
-                Descricao = "Turnê internacional com estrutura premium."
+                Descricao = "Turnê internacional com estrutura premium.",
+                ImagemUrl = "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800"
             };
 
             context.Eventos.AddRange(evento1, evento2);

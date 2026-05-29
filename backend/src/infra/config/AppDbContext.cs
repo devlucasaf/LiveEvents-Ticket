@@ -26,6 +26,18 @@ public class AppDbContext : DbContext
             .HasIndex(u => u.Email)
             .IsUnique();
 
+        modelBuilder.Entity<Ingresso>()
+            .Property(i => i.Preco)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<ItemPedido>()
+            .Property(i => i.PrecoUnitario)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Pedido>()
+            .Property(p => p.ValorTotal)
+            .HasPrecision(18, 2);
+
         modelBuilder.Entity<Pedido>()
             .HasMany(p => p.Itens)
             .WithOne()
