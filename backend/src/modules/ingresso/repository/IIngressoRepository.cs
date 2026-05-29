@@ -6,5 +6,6 @@ public interface IIngressoRepository
 {
     Task<List<IngressoEntity>> ListarPorEventoAsync(int eventoId, CancellationToken cancellationToken = default);
     Task<IngressoEntity?> BuscarPorIdAsync(int id, CancellationToken cancellationToken = default);
+    Task AdicionarAsync(IngressoEntity ingresso, CancellationToken cancellationToken = default);
     Task AtualizarAsync(CancellationToken cancellationToken = default);
 }

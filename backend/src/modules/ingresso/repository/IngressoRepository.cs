@@ -26,6 +26,12 @@ public class IngressoRepository : IIngressoRepository
         return _context.Ingressos.FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
     }
 
+    public async Task AdicionarAsync(IngressoEntity ingresso, CancellationToken cancellationToken = default)
+    {
+        _context.Ingressos.Add(ingresso);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     public Task AtualizarAsync(CancellationToken cancellationToken = default)
     {
         return _context.SaveChangesAsync(cancellationToken);
