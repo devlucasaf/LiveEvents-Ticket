@@ -40,4 +40,15 @@ public class UsuarioController : ControllerBase
         var usuario = await _service.BuscarPorIdAsync(currentUser.GetUserId(), cancellationToken);
         return Ok(usuario);
     }
+
+    [HttpPut("me")]
+    [Authorize]
+    public async Task<IActionResult> Atualizar(
+        [FromServices] CurrentUserService currentUser,
+        [FromBody] UsuarioAtualizarDto dto,
+        CancellationToken cancellationToken)
+    {
+        var usuario = await _service.AtualizarAsync(currentUser.GetUserId(), dto, cancellationToken);
+        return Ok(usuario);
+    }
 }
