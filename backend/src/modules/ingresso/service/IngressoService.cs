@@ -8,11 +8,13 @@ public class IngressoService
 {
     private readonly IIngressoRepository _repository;
 
+    // --- INJEÇÃO DE DEPENDÊNCIA DO REPOSITÓRIO ---
     public IngressoService(IIngressoRepository repository)
     {
         _repository = repository;
     }
 
+    // --- LISTAR INGRESSOS DISPONÍVEIS POR EVENTO ---
     public async Task<List<IngressoDisponivelDto>> ListarPorEventoAsync(int eventoId, CancellationToken cancellationToken = default)
     {
         var ingressos = await _repository.ListarPorEventoAsync(eventoId, cancellationToken);
@@ -26,6 +28,7 @@ public class IngressoService
         }).ToList();
     }
 
+    // --- CRIAR NOVO INGRESSO A PARTIR DO DTO ---
     public async Task<IngressoDisponivelDto> CriarAsync(IngressoCriarDto dto, CancellationToken cancellationToken = default)
     {
         var ingresso = new IngressoEntity

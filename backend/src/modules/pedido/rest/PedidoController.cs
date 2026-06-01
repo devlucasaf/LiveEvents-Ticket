@@ -13,11 +13,13 @@ public class PedidoController : ControllerBase
 {
     private readonly PedidoService _service;
 
+    // --- INJEÇÃO DE DEPENDÊNCIA DO PEDIDO SERVICE ---
     public PedidoController(PedidoService service)
     {
         _service = service;
     }
 
+    // --- REALIZAR CHECKOUT / CRIAR PEDIDO ---
     [HttpPost("checkout")]
     public async Task<IActionResult> Checkout(
         [FromServices] CurrentUserService currentUser,
@@ -28,6 +30,7 @@ public class PedidoController : ControllerBase
         return Ok(resposta);
     }
 
+    // --- LISTAR PEDIDOS DO USUÁRIO LOGADO ---
     [HttpGet("meus")]
     public async Task<IActionResult> ListarMeus(
         [FromServices] CurrentUserService currentUser,

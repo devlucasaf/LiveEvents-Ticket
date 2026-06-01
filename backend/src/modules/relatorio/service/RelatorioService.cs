@@ -13,8 +13,10 @@ public class RelatorioService
         _context = context;
     }
 
+    // --- GERAR RELATÓRIO DE VENDAS ---
     public async Task<RelatorioVendasDto> GerarVendasAsync(CancellationToken cancellationToken = default)
     {
+        // --- BUSCAR TODOS OS PEDIDOS COM STATUS PAGO ---
         var pedidosPagos = await _context.Pedidos
             .Include(p => p.Itens)
             .Where(p => p.Status == "PAGO")
@@ -23,6 +25,7 @@ public class RelatorioService
         var ingressos = await _context.Ingressos.ToListAsync(cancellationToken);
         var eventos = await _context.Eventos.ToListAsync(cancellationToken);
 
+        // --- AGRUPAR VENDAS POR EVENTO ---
         var porEvento = pedidosPagos
             .SelectMany(p => p.Itens)
             .Join(ingressos,
@@ -43,6 +46,7 @@ public class RelatorioService
             .OrderByDescending(r => r.Receita)
             .ToList();
 
+        // --- RETORNAR RELATÓRIO COM TOTAIS E DETALHAMENTO POR EVENTO ---
         return new RelatorioVendasDto
         {
             TotalPedidos = pedidosPagos.Count,

@@ -5,10 +5,12 @@ namespace LiveEventsTicket.Backend.Modules.Pagamento.Service;
 
 public class PagamentoService
 {
+    // --- PROCESSAR PAGAMENTO ---
     public PagamentoEntity ProcessarPagamento(CriarPedidoDto dto, int pedidoId)
     {
         var tipo = dto.Pagamento.Tipo.ToUpperInvariant();
 
+        // --- PAGAMENTO VIA CARTÃO ---
         if (tipo == "CARTAO")
         {
             var numero = dto.Pagamento.NumeroCartao ?? string.Empty;
@@ -23,6 +25,7 @@ public class PagamentoService
             };
         }
 
+        // --- PAGAMENTO VIA PIX ---
         return new PagamentoEntity
         {
             PedidoId = pedidoId,

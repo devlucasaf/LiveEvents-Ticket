@@ -8,7 +8,7 @@ namespace LiveEventsTicket.Backend.Modules.Usuario.Service;
 public class UsuarioService
 {
     private readonly IUsuarioRepository _repository;
-    private readonly JwtTokenService _jwtTokenService;
+    private readonly JwtTokenService    _jwtTokenService;
 
     public UsuarioService(IUsuarioRepository repository, JwtTokenService jwtTokenService)
     {
@@ -16,6 +16,7 @@ public class UsuarioService
         _jwtTokenService = jwtTokenService;
     }
 
+    // --- REGISTRAR NOVO USUÁRIO ---
     public async Task<UsuarioRespostaDto> RegistrarAsync(UsuarioRegistroDto dto, CancellationToken cancellationToken = default)
     {
         var existente = await _repository.BuscarPorEmailAsync(dto.Email, cancellationToken);
@@ -40,6 +41,7 @@ public class UsuarioService
         return Map(usuario);
     }
 
+    // --- LOGIN DO USUÁRIO ---
     public async Task<TokenRespostaDto> LoginAsync(UsuarioLoginDto dto, CancellationToken cancellationToken = default)
     {
         var usuario = await _repository.BuscarPorEmailAsync(dto.Email, cancellationToken)
@@ -58,6 +60,7 @@ public class UsuarioService
         };
     }
 
+    // --- BUSCAR USUÁRIO POR ID ---
     public async Task<UsuarioRespostaDto> BuscarPorIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var usuario = await _repository.BuscarPorIdAsync(id, cancellationToken)
@@ -66,6 +69,7 @@ public class UsuarioService
         return Map(usuario);
     }
 
+    // --- ATUALIZAR PERFIL DO USUÁRIO ---
     public async Task<UsuarioRespostaDto> AtualizarAsync(int id, UsuarioAtualizarDto dto, CancellationToken cancellationToken = default)
     {
         var usuario = await _repository.BuscarPorIdAsync(id, cancellationToken)
@@ -81,6 +85,7 @@ public class UsuarioService
             usuario.Sobrenome = dto.Sobrenome;
         }
 
+        // --- VALIDAR EMAIL DUPLICADO AO ALTERAR ---
         if (!string.IsNullOrWhiteSpace(dto.Email) && dto.Email != usuario.Email)
         {
             var existente = await _repository.BuscarPorEmailAsync(dto.Email, cancellationToken);
@@ -101,6 +106,7 @@ public class UsuarioService
             usuario.Cpf = dto.Cpf;
         }
 
+        // --- TROCA DE SENHA ---
         if (!string.IsNullOrWhiteSpace(dto.NovaSenha))
         {
             if (string.IsNullOrWhiteSpace(dto.SenhaAtual) || !BCrypt.Net.BCrypt.Verify(dto.SenhaAtual, usuario.SenhaHash))
@@ -114,6 +120,7 @@ public class UsuarioService
         return Map(usuario);
     }
 
+    // --- MAPEAMENTO DE ENTIDADE PARA DTO DE RESPOSTA ---
     private static UsuarioRespostaDto Map(UsuarioEntity usuario) => new()
     {
         Id = usuario.Id,

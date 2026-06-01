@@ -11,11 +11,12 @@ namespace LiveEventsTicket.Backend.Modules.Admin.Service;
 
 public class AdminService
 {
-    private readonly EventoService _eventoService;
-    private readonly IngressoService _ingressoService;
-    private readonly RelatorioService _relatorioService;
+    private readonly EventoService      _eventoService;
+    private readonly IngressoService    _ingressoService;
+    private readonly RelatorioService   _relatorioService;
     private readonly IUsuarioRepository _usuarioRepository;
 
+    // --- CONSTRUTOR COM INJEÇÃO DE DEPENDÊNCIA ---
     public AdminService(
         EventoService eventoService,
         IngressoService ingressoService,
@@ -28,21 +29,25 @@ public class AdminService
         _usuarioRepository = usuarioRepository;
     }
 
+    // --- CRIAR EVENTO ---
     public Task<EventoResumoDto> CriarEventoAsync(EventoCriarDto dto, CancellationToken cancellationToken = default)
     {
         return _eventoService.CriarAsync(dto, cancellationToken);
     }
 
+    // --- CRIAR INGRESSO ---
     public Task<IngressoDisponivelDto> CriarIngressoAsync(IngressoCriarDto dto, CancellationToken cancellationToken = default)
     {
         return _ingressoService.CriarAsync(dto, cancellationToken);
     }
 
+    // --- GERAR RELATÓRIO DE VENDAS ---
     public Task<RelatorioVendasDto> RelatorioVendasAsync(CancellationToken cancellationToken = default)
     {
         return _relatorioService.GerarVendasAsync(cancellationToken);
     }
 
+    // --- LISTAR TODOS OS USUÁRIOS E MAPEAR PARA DTO ---
     public async Task<List<UsuarioRespostaDto>> ListarUsuariosAsync(CancellationToken cancellationToken = default)
     {
         var usuarios = await _usuarioRepository.ListarTodosAsync(cancellationToken);
@@ -58,6 +63,7 @@ public class AdminService
         }).ToList();
     }
 
+    // --- ALTERAR ROLE DE UM USUÁRIO ---
     public async Task<UsuarioRespostaDto> AlterarRoleAsync(int usuarioId, string novaRole, CancellationToken cancellationToken = default)
     {
         var usuario = await _usuarioRepository.BuscarPorIdAsync(usuarioId, cancellationToken)

@@ -14,11 +14,13 @@ public class AdminController : ControllerBase
 {
     private readonly AdminService _service;
 
+    // --- INJEÇÃO DE DEPENDÊNCIA DO ADMIN SERVICE ---
     public AdminController(AdminService service)
     {
         _service = service;
     }
 
+    // --- CRIAR NOVO EVENTO ---
     [HttpPost("evento")]
     public async Task<IActionResult> CriarEvento([FromBody] EventoCriarDto dto, CancellationToken cancellationToken)
     {
@@ -26,6 +28,7 @@ public class AdminController : ControllerBase
         return Ok(evento);
     }
 
+    // --- CRIAR NOVO INGRESSO ---
     [HttpPost("ingresso")]
     public async Task<IActionResult> CriarIngresso([FromBody] IngressoCriarDto dto, CancellationToken cancellationToken)
     {
@@ -33,18 +36,21 @@ public class AdminController : ControllerBase
         return Created($"api/ingresso/{ingresso.Id}", ingresso);
     }
 
+    // --- OBTER RELATÓRIO DE VENDAS ---
     [HttpGet("relatorio/vendas")]
     public async Task<IActionResult> RelatorioVendas(CancellationToken cancellationToken)
     {
         return Ok(await _service.RelatorioVendasAsync(cancellationToken));
     }
 
+    // --- LISTAR TODOS OS USUÁRIOS ---
     [HttpGet("usuarios")]
     public async Task<IActionResult> ListarUsuarios(CancellationToken cancellationToken)
     {
         return Ok(await _service.ListarUsuariosAsync(cancellationToken));
     }
 
+    // --- ALTERAR ROLE DE UM USUÁRIO ---
     [HttpPut("usuarios/{id:int}/role")]
     public async Task<IActionResult> AlterarRole(int id, [FromBody] AlterarRoleDto dto, CancellationToken cancellationToken)
     {

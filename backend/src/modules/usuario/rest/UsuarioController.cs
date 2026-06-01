@@ -17,6 +17,7 @@ public class UsuarioController : ControllerBase
         _service = service;
     }
 
+    // --- REGISTRAR NOVO USUÁRIO ---
     [HttpPost("registrar")]
     public async Task<IActionResult> Registrar([FromBody] UsuarioRegistroDto dto, CancellationToken cancellationToken)
     {
@@ -24,6 +25,7 @@ public class UsuarioController : ControllerBase
         return Ok(usuario);
     }
 
+    // --- LOGIN DO USUÁRIO ---
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UsuarioLoginDto dto, CancellationToken cancellationToken)
     {
@@ -31,6 +33,7 @@ public class UsuarioController : ControllerBase
         return Ok(token);
     }
 
+    // --- OBTER DADOS DO USUÁRIO LOGADO ---
     [HttpGet("me")]
     [Authorize]
     public async Task<IActionResult> Me(
@@ -41,6 +44,7 @@ public class UsuarioController : ControllerBase
         return Ok(usuario);
     }
 
+    // --- ATUALIZAR PERFIL DO USUÁRIO LOGADO ---
     [HttpPut("me")]
     [Authorize]
     public async Task<IActionResult> Atualizar(

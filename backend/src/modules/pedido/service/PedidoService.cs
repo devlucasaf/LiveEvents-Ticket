@@ -24,8 +24,10 @@ public class PedidoService
         _pagamentoService = pagamentoService;
     }
 
+    // --- CRIAR PEDIDO COM VALIDAÇÃO ---
     public async Task<PedidoRespostaDto> CriarAsync(int usuarioId, CriarPedidoDto dto, CancellationToken cancellationToken = default)
     {
+        // --- VALIDAR QUE O PEDIDO TEM AO MENOS UM ITEM ---
         if (dto.Itens.Count == 0)
         {
             throw new InvalidOperationException("Pedido deve conter ao menos um ingresso.");
@@ -33,6 +35,7 @@ public class PedidoService
 
         var pedido = new PedidoEntity { UsuarioId = usuarioId };
 
+        // --- PROCESSAR CADA ITEM DO PEDIDO ---
         foreach (var item in dto.Itens)
         {
             var ingresso = await _ingressoRepository.BuscarPorIdAsync(item.IngressoId, cancellationToken)
@@ -53,14 +56,18 @@ public class PedidoService
             });
         }
 
+        // --- CALCULAR VALOR TOTAL DO PEDIDO ---
         pedido.ValorTotal = pedido.Itens.Sum(i => i.Quantidade * i.PrecoUnitario);
 
+        // --- SALVAR PEDIDO E ATUALIZAR ESTOQUE DE INGRESSOS ---
         await _pedidoRepository.AdicionarPedidoAsync(pedido, cancellationToken);
         await _ingressoRepository.AtualizarAsync(cancellationToken);
 
+        // --- PROCESSAR PAGAMENTO ---
         var pagamento = _pagamentoService.ProcessarPagamento(dto, pedido.Id);
         await _pedidoRepository.AdicionarPagamentoAsync(pagamento, cancellationToken);
 
+        // --- ATUALIZAR STATUS DO PEDIDO E GERAR QR CODE SE APROVADO ---
         pedido.Status = pagamento.Status == "APROVADO" ? "PAGO" : "PAGAMENTO_RECUSADO";
         if (pagamento.Status == "APROVADO")
         {
@@ -80,6 +87,7 @@ public class PedidoService
         };
     }
 
+    // --- LISTAR PEDIDOS DO USUÁRIO E MAPEAR PARA DTO ---
     public async Task<List<PedidoRespostaDto>> ListarPorUsuarioAsync(int usuarioId, CancellationToken cancellationToken = default)
     {
         var pedidos = await _pedidoRepository.ListarPorUsuarioAsync(usuarioId, cancellationToken);
@@ -94,6 +102,7 @@ public class PedidoService
         }).ToList();
     }
 
+    // --- GERAR QR CODE EM BASE64 A PARTIR DO PAYLOAD ---
     private static string GerarQrCodeBase64(string payload)
     {
         using var generator = new QRCodeGenerator();
