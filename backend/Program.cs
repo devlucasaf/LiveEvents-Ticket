@@ -10,6 +10,7 @@ using LiveEventsTicket.Backend.Modules.Pagamento.Service;
 using LiveEventsTicket.Backend.Modules.Pedido.Repository;
 using LiveEventsTicket.Backend.Modules.Pedido.Service;
 using LiveEventsTicket.Backend.Modules.Relatorio.Service;
+using LiveEventsTicket.Backend.Modules.Admin.Service;
 using LiveEventsTicket.Backend.Modules.Usuario.Repository;
 using LiveEventsTicket.Backend.Modules.Usuario.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +38,7 @@ builder.Services.AddScoped<IngressoService>();
 builder.Services.AddScoped<PagamentoService>();
 builder.Services.AddScoped<PedidoService>();
 builder.Services.AddScoped<RelatorioService>();
+builder.Services.AddScoped<AdminService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
