@@ -1,0 +1,133 @@
+.datepicker {
+    position: relative;
+    width: 100%;
+}
+
+.datepicker__input {
+    cursor: pointer;
+    padding-right: 2.5rem !important;
+}
+
+.datepicker__icone {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--muted);
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.datepicker__dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--panel);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 1rem;
+    animation: datepicker-fadeIn 0.15s ease;
+}
+
+@keyframes datepicker-fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-4px); 
+    }
+    
+    to   { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.datepicker__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.datepicker__titulo {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.datepicker__nav {
+    background: none;
+    border: none;
+    color: var(--brand);
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+}
+
+.datepicker__nav:hover {
+    background: var(--brand-light);
+}
+
+.datepicker__semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 0.25rem;
+}
+
+.datepicker__dia-semana {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 0.25rem 0;
+    text-transform: uppercase;
+}
+
+.datepicker__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.datepicker__dia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    border: none;
+    background: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.datepicker__dia:hover:not(.datepicker__dia--vazio) {
+    background: var(--brand-light);
+    color: var(--brand);
+}
+
+.datepicker__dia--selecionado {
+    background: var(--brand) !important;
+    color: white !important;
+    font-weight: 700;
+}
+
+.datepicker__dia--vazio {
+    cursor: default;
+}
