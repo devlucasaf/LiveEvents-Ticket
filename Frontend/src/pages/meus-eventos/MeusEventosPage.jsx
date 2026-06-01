@@ -4,10 +4,10 @@ import { eventoService } from '../../services/eventoService';
 import '../../styles/meus-eventos.css';
 
 export default function MeusEventosPage() {
-  const [tab, setTab] = useState('upcoming');
+  const [tab,     setTab]     = useState('upcoming');
   const [pedidos, setPedidos] = useState([]);
   const [eventos, setEventos] = useState([]);
-  const [erro, setErro] = useState('');
+  const [erro,    setErro]    = useState('');
 
   useEffect(() => {
     Promise.all([pedidoService.meusPedidos(), eventoService.listar()])
@@ -67,7 +67,11 @@ export default function MeusEventosPage() {
           {displayed.map((item) => (
             <div key={item.id} className="meus-eventos-page__item">
               {item.evento.imagemUrl && (
-                <img className="meus-eventos-page__item-img" src={item.evento.imagemUrl} alt={item.evento.titulo} />
+                <img 
+                  className="meus-eventos-page__item-img" 
+                  src={item.evento.imagemUrl} 
+                  alt={item.evento.titulo} 
+                />
               )}
               <div className="meus-eventos-page__item-info">
                 <span className="meus-eventos-page__item-title">{item.evento.titulo || `Pedido #${item.id}`}</span>

@@ -5,8 +5,8 @@ import '../styles/navbar.css';
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  const [dropdownOpen,  setDropdownOpen]  = useState(false);
+  const [theme,         setTheme]         = useState(() => localStorage.getItem('theme') || 'light');
   const dropdownRef = useRef(null);
 
   const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
@@ -45,7 +45,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      {/* Logo */}
+      {/* --- LOGO --- */}
       <Link to="/" className="navbar__logo">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -53,7 +53,7 @@ export default function Navbar() {
         LiveEvents
       </Link>
 
-      {/* Links centrais */}
+      {/* --- LINKS CENTRAIS --- */}
       <div className="navbar__center">
         <Link to="/" className={`navbar__link ${isActive('/')}`}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -88,7 +88,7 @@ export default function Navbar() {
         )}
       </div>
 
-      {/* Direita */}
+      {/* --- DIREITA --- */}
       <div className="navbar__right">
         <button className="navbar__theme-btn" onClick={toggleTheme} title="Alternar tema">
           {theme === 'light' ? (
@@ -121,18 +121,21 @@ export default function Navbar() {
                   </svg>
                   Meus dados
                 </Link>
+
                 <Link to="/meus-eventos" className="navbar__dropdown-item" onClick={() => setDropdownOpen(false)}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 002 2h0a2 2 0 002-2V7a2 2 0 00-2-2zm0 8a2 2 0 00-2 2v3a2 2 0 002 2h0a2 2 0 002-2v-3a2 2 0 00-2-2z"/>
                   </svg>
                   Meus ingressos
                 </Link>
+
                 <Link to="/salvos" className="navbar__dropdown-item" onClick={() => setDropdownOpen(false)}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
                   </svg>
                   Eventos salvos
                 </Link>
+
                 {usuario.role === 'ADMIN' && (
                   <Link to="/admin/dashboard" className="navbar__dropdown-item" onClick={() => setDropdownOpen(false)}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

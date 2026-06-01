@@ -6,7 +6,7 @@ import '../../styles/salvos.css';
 
 export default function SalvosPage() {
   const [eventos, setEventos] = useState([]);
-  const [salvos, setSalvos] = useState([]);
+  const [salvos,  setSalvos]  = useState([]);
   const navigate = useNavigate();
 
   function loadSalvos() {

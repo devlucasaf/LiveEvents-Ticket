@@ -4,10 +4,10 @@ import { eventoService } from '../../services/eventoService';
 import '../../styles/evento-detalhe.css';
 
 export default function EventoDetalhePage() {
-  const { id } = useParams();
-  const [evento, setEvento] = useState(null);
+  const { id }                    = useParams();
+  const [evento,    setEvento]    = useState(null);
   const [ingressos, setIngressos] = useState([]);
-  const [erro, setErro] = useState('');
+  const [erro,      setErro]      = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,16 +20,32 @@ export default function EventoDetalhePage() {
   }, [id]);
 
   function selecionarIngresso(ingresso) {
-    localStorage.setItem('checkoutItem', JSON.stringify({ ingressoId: ingresso.id, quantidade: 1 }));
+    localStorage.setItem('checkoutItem', JSON.stringify({
+      ingressoId: ingresso.id,
+      quantidade: 1,
+      setor: ingresso.setor,
+      preco: ingresso.preco,
+      eventoTitulo: evento.titulo,
+      eventoData: evento.dataEvento,
+      eventoLocal: evento.local
+    }));
     navigate('/pedido/checkout');
   }
 
-  if (!evento) return <p style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted)' }}>Carregando...</p>;
+  if (!evento) {
+    return (
+      <p style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted)' }}>Carregando...</p>
+    );
+  }
 
   return (
     <section className="evento-detalhe">
       {evento.imagemUrl && (
-        <img className="evento-detalhe__banner" src={evento.imagemUrl} alt={evento.titulo} />
+        <img 
+          className="evento-detalhe__banner" 
+          src={evento.imagemUrl} 
+          alt={evento.titulo} 
+        />
       )}
 
       <div className="evento-detalhe__header">
@@ -38,13 +54,15 @@ export default function EventoDetalhePage() {
         <div className="evento-detalhe__meta">
           <span className="evento-detalhe__meta-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
             </svg>
             {evento.local}
           </span>
           <span className="evento-detalhe__meta-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18"/>
             </svg>
             {new Date(evento.dataEvento).toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
           </span>

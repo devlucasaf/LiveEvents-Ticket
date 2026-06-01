@@ -25,7 +25,11 @@ export default function CardEvento({ evento, onSelecionar }) {
   return (
     <button className="card-evento" onClick={() => onSelecionar(evento.id)}>
       {evento.imagemUrl && (
-        <img className="card-evento__img" src={evento.imagemUrl} alt={evento.titulo} />
+        <img 
+          className="card-evento__img" 
+          src={evento.imagemUrl} 
+          alt={evento.titulo} 
+        />
       )}
       <div className="card-evento__body">
         <span className="card-evento__tag">{evento.categoria}</span>
@@ -37,6 +41,7 @@ export default function CardEvento({ evento, onSelecionar }) {
           </svg>
           {evento.local}
         </span>
+
         <span className="card-evento__info">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <rect x="3" y="4" width="18" height="18" rx="2"/>
@@ -44,6 +49,7 @@ export default function CardEvento({ evento, onSelecionar }) {
           </svg>
           {new Date(evento.dataEvento).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}
         </span>
+        
         <div className="card-evento__actions">
           <span className="card-evento__price">
             {evento.precoMinimo ? `A partir de R$ ${evento.precoMinimo.toFixed(2)}` : 'Ver ingressos'}

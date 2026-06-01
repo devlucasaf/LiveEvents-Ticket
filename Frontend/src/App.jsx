@@ -12,6 +12,7 @@ import SelecaoAssentoPage from './pages/ingresso/SelecaoAssentoPage';
 import CheckoutPage from './pages/pedido/CheckoutPage';
 import PerfilPage from './pages/usuario/PerfilPage';
 import DashboardAdminPage from './pages/admin/DashboardAdminPage';
+import CriarEventoPage from './pages/admin/CriarEventoPage';
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/pedido/checkout" element={<CheckoutPage />} />
           <Route path="/usuario/perfil" element={<PerfilPage />} />
           <Route path="/admin/dashboard" element={<DashboardAdminPage />} />
+          <Route path="/admin/criar-evento" element={<CriarEventoPage />} />
         </Routes>
       </main>
     </div>

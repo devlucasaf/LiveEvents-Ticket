@@ -5,9 +5,9 @@ import { eventoService } from '../../services/eventoService';
 import '../../styles/busca.css';
 
 export default function BuscaPage() {
-  const [termo, setTermo] = useState('');
-  const [eventos, setEventos] = useState([]);
-  const [resultados, setResultados] = useState([]);
+  const [termo,       setTermo]       = useState('');
+  const [eventos,     setEventos]     = useState([]);
+  const [resultados,  setResultados]  = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,7 +35,8 @@ export default function BuscaPage() {
 
       <div className="busca-page__input-wrapper">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
         </svg>
         <input
           className="busca-page__input"
@@ -49,7 +50,8 @@ export default function BuscaPage() {
       {termo.trim() && resultados.length === 0 && (
         <div className="busca-page__empty">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
           </svg>
           <p>Nenhum evento encontrado para "{termo}"</p>
         </div>

@@ -6,7 +6,7 @@ import '../../styles/eventos.css';
 
 export default function EventosPage() {
   const [eventos, setEventos] = useState([]);
-  const [erro, setErro] = useState('');
+  const [erro,    setErro]    = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
