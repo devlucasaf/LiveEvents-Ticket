@@ -13,6 +13,6 @@ export const pedidoService = {
     },
 
     relatorioVendas() {
-        return apiRequest('/relatorio/vendas');
+        return apiRequest('/admin/relatorio/vendas');
     }
 };

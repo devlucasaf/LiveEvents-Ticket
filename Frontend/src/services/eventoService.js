@@ -11,5 +11,19 @@ export const eventoService = {
 
     listarIngressos(eventoId) {
         return apiRequest(`/ingresso/evento/${eventoId}`);
+    },
+
+    criar(payload) {
+        return apiRequest('/admin/evento', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+    },
+
+    criarIngresso(payload) {
+        return apiRequest('/admin/ingresso', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
     }
 };

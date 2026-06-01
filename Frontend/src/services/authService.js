@@ -22,5 +22,20 @@ export const authService = {
     logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
+    },
+
+    async atualizarPerfil(payload) {
+        const data = await apiRequest('/usuario/me', {
+            method: 'PUT',
+            body: JSON.stringify(payload)
+        });
+        localStorage.setItem('usuario', JSON.stringify(data));
+        return data;
+    },
+
+    async buscarPerfil() {
+        const data = await apiRequest('/usuario/me');
+        localStorage.setItem('usuario', JSON.stringify(data));
+        return data;
     }
 };
