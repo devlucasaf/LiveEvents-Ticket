@@ -6,14 +6,17 @@ import '../../styles/auth.css';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState('');
+  const [erro,  setErro]  = useState('');
   const navigate = useNavigate();
 
   async function handleSubmit(event) {
     event.preventDefault();
     setErro('');
     try {
-      await authService.login({ email, senha });
+      await authService.login({ 
+        email, 
+        senha 
+      });
       navigate('/');
       window.location.reload();
     } catch (e) {
