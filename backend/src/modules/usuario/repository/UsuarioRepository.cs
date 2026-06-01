@@ -19,6 +19,12 @@ public class UsuarioRepository : IUsuarioRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task AtualizarAsync(UsuarioEntity usuario, CancellationToken cancellationToken = default)
+    {
+        _context.Usuarios.Update(usuario);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     public Task<UsuarioEntity?> BuscarPorEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         return _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
@@ -27,5 +33,10 @@ public class UsuarioRepository : IUsuarioRepository
     public Task<UsuarioEntity?> BuscarPorIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+    }
+
+    public Task<List<UsuarioEntity>> ListarTodosAsync(CancellationToken cancellationToken = default)
+    {
+        return _context.Usuarios.ToListAsync(cancellationToken);
     }
 }
