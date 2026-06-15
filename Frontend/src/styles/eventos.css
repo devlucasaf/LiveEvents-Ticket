@@ -9,7 +9,7 @@
 }
 
 .eventos-page__hero::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     right: -20%;

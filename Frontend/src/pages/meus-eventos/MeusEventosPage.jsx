@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { pedidoService } from '../../services/pedidoService';
-import { eventoService } from '../../services/eventoService';
-import '../../styles/meus-eventos.css';
+import { useEffect, useState } from "react";
+import { pedidoService } from "../../services/pedidoService";
+import { eventoService } from "../../services/eventoService";
+import "../../styles/meus-eventos.css";
 
 export default function MeusEventosPage() {
-  const [tab,     setTab]     = useState('upcoming');
+  const [tab,     setTab]     = useState("upcoming");
   const [pedidos, setPedidos] = useState([]);
   const [eventos, setEventos] = useState([]);
-  const [erro,    setErro]    = useState('');
+  const [erro,    setErro]    = useState("");
 
   useEffect(() => {
     Promise.all([pedidoService.meusPedidos(), eventoService.listar()])
@@ -21,7 +21,7 @@ export default function MeusEventosPage() {
   const now = new Date();
 
   const meusEventos = pedidos
-    .filter((p) => p.status === 'PAGO')
+    .filter((p) => p.status === "PAGO")
     .map((p) => {
       const evento = eventos.find((e) => e.id === p.eventoId) || {};
       return { ...p, evento };
@@ -30,7 +30,7 @@ export default function MeusEventosPage() {
   const upcoming = meusEventos.filter((p) => p.evento.dataEvento && new Date(p.evento.dataEvento) >= now);
   const past = meusEventos.filter((p) => p.evento.dataEvento && new Date(p.evento.dataEvento) < now);
 
-  const displayed = tab === 'upcoming' ? upcoming : past;
+  const displayed = tab === "upcoming" ? upcoming : past;
 
   return (
     <section className="meus-eventos-page">
@@ -45,14 +45,14 @@ export default function MeusEventosPage() {
 
       <div className="meus-eventos-page__tabs">
         <button
-          className={`meus-eventos-page__tab ${tab === 'upcoming' ? 'meus-eventos-page__tab--active' : ''}`}
-          onClick={() => setTab('upcoming')}
+          className={`meus-eventos-page__tab ${tab === "upcoming" ? "meus-eventos-page__tab--active" : ""}`}
+          onClick={() => setTab("upcoming")}
         >
           Em breve
         </button>
         <button
-          className={`meus-eventos-page__tab ${tab === 'past' ? 'meus-eventos-page__tab--active' : ''}`}
-          onClick={() => setTab('past')}
+          className={`meus-eventos-page__tab ${tab === "past" ? "meus-eventos-page__tab--active" : ""}`}
+          onClick={() => setTab("past")}
         >
           Passados
         </button>
@@ -60,7 +60,7 @@ export default function MeusEventosPage() {
 
       {displayed.length === 0 ? (
         <div className="meus-eventos-page__empty">
-          <p>{tab === 'upcoming' ? 'Nenhum evento em breve.' : 'Nenhum evento passado.'}</p>
+          <p>{tab === "upcoming" ? "Nenhum evento em breve." : "Nenhum evento passado."}</p>
         </div>
       ) : (
         <div className="meus-eventos-page__list">
@@ -76,11 +76,11 @@ export default function MeusEventosPage() {
               <div className="meus-eventos-page__item-info">
                 <span className="meus-eventos-page__item-title">{item.evento.titulo || `Pedido #${item.id}`}</span>
                 <span className="meus-eventos-page__item-detail">
-                  {item.evento.local} • {item.evento.dataEvento && new Date(item.evento.dataEvento).toLocaleDateString('pt-BR')}
+                  {item.evento.local} • {item.evento.dataEvento && new Date(item.evento.dataEvento).toLocaleDateString("pt-BR")}
                 </span>
                 <span className="meus-eventos-page__item-detail">R$ {item.valorTotal?.toFixed(2)}</span>
-                <span className={`meus-eventos-page__item-status meus-eventos-page__item-status--${tab === 'upcoming' ? 'upcoming' : 'past'}`}>
-                  {tab === 'upcoming' ? 'Em breve' : 'Realizado'}
+                <span className={`meus-eventos-page__item-status meus-eventos-page__item-status--${tab === "upcoming" ? "upcoming" : "past"}`}>
+                  {tab === "upcoming" ? "Em breve" : "Realizado"}
                 </span>
               </div>
             </div>

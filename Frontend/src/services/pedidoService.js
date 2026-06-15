@@ -1,18 +1,18 @@
-import { apiRequest } from './api';
+import { apiRequest } from "./api";
 
 export const pedidoService = {
     checkout(payload) {
-        return apiRequest('/pedido/checkout', {
-            method: 'POST',
+        return apiRequest("/pedido/checkout", {
+            method: "POST",
             body: JSON.stringify(payload)
         });
     },
 
     meusPedidos() {
-        return apiRequest('/pedido/meus');
+        return apiRequest("/pedido/meus");
     },
 
     relatorioVendas() {
-        return apiRequest('/admin/relatorio/vendas');
+        return apiRequest("/admin/relatorio/vendas");
     }
 };

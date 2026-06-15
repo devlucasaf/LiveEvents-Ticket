@@ -1,8 +1,8 @@
-import { apiRequest } from './api';
+import { apiRequest } from "./api";
 
 export const eventoService = {
     listar() {
-        return apiRequest('/evento');
+        return apiRequest("/evento");
     },
 
     buscar(id) {
@@ -14,15 +14,15 @@ export const eventoService = {
     },
 
     criar(payload) {
-        return apiRequest('/admin/evento', {
-            method: 'POST',
+        return apiRequest("/admin/evento", {
+            method: "POST",
             body: JSON.stringify(payload)
         });
     },
 
     criarIngresso(payload) {
-        return apiRequest('/admin/ingresso', {
-            method: 'POST',
+        return apiRequest("/admin/ingresso", {
+            method: "POST",
             body: JSON.stringify(payload)
         });
     }
