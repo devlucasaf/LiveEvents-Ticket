@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "http://localhost:5173",
+"RedirectUrl": "",
+"LaunchCommand": "npm run dev",
+"WorkingDirectory": "C:\\Users\\lucasfreitas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\backend\\..\\Frontend\\",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}

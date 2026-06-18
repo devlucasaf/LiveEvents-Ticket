@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\LiveEvents-Ticket.Backend.props" />
+</Project>

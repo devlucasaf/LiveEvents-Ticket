@@ -1,0 +1,286 @@
+.admin-page {
+    max-width: 800px;
+    margin: 1rem auto;
+}
+
+.admin-page h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* --- CARDS DE ESTATÍSTICAS --- */
+.admin-page__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.admin-page__stat-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-page__stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.admin-page__stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--brand);
+    margin-top: 0.3rem;
+}
+
+/* --- TABELA DE DADOS --- */
+.admin-page__table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.admin-page__table th,
+.admin-page__table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--line-light);
+}
+
+.admin-page__table th {
+    background: var(--bg-secondary);
+    font-weight: 700;
+    color: var(--ink-secondary);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+}
+
+.admin-page__table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-page__table tr:hover td {
+    background: var(--panel-hover);
+}
+
+/* --- CABEÇALHO DO DASHBOARD --- */
+.admin-page__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.admin-page__header h2 {
+    margin-bottom: 0;
+}
+
+/* --- BOTÃO DE CRIAR EVENTO --- */
+.admin-page__criar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.6rem 1.2rem;
+    background: var(--brand);
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.admin-page__criar-btn:hover {
+    background: var(--brand-hover);
+}
+
+/* --- PÁGINA DE CRIAÇÃO DE EVENTO --- */
+.admin-criar__card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.admin-criar__card h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* --- FORMULÁRIO DE CRIAÇÃO --- */
+.admin-criar__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+/* --- CAMPOS DO FORMULÁRIO --- */
+.admin-criar__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.admin-criar__field label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.admin-criar__field input,
+.admin-criar__field select,
+.admin-criar__field textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    color: var(--ink);
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+}
+
+.admin-criar__field input:focus,
+.admin-criar__field select:focus,
+.admin-criar__field textarea:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+    outline: none;
+}
+
+/* --- LINHA COM DUAS COLUNAS --- */
+.admin-criar__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* --- SEÇÃO DE INGRESSOS --- */
+.admin-criar__ingressos {
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line-light);
+}
+
+.admin-criar__ingressos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.admin-criar__ingressos-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* --- BOTÃO ADICIONAR INGRESSO --- */
+.admin-criar__add-btn {
+    background: none;
+    border: 1.5px dashed var(--brand);
+    color: var(--brand);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.admin-criar__add-btn:hover {
+    background: var(--brand-light);
+}
+
+/* --- ITEM DE INGRESSO --- */
+.admin-criar__ingresso-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.admin-criar__ingresso-fields {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.admin-criar__ingresso-fields input {
+    padding: 0.65rem 0.8rem;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    color: var(--ink);
+    font-size: 0.85rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-criar__ingresso-fields input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+    outline: none;
+}
+
+/* --- BOTÃO REMOVER INGRESSO --- */
+.admin-criar__remove-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 50%;
+    transition: color 0.15s, background 0.15s;
+}
+
+.admin-criar__remove-btn:hover {
+    color: #d32f2f;
+    background: rgba(211, 47, 47, 0.08);
+}
+
+/* --- BOTÃO SUBMIT DO FORMULÁRIO --- */
+.admin-criar__submit {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--brand);
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.admin-criar__submit:hover:not(:disabled) {
+    background: var(--brand-hover);
+}
+
+.admin-criar__submit:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.admin-criar__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
