@@ -37,17 +37,30 @@ export default function DatePicker({ value, onChange, placeholder = "Data de nas
     const [aberto,      setAberto]      = useState(false);
     const [anoAtual,    setAnoAtual]    = useState(new Date().getFullYear() - 20);
     const [mesAtual,    setMesAtual]    = useState(new Date().getMonth());
+    const [seletorAberto, setSeletorAberto] = useState(null); // "mes" | "ano" | null
     const ref = useRef(null);
+    const refListaAno = useRef(null);
 
     useEffect(() => {
         function handleClickFora(e) {
             if (ref.current && !ref.current.contains(e.target)) {
                 setAberto(false);
+                setSeletorAberto(null);
             }
         }
         document.addEventListener("mousedown", handleClickFora);
         return () => document.removeEventListener("mousedown", handleClickFora);
     }, []);
+
+    // --- AO ABRIR LISTA DE ANOS, ROLA AT\u00c9 O ANO SELECIONADO ---
+    useEffect(() => {
+        if (seletorAberto === "ano" && refListaAno.current) {
+            const itemAtivo = refListaAno.current.querySelector(".datepicker__opcao--ativa");
+            if (itemAtivo) {
+                itemAtivo.scrollIntoView({ block: "center" });
+            }
+        }
+    }, [seletorAberto]);
 
     function mesAnterior() {
         if (mesAtual === 0) {
@@ -104,6 +117,13 @@ export default function DatePicker({ value, onChange, placeholder = "Data de nas
         ? formatarData(new Date(value + "T00:00:00"))
         : "";
 
+    // --- GERAR LISTA DE ANOS (100 ANOS PARA TRÁS ATÉ ANO ATUAL) ---
+    const anoCorrente = new Date().getFullYear();
+    const anosDisponiveis = [];
+    for (let a = anoCorrente; a >= anoCorrente - 100; a--) {
+        anosDisponiveis.push(a);
+    }
+
     return (
         <div className="datepicker" ref={ref}>
             <input
@@ -126,7 +146,57 @@ export default function DatePicker({ value, onChange, placeholder = "Data de nas
                 <div className="datepicker__dropdown">
                     <div className="datepicker__header">
                         <button type="button" className="datepicker__nav" onClick={mesAnterior}>‹</button>
-                        <span className="datepicker__titulo">{MESES[mesAtual]} {anoAtual}</span>
+                        <div className="datepicker__seletores">
+                            {/* --- SELETOR CUSTOMIZADO DE MÊS --- */}
+                            <div className="datepicker__select-wrap">
+                                <button
+                                    type="button"
+                                    className="datepicker__select"
+                                    onClick={() => setSeletorAberto(seletorAberto === "mes" ? null : "mes")}
+                                >
+                                    {MESES[mesAtual]}
+                                    <span className="datepicker__select-seta">▾</span>
+                                </button>
+                                {seletorAberto === "mes" && (
+                                    <ul className="datepicker__opcoes">
+                                        {MESES.map((m, i) => (
+                                            <li
+                                                key={m}
+                                                className={`datepicker__opcao ${i === mesAtual ? "datepicker__opcao--ativa" : ""}`}
+                                                onClick={() => { setMesAtual(i); setSeletorAberto(null); }}
+                                            >
+                                                {m}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+
+                            {/* --- SELETOR CUSTOMIZADO DE ANO --- */}
+                            <div className="datepicker__select-wrap">
+                                <button
+                                    type="button"
+                                    className="datepicker__select"
+                                    onClick={() => setSeletorAberto(seletorAberto === "ano" ? null : "ano")}
+                                >
+                                    {anoAtual}
+                                    <span className="datepicker__select-seta">▾</span>
+                                </button>
+                                {seletorAberto === "ano" && (
+                                    <ul className="datepicker__opcoes" ref={refListaAno}>
+                                        {anosDisponiveis.map((a) => (
+                                            <li
+                                                key={a}
+                                                className={`datepicker__opcao ${a === anoAtual ? "datepicker__opcao--ativa" : ""}`}
+                                                onClick={() => { setAnoAtual(a); setSeletorAberto(null); }}
+                                            >
+                                                {a}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
                         <button type="button" className="datepicker__nav" onClick={mesSeguinte}>›</button>
                     </div>
 
