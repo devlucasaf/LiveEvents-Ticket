@@ -16,7 +16,7 @@ builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddHttpContextAccessor();
 
-// --- ENTITY FRAMEWORK CORE + SQL SERVER ---
+// --- ENTITY FRAMEWORK CORE ---
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -30,7 +30,7 @@ builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<VendaService>();
 builder.Services.AddScoped<OperadorService>();
 
-// --- CONTROLLERS, SWAGGER E API EXPLORER ---
+// --- CONTROLLERS, SWAGGER E API ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -89,13 +89,13 @@ await app.SeedDataAsync();
 
 // --- BANNER DE INICIALIZAÇÃO ---
 Console.WriteLine();
-Console.WriteLine("====================================================");
+Console.WriteLine("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
 Console.WriteLine("    PONTO DE VENDA - Backend");
 Console.WriteLine("    .NET:       8.0");
 Console.WriteLine("    Ambiente:   " + app.Environment.EnvironmentName);
 Console.WriteLine("    Backend:    http://localhost:5100");
 Console.WriteLine("    Swagger:    http://localhost:5100/swagger");
-Console.WriteLine("====================================================");
+Console.WriteLine("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
 Console.WriteLine();
 
 app.Run();
