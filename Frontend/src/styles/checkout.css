@@ -374,3 +374,136 @@
     border-radius: var(--radius-sm);
     border: 1px solid var(--line);
 }
+
+/* --- RESUMO DETALHADO DA CONFIRMAÇÃO --- */
+.checkout-page__confirmado-resumo {
+    text-align: left;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    background: var(--bg-secondary);
+}
+
+.checkout-page__confirmado-evento {
+    padding: 1.1rem 1.25rem;
+    background: var(--brand-light);
+    border-bottom: 1px solid var(--line);
+}
+
+.checkout-page__confirmado-evento h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+}
+
+.checkout-page__confirmado-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--ink-secondary);
+    margin-top: 0.2rem;
+}
+
+.checkout-page__confirmado-meta svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex-shrink: 0;
+    color: var(--brand);
+}
+
+.checkout-page__confirmado-detalhes {
+    padding: 0.5rem 1.25rem;
+}
+
+.checkout-page__confirmado-linha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0;
+    font-size: 0.85rem;
+    color: var(--ink-secondary);
+    border-bottom: 1px dashed var(--line);
+}
+
+.checkout-page__confirmado-linha:last-child {
+    border-bottom: none;
+}
+
+.checkout-page__confirmado-linha strong {
+    color: var(--ink);
+    font-weight: 600;
+    text-align: right;
+}
+
+.checkout-page__confirmado-linha--total {
+    border-top: 1.5px solid var(--line);
+    border-bottom: 1.5px solid var(--line) !important;
+    margin-top: 0.3rem;
+    padding: 0.8rem 0;
+}
+
+.checkout-page__confirmado-linha--total span {
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.checkout-page__confirmado-linha--total strong {
+    font-size: 1.1rem;
+    color: var(--brand);
+    font-weight: 800;
+}
+
+/* --- CAIXA DO CÓDIGO PIX --- */
+.checkout-page__pix-box {
+    text-align: left;
+    padding: 1rem 1.25rem;
+    border: 1.5px dashed var(--brand);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    margin-bottom: 1rem;
+}
+
+.checkout-page__pix-titulo {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+}
+
+.checkout-page__pix-box code {
+    display: block;
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 0.85rem;
+    color: var(--ink);
+    word-break: break-all;
+}
+
+.checkout-page__qr {
+    width: min(220px, 100%);
+    margin: 0 auto 1.25rem;
+    display: block;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+}
+
+/* --- AÇÕES FINAIS --- */
+.checkout-page__confirmado-acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.checkout-page__btn--secundario {
+    background: transparent;
+    color: var(--brand);
+    border: 1.5px solid var(--brand);
+}
+
+.checkout-page__btn--secundario:hover:not(:disabled) {
+    background: var(--brand-light);
+}

@@ -23,6 +23,25 @@ function formatarMoeda(valor) {
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const item = JSON.parse(localStorage.getItem("checkoutItem") || "{}");
+  const token = localStorage.getItem("token");
+
+  // --- GUARDA DE AUTENTICAÇÃO ---
+  if (!token) {
+    return (
+      <div className="checkout-page">
+        <div className="checkout-page__card">
+          <h2>Faça login para continuar</h2>
+          <p>Você precisa estar logado para finalizar a compra do ingresso.</p>
+          <button
+            className="checkout-page__btn"
+            onClick={() => navigate("/auth/login?retorno=/pedido/checkout")}
+          >
+            Ir para o login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const [etapa,           setEtapa]           = useState("carrinho"); 
   const [seguro,          setSeguro]          = useState(false);
@@ -34,8 +53,9 @@ export default function CheckoutPage() {
   const [parcelas,        setParcelas]        = useState(1);
   const [erro,            setErro]            = useState("");
   const [resultado,       setResultado]       = useState(null);
+  const [compraSnapshot,  setCompraSnapshot]  = useState(null);
 
-  if (!item.ingressoId) {
+  if (!item.ingressoId && etapa !== "confirmado") {
     return (
       <div className="checkout-page">
         <div className="checkout-page__card">
@@ -86,6 +106,18 @@ export default function CheckoutPage() {
           parcelas: tipoPagamento === "cartao" ? parcelas : null
         },
         seguro
+      });
+      // --- GUARDA O SNAPSHOT DA COMPRA PARA EXIBIR NA CONFIRMAÇÃO ---
+      setCompraSnapshot({
+        item,
+        precoBase,
+        taxaServico,
+        valorSeguro,
+        total,
+        seguro,
+        tipoPagamento,
+        parcelas,
+        numeroCartao
       });
       setResultado(data);
       setEtapa("confirmado");
@@ -294,6 +326,18 @@ export default function CheckoutPage() {
   }
 
   // --- CONFIRMADO ---
+  const snap = compraSnapshot || {};
+  const dataFormatada = snap.item?.eventoData
+    ? new Date(snap.item.eventoData).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      })
+    : null;
+  const ultimosDigitos = snap.numeroCartao
+    ? snap.numeroCartao.replace(/\s/g, "").slice(-4)
+    : null;
+
   return (
     <div className="checkout-page">
       <div className="checkout-page__card checkout-page__card--confirmado">
@@ -304,26 +348,103 @@ export default function CheckoutPage() {
         </div>
         <h2>Compra confirmada!</h2>
         <p className="checkout-page__sucesso-msg">
-          Seu ingresso foi adquirido com sucesso. Ele já está disponível na sua área de ingressos.
+          Seu ingresso já está disponível em <strong>Meus Ingressos</strong>.
         </p>
 
-        {resultado && (
-          <div className="checkout-page__result">
-            <p><strong>Pedido:</strong> #{resultado.id}</p>
-            <p><strong>Status:</strong> {resultado.pagamentoStatus}</p>
-            {resultado.codigoPix && <p><strong>Código PIX:</strong> {resultado.codigoPix}</p>}
-            {resultado.qrCodeBase64 && (
-              <img 
-                src={`data:image/png;base64,${resultado.qrCodeBase64}`} 
-                alt="QR Code" 
-              />
-            )}
+        {/* --- RESUMO DETALHADO DA COMPRA --- */}
+        {snap.item && (
+          <div className="checkout-page__confirmado-resumo">
+            <div className="checkout-page__confirmado-evento">
+              <h3>{snap.item.eventoTitulo || "Evento"}</h3>
+              {snap.item.eventoLocal && (
+                <p className="checkout-page__confirmado-meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  {snap.item.eventoLocal}
+                </p>
+              )}
+              {dataFormatada && (
+                <p className="checkout-page__confirmado-meta">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  {dataFormatada}
+                </p>
+              )}
+            </div>
+
+            <div className="checkout-page__confirmado-detalhes">
+              <div className="checkout-page__confirmado-linha">
+                <span>Setor</span>
+                <strong>{snap.item.setor || "—"}</strong>
+              </div>
+              <div className="checkout-page__confirmado-linha">
+                <span>Quantidade</span>
+                <strong>{snap.item.quantidade}</strong>
+              </div>
+              <div className="checkout-page__confirmado-linha">
+                <span>Ingresso</span>
+                <strong>{formatarMoeda(snap.precoBase)}</strong>
+              </div>
+              <div className="checkout-page__confirmado-linha">
+                <span>Taxa de serviço</span>
+                <strong>{formatarMoeda(snap.taxaServico)}</strong>
+              </div>
+              {snap.seguro && (
+                <div className="checkout-page__confirmado-linha">
+                  <span>Seguro Ingresso Protegido</span>
+                  <strong>{formatarMoeda(snap.valorSeguro)}</strong>
+                </div>
+              )}
+              <div className="checkout-page__confirmado-linha checkout-page__confirmado-linha--total">
+                <span>Total pago</span>
+                <strong>{formatarMoeda(snap.total)}</strong>
+              </div>
+              <div className="checkout-page__confirmado-linha">
+                <span>Forma de pagamento</span>
+                <strong>
+                  {snap.tipoPagamento === "cartao"
+                    ? `Cartão •••• ${ultimosDigitos} (${snap.parcelas}x)`
+                    : "PIX"}
+                </strong>
+              </div>
+              {resultado && (
+                <div className="checkout-page__confirmado-linha">
+                  <span>Nº do pedido</span>
+                  <strong>#{resultado.id}</strong>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
-        <button className="checkout-page__btn" onClick={() => navigate("/meus-eventos")}>
-          Ver meus ingressos
-        </button>
+        {/* --- DADOS DO PIX / QR CODE --- */}
+        {resultado?.codigoPix && (
+          <div className="checkout-page__pix-box">
+            <p className="checkout-page__pix-titulo">Código PIX</p>
+            <code>{resultado.codigoPix}</code>
+          </div>
+        )}
+        {resultado?.qrCodeBase64 && (
+          <img
+            className="checkout-page__qr"
+            src={`data:image/png;base64,${resultado.qrCodeBase64}`}
+            alt="QR Code do ingresso"
+          />
+        )}
+
+        <div className="checkout-page__confirmado-acoes">
+          <button className="checkout-page__btn" onClick={() => navigate("/meus-eventos")}>
+            Ver Meus Ingressos
+          </button>
+          <button
+            className="checkout-page__btn checkout-page__btn--secundario"
+            onClick={() => navigate("/")}
+          >
+            Explorar mais eventos
+          </button>
+        </div>
       </div>
     </div>
   );
