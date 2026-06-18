@@ -3,6 +3,7 @@ using LiveEventsTicket.Backend.Modules.Pagamento.Service;
 using LiveEventsTicket.Backend.Modules.Pedido.Dto;
 using LiveEventsTicket.Backend.Modules.Pedido.Repository;
 using QRCoder;
+using IngressoEntity = LiveEventsTicket.Backend.Modules.Ingresso.Model.Ingresso;
 using ItemPedido = LiveEventsTicket.Backend.Modules.Pedido.Model.ItemPedido;
 using PedidoEntity = LiveEventsTicket.Backend.Modules.Pedido.Model.Pedido;
 
@@ -92,13 +93,40 @@ public class PedidoService
     {
         var pedidos = await _pedidoRepository.ListarPorUsuarioAsync(usuarioId, cancellationToken);
 
-        return pedidos.Select(p => new PedidoRespostaDto
+        // --- BUSCAR DADOS DOS INGRESSOS USADOS NOS PEDIDOS PARA OBTER EVENTO ---
+        var ingressoIds = pedidos.SelectMany(p => p.Itens).Select(i => i.IngressoId).Distinct().ToList();
+        var ingressos = new Dictionary<int, IngressoEntity>();
+        foreach (var id in ingressoIds)
         {
-            Id = p.Id,
-            ValorTotal = p.ValorTotal,
-            Status = p.Status,
-            QrCodeBase64 = p.QrCodeBase64,
-            PagamentoStatus = p.Status.StartsWith("PAGAMENTO") ? "RECUSADO" : "APROVADO"
+            var ing = await _ingressoRepository.BuscarPorIdAsync(id, cancellationToken);
+            if (ing is not null) 
+            {
+                ingressos[id] = ing;
+            }
+        }
+
+        return pedidos.Select(p =>
+        {
+            var primeiroItem = p.Itens.FirstOrDefault();
+            IngressoEntity? ingresso = null;
+            if (primeiroItem is not null && ingressos.TryGetValue(primeiroItem.IngressoId, out var ing))
+            {
+                ingresso = ing;
+            }
+
+            return new PedidoRespostaDto
+            {
+                Id = p.Id,
+                ValorTotal = p.ValorTotal,
+                Status = p.Status,
+                QrCodeBase64 = p.QrCodeBase64,
+                PagamentoStatus = p.Status == "PAGO" ? "APROVADO" : "RECUSADO",
+                DataCriacao = p.DataCriacao,
+                EventoId = ingresso?.EventoId,
+                IngressoId = primeiroItem?.IngressoId,
+                Setor = ingresso?.Setor,
+                Quantidade = primeiroItem?.Quantidade ?? 0
+            };
         }).ToList();
     }
 

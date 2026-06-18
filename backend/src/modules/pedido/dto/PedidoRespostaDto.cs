@@ -8,4 +8,9 @@ public class PedidoRespostaDto
     public string?  QrCodeBase64    { get; set; }
     public string   PagamentoStatus { get; set; } = string.Empty;
     public string?  CodigoPix       { get; set; }
+    public DateTime DataCriacao     { get; set; }
+    public int?     EventoId        { get; set; }
+    public int?     IngressoId      { get; set; }
+    public string?  Setor           { get; set; }
+    public int      Quantidade      { get; set; }
 }
