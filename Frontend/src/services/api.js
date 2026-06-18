@@ -12,6 +12,17 @@ export async function apiRequest(path, options = {}) {
         ...options
     });
 
+    // --- TRATAMENTO DE SESSÃO EXPIRADA ---
+    if (response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        if (!window.location.pathname.startsWith("/auth/login")) {
+            const retorno = encodeURIComponent(window.location.pathname + window.location.search);
+            window.location.href = `/auth/login?retorno=${retorno}`;
+        }
+        throw new Error("Sessão expirada. Faça login novamente.");
+    }
+
     if (!response.ok) {
         const payload = await response.json().catch(() => ({}));
         throw new Error(payload.message || "Erro na requisição");
