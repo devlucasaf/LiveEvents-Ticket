@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\PontoVenda.Backend.props" />
+</Project>
