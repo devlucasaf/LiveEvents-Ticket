@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import '../../styles/auth.css';
 
@@ -8,6 +8,8 @@ export default function LoginPage() {
   const [senha, setSenha] = useState('');
   const [erro,  setErro]  = useState('');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const retorno = searchParams.get('retorno') || '/';
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -17,7 +19,7 @@ export default function LoginPage() {
         email, 
         senha 
       });
-      navigate('/');
+      navigate(retorno);
       window.location.reload();
     } catch (e) {
       setErro(e.message);
