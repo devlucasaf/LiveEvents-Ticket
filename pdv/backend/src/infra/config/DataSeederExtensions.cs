@@ -37,6 +37,72 @@ public static class DataSeederExtensions
             );
         }
 
+        // --- SEED DE EVENTO ---
+        if (!await context.Eventos.AnyAsync())
+        {
+            var evento = new Evento
+            {
+                Nome        = "Show Internacional 2026",
+                Local       = "Estádio Central - São Paulo/SP",
+                DataEvento  = new DateTime(2026, 12, 15, 21, 0, 0, DateTimeKind.Utc),
+                Descricao   = "Turnê mundial com convidados especiais. Abertura dos portões às 18h.",
+                Ativo       = true
+            };
+
+            // --- CAMAROTE VIP ---
+            for (var fileira = 'A'; fileira <= 'B'; fileira++)
+            {
+                for (var num = 1; num <= 10; num++)
+                {
+                    evento.Assentos.Add(new Assento
+                    {
+                        EventoId    = evento.Id,
+                        Setor       = "CAMAROTE_VIP",
+                        Fileira     = fileira.ToString(),
+                        Numero      = num,
+                        Preco       = 800.00m,
+                        Status      = "DISPONIVEL"
+                    });
+                }
+            }
+
+            // --- PISTA PREMIUM ---
+            for (var fileira = 'A'; fileira <= 'C'; fileira++)
+            {
+                for (var num = 1; num <= 15; num++)
+                {
+                    evento.Assentos.Add(new Assento
+                    {
+                        EventoId    = evento.Id,
+                        Setor       = "PISTA_PREMIUM",
+                        Fileira     = fileira.ToString(),
+                        Numero      = num,
+                        Preco       = 350.00m,
+                        Status      = "DISPONIVEL"
+                    });
+                }
+            }
+
+            // --- ARQUIBANCADA ---
+            for (var fileira = 'A'; fileira <= 'E'; fileira++)
+            {
+                for (var num = 1; num <= 20; num++)
+                {
+                    evento.Assentos.Add(new Assento
+                    {
+                        EventoId    = evento.Id,
+                        Setor       = "ARQUIBANCADA",
+                        Fileira     = fileira.ToString(),
+                        Numero      = num,
+                        Preco       = 150.00m,
+                        Status      = "DISPONIVEL"
+                    });
+                }
+            }
+
+            context.Eventos.Add(evento);
+        }
+
         await context.SaveChangesAsync();
     }
 }
