@@ -44,6 +44,44 @@
     color: var(--muted);
 }
 
+/* --- CAMPO DE SENHA COM BOTÃO DE VISUALIZAR --- */
+.auth-page__senha-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.auth-page__input--senha {
+    padding-right: 2.8rem;
+}
+
+.auth-page__toggle-senha {
+    position: absolute;
+    right: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color 0.15s, background 0.15s;
+}
+
+.auth-page__toggle-senha:hover {
+    color: var(--brand);
+    background: var(--brand-light);
+}
+
+.auth-page__toggle-senha svg {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
 .auth-page__btn {
     width: 100%;
     padding: 0.85rem;
