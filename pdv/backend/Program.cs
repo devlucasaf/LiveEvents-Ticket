@@ -24,11 +24,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IVendaRepository, VendaRepository>();
 builder.Services.AddScoped<IOperadorRepository, OperadorRepository>();
+builder.Services.AddScoped<IVendaFisicaRepository, VendaFisicaRepository>();
 
 // --- SERVICES ---
 builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<VendaService>();
 builder.Services.AddScoped<OperadorService>();
+builder.Services.AddScoped<VendaFisicaService>();
 
 // --- CONTROLLERS, SWAGGER E API ---
 builder.Services.AddControllers();
