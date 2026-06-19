@@ -32,7 +32,7 @@ public class ProdutoController : ControllerBase
         return Ok(await _service.BuscarPorCodigoBarrasAsync(codigo, cancellationToken));
     }
 
-    // --- CRIAR NOVO PRODUTO (APENAS ADMIN) ---
+    // --- CRIAR NOVO PRODUTO ---
     [HttpPost]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Criar([FromBody] ProdutoDto dto, CancellationToken cancellationToken)

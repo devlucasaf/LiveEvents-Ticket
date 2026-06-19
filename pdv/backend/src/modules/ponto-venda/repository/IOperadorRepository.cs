@@ -6,5 +6,5 @@ public interface IOperadorRepository
 {
     Task<Operador?> BuscarPorLoginAsync(string login, CancellationToken cancellationToken = default);
     Task<Operador?> BuscarPorIdAsync(int id, CancellationToken cancellationToken = default);
-    Task            AdicionarAsync(Operador operador, CancellationToken cancellationToken = default);
+    Task AdicionarAsync(Operador operador, CancellationToken cancellationToken = default);
 }
