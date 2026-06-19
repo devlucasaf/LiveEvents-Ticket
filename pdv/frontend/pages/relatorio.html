@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDV — Relatório de Vendas</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-marca">
+            <span class="logo-icon"></span>
+            <strong>PDV Bilheteria</strong>
+        </div>
+        <nav class="topbar-nav">
+            <a href="venda.html">Nova Venda</a>
+            <a href="relatorio.html" class="ativo">Relatório</a>
+        </nav>
+        <div class="topbar-user">
+            <span id="lbl-usuario">--</span>
+            <button id="btn-sair" class="btn btn-link">Sair</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="painel">
+            <div class="painel-cabecalho">
+                <div>
+                    <h1>Relatório de Vendas</h1>
+                    <p class="painel-subtitulo">Lista de vendas registradas pela bilheteria.</p>
+                </div>
+                <div class="acoes-cabecalho">
+                    <select id="filtro-pagamento">
+                        <option value="">Todos os pagamentos</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="Cartao">Cartão</option>
+                        <option value="Pix">Pix</option>
+                    </select>
+                    <button id="btn-atualizar" class="btn btn-secundario">⟳ Atualizar</button>
+                </div>
+            </div>
+
+            <!-- CARDS DE TOTAIS -->
+            <div class="grade-totais">
+                <div class="card-total">
+                    <span class="card-label">Vendas</span>
+                    <strong id="total-vendas" class="card-valor">0</strong>
+                </div>
+                <div class="card-total">
+                    <span class="card-label">Faturamento total</span>
+                    <strong id="total-faturamento" class="card-valor">R$ 0,00</strong>
+                </div>
+                <div class="card-total">
+                    <span class="card-label">Ticket médio</span>
+                    <strong id="total-ticket-medio" class="card-valor">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <!-- TABELA -->
+            <div class="tabela-wrapper">
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>ID da Venda</th>
+                            <th>Assento</th>
+                            <th>Pagamento</th>
+                            <th class="alinhar-direita">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-tabela">
+                        <tr><td colspan="5" class="celula-vazia">Carregando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="msg-feedback" class="alerta oculto" role="alert"></div>
+        </section>
+    </main>
+
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/relatorio.js"></script>
+</body>
+</html>

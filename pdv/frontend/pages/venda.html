@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDV — Nova Venda Física</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-marca">
+            <span class="logo-icon"></span>
+            <strong>PDV Bilheteria</strong>
+        </div>
+        <nav class="topbar-nav">
+            <a href="venda.html" class="ativo">Nova Venda</a>
+            <a href="relatorio.html">Relatório</a>
+        </nav>
+        <div class="topbar-user">
+            <span id="lbl-usuario">--</span>
+            <button id="btn-sair" class="btn btn-link">Sair</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="painel">
+            <h1>Nova Venda Física</h1>
+            <p class="painel-subtitulo">Selecione o evento, escolha um assento disponível e finalize a venda.</p>
+
+            <form id="form-venda" novalidate>
+                <!-- EVENTO -->
+                <div class="campo">
+                    <label for="evento">Evento</label>
+                    <select id="evento" name="evento" required>
+                        <option value="">Carregando eventos...</option>
+                    </select>
+                </div>
+
+                <!-- ASSENTOS -->
+                <div class="campo">
+                    <label>Assentos disponíveis</label>
+                    <div id="lista-assentos" class="grade-assentos">
+                        <p class="placeholder-grade">Selecione um evento para ver os assentos.</p>
+                    </div>
+                    <input type="hidden" id="assento-id" name="assentoId" />
+                    <div id="resumo-assento" class="resumo-assento oculto"></div>
+                </div>
+
+                <!-- PAGAMENTO -->
+                <div class="campo">
+                    <label>Método de pagamento</label>
+                    <div class="grupo-radio">
+                        <label class="opcao-radio">
+                            <input type="radio" name="metodoPagamento" value="Dinheiro" required />
+                            <span>Dinheiro</span>
+                        </label>
+                        <label class="opcao-radio">
+                            <input type="radio" name="metodoPagamento" value="Cartao" />
+                            <span>Cartão</span>
+                        </label>
+                        <label class="opcao-radio">
+                            <input type="radio" name="metodoPagamento" value="Pix" />
+                            <span>Pix</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="msg-feedback" class="alerta oculto" role="alert"></div>
+
+                <div class="acoes-form">
+                    <button type="button" id="btn-limpar" class="btn btn-secundario">Limpar</button>
+                    <button type="submit" id="btn-registrar" class="btn btn-primario">
+                        <span class="btn-texto">Registrar venda</span>
+                        <span class="btn-spinner oculto"></span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- MODAL DE COMPROVANTE -->
+        <div id="modal-comprovante" class="modal oculto" role="dialog" aria-modal="true">
+            <div class="modal-conteudo">
+                <header class="modal-header">
+                    <h2>Venda registrada</h2>
+                </header>
+                <div class="modal-body" id="comprovante-corpo"></div>
+                <footer class="modal-footer">
+                    <button class="btn btn-secundario" id="btn-imprimir">Imprimir</button>
+                    <button class="btn btn-primario" id="btn-nova-venda">Nova venda</button>
+                </footer>
+            </div>
+        </div>
+    </main>
+
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/venda.js"></script>
+</body>
+</html>

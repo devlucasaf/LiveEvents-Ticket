@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDV — Login do Atendente</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body class="tela-login">
+    <main class="card-login">
+        <div class="logo">
+            <span class="logo-icon">🎫</span>
+            <h1>PDV Bilheteria</h1>
+            <p class="subtitulo">Acesso do atendente</p>
+        </div>
+
+        <form id="form-login" novalidate>
+            <div class="campo">
+                <label for="login">Login</label>
+                <input type="text" id="login" name="login" placeholder="ex.: admin" autocomplete="username" required />
+            </div>
+
+            <div class="campo">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" placeholder="••••••••" autocomplete="current-password" required />
+            </div>
+
+            <div id="msg-erro" class="alerta alerta-erro oculto" role="alert"></div>
+
+            <button type="submit" class="btn btn-primario btn-bloco" id="btn-entrar">
+                <span class="btn-texto">Entrar</span>
+                <span class="btn-spinner oculto"></span>
+            </button>
+        </form>
+
+        <p class="rodape-info">v1.0 • Bilheteria física</p>
+    </main>
+
+    <script src="scripts/api.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/login.js"></script>
+</body>
+</html>
