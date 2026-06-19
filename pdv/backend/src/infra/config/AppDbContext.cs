@@ -16,10 +16,9 @@ public class AppDbContext : DbContext
     public DbSet<Operador>      Operadores  => Set<Operador>();
 
     // --- TABELAS DA BILHETERIA FÍSICA ---
-    public DbSet<Evento>            Eventos             => Set<Evento>();
-    public DbSet<Assento>           Assentos            => Set<Assento>();
-    public DbSet<VendaFisica>       VendasFisicas       => Set<VendaFisica>();
-    public DbSet<ItemVendaFisica>   ItensVendaFisica    => Set<ItemVendaFisica>();
+    public DbSet<Evento>        Eventos         => Set<Evento>();
+    public DbSet<Assento>       Assentos        => Set<Assento>();
+    public DbSet<VendaFisica>   VendasFisicas   => Set<VendaFisica>();
 
     // --- CONFIGURAÇÃO DO MODELO ---
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -89,49 +88,24 @@ public class AppDbContext : DbContext
 
         // --- VENDA FÍSICA ---
         modelBuilder.Entity<VendaFisica>()
-            .Property(v => v.ValorTotal)
+            .Property(v => v.Valor)
             .HasPrecision(18, 2);
 
         modelBuilder.Entity<VendaFisica>()
-            .Property(v => v.FormaPagamento)
-            .HasMaxLength(30)
-            .IsRequired();
-
-        modelBuilder.Entity<VendaFisica>()
-            .Property(v => v.Status)
+            .Property(v => v.MetodoPagamento)
+            .HasConversion<string>()
             .HasMaxLength(20)
             .IsRequired();
-
-        modelBuilder.Entity<VendaFisica>()
-            .Property(v => v.NomeComprador)
-            .HasMaxLength(150);
-
-        modelBuilder.Entity<VendaFisica>()
-            .Property(v => v.CpfComprador)
-            .HasMaxLength(14);
 
         modelBuilder.Entity<VendaFisica>()
             .HasIndex(v => v.DataVenda);
 
         modelBuilder.Entity<VendaFisica>()
-            .HasIndex(v => v.OperadorId);
-
-        modelBuilder.Entity<VendaFisica>()
             .HasIndex(v => v.EventoId);
 
+        // Um assento só pode ser vendido uma única vez
         modelBuilder.Entity<VendaFisica>()
-            .HasMany(v => v.Itens)
-            .WithOne()
-            .HasForeignKey(i => i.VendaFisicaId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // --- ITEM VENDA FÍSICA ---
-        modelBuilder.Entity<ItemVendaFisica>()
-            .Property(i => i.Preco)
-            .HasPrecision(18, 2);
-
-        modelBuilder.Entity<ItemVendaFisica>()
-            .HasIndex(i => i.AssentoId)
+            .HasIndex(v => v.AssentoId)
             .IsUnique();
     }
 }
