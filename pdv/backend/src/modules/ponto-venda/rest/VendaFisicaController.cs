@@ -38,7 +38,7 @@ public class VendaFisicaController : ControllerBase
     public async Task<IActionResult> BuscarPorId(Guid id, CancellationToken cancellationToken)
     {
         var vendas = await _service.ListarAsync(cancellationToken);
-        var venda  = vendas.FirstOrDefault(v => v.Id == id);
+        var venda = vendas.FirstOrDefault(v => v.Id == id);
         return venda is null ? NotFound() : Ok(venda);
     }
 }

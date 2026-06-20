@@ -27,11 +27,11 @@ public class EventoController : ControllerBase
             .OrderBy(e => e.DataEvento)
             .Select(e => new EventoRespostaDto
             {
-                Id          = e.Id,
-                Nome        = e.Nome,
-                Local       = e.Local,
-                DataEvento  = e.DataEvento,
-                Ativo       = e.Ativo
+                Id = e.Id,
+                Nome = e.Nome,
+                Local = e.Local,
+                DataEvento = e.DataEvento,
+                Ativo = e.Ativo
             })
             .ToListAsync(cancellationToken);
 
@@ -55,12 +55,12 @@ public class EventoController : ControllerBase
             .ThenBy(a => a.Numero)
             .Select(a => new AssentoRespostaDto
             {
-                Id      = a.Id,
-                Setor   = a.Setor,
+                Id = a.Id,
+                Setor = a.Setor,
                 Fileira = a.Fileira,
-                Numero  = a.Numero,
-                Preco   = a.Preco,
-                Status  = a.Status
+                Numero = a.Numero,
+                Preco = a.Preco,
+                Status = a.Status
             })
             .ToListAsync(cancellationToken);
 

@@ -7,8 +7,8 @@ namespace PontoVenda.Backend.Modules.PontoVenda.Service;
 
 public class OperadorService
 {
-    private readonly IOperadorRepository    _repository;
-    private readonly JwtTokenService        _jwtTokenService;
+    private readonly IOperadorRepository _repository;
+    private readonly JwtTokenService _jwtTokenService;
 
     // --- INJEÇÃO DO REPOSITORY E DO SERVIÇO DE JWT ---
     public OperadorService(IOperadorRepository repository, JwtTokenService jwtTokenService)

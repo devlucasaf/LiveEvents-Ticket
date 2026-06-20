@@ -81,11 +81,11 @@ public class VendaFisicaService
     // --- MAPEAR ENTIDADE PARA DTO DE RESPOSTA ---
     private static VendaFisicaRespostaDto Map(VendaFisica venda) => new()
     {
-        Id              = venda.Id,
-        EventoId        = venda.EventoId,
-        AssentoId       = venda.AssentoId,
+        Id = venda.Id,
+        EventoId = venda.EventoId,
+        AssentoId = venda.AssentoId,
         MetodoPagamento = venda.MetodoPagamento.ToString(),
-        Valor           = venda.Valor,
-        DataVenda       = venda.DataVenda
+        Valor = venda.Valor,
+        DataVenda = venda.DataVenda
     };
 }

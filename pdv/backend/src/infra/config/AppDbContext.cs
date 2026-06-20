@@ -103,7 +103,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<VendaFisica>()
             .HasIndex(v => v.EventoId);
 
-        // Um assento só pode ser vendido uma única vez
         modelBuilder.Entity<VendaFisica>()
             .HasIndex(v => v.AssentoId)
             .IsUnique();

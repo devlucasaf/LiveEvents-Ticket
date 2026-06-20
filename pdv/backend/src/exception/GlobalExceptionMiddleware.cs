@@ -31,10 +31,10 @@ public class GlobalExceptionMiddleware
     {
         var (statusCode, message) = ex switch
         {
-            KeyNotFoundException        => (HttpStatusCode.NotFound, ex.Message),
-            InvalidOperationException   => (HttpStatusCode.BadRequest, ex.Message),
+            KeyNotFoundException => (HttpStatusCode.NotFound, ex.Message),
+            InvalidOperationException => (HttpStatusCode.BadRequest, ex.Message),
             UnauthorizedAccessException => (HttpStatusCode.Unauthorized, ex.Message),
-            _                           => (HttpStatusCode.InternalServerError, "Erro interno do servidor.")
+            _ => (HttpStatusCode.InternalServerError, "Erro interno do servidor.")
         };
 
         context.Response.ContentType = "application/json";
