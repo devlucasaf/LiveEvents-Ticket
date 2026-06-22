@@ -1,6 +1,6 @@
 <img 
     width=100% 
-    src="https://capsule-render.vercel.app/api?type=waving&color=A020F0&height=140&section=header&text=LiveEvents-Ticket&fontColor=ffffff&fontSize=42&fontAlignY=38"
+    src="https://capsule-render.vercel.app/api?type=waving&color=A020F0&height=120&section=header"
 />
 
 <p align="center">
