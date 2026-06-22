@@ -4,6 +4,7 @@
     const selEvento      = document.getElementById("evento");
     const listaAssentos  = document.getElementById("lista-assentos");
     const inputAssentoId = document.getElementById("assento-id");
+    const inputValor     = document.getElementById("valor");
     const resumoAssento  = document.getElementById("resumo-assento");
     const form           = document.getElementById("form-venda");
     const btnRegistrar   = document.getElementById("btn-registrar");
@@ -163,6 +164,9 @@
         assentoSelecionado = assento;
         inputAssentoId.value = assento.id;
 
+        // --- PREENCHE AUTOMATICAMENTE O CAMPO VALOR COM O PREÇO DO ASSENTO ---
+        inputValor.value = Number(assento.preco).toFixed(2);
+
         resumoAssento.classList.remove("oculto");
         resumoAssento.innerHTML = `
             Assento selecionado:
@@ -175,6 +179,7 @@
         document.querySelectorAll(".assento.selecionado").forEach((b) => b.classList.remove("selecionado"));
         assentoSelecionado = null;
         inputAssentoId.value = "";
+        inputValor.value = "";
         resumoAssento.classList.add("oculto");
         resumoAssento.innerHTML = "";
     }
@@ -192,39 +197,49 @@
         const historico = JSON.parse(localStorage.getItem("pdv:historico") || "[]");
         historico.unshift({
             id: venda.id,
+            codigoTicket: venda.codigoTicket,
             eventoId: venda.eventoId,
+            eventoNome: venda.eventoNome,
             assentoId: venda.assentoId,
+            assentoLabel: `${(venda.assentoSetor || "").replace(/_/g, " ")} • ${venda.assentoFileira}${venda.assentoNumero}`,
             metodoPagamento: venda.metodoPagamento,
             valor: venda.valor,
-            dataVenda: venda.dataVenda,
-            assentoLabel: assentoSelecionado
-                ? `${assentoSelecionado.setor.replace(/_/g, " ")} • ${assentoSelecionado.fileira}${assentoSelecionado.numero}`
-                : "--"
+            dataVenda: venda.dataVenda
         });
         localStorage.setItem("pdv:historico", JSON.stringify(historico.slice(0, 200)));
     }
 
-    // --- MODAL DE COMPROVANTE ---
+    // --- MODAL DE COMPROVANTE (TICKET FÍSICO COM QR CODE) ---
 
     function abrirComprovante(venda) {
-        const assentoLabel = assentoSelecionado
-            ? `${assentoSelecionado.setor.replace(/_/g, " ")} — Fileira ${assentoSelecionado.fileira} / Nº ${assentoSelecionado.numero}`
-            : "--";
-
-        const eventoLabel = selEvento.options[selEvento.selectedIndex]?.text || "--";
+        const assentoLabel = `${(venda.assentoSetor || "").replace(/_/g, " ")} — Fileira ${venda.assentoFileira} / Nº ${venda.assentoNumero}`;
 
         corpoComprov.innerHTML = `
             <div class="linha">
-                <span class="label">Comprovante</span>
+                <span class="label">Ticket</span>
                 <span class="valor codigo-curto">
-                    ${venda.id.slice(0, 8).toUpperCase()}
+                    ${venda.codigoTicket}
                 </span>
             </div>
 
             <div class="linha">
                 <span class="label">Evento</span>
                 <span class="valor">
-                    ${eventoLabel}
+                    ${venda.eventoNome || "--"}
+                </span>
+            </div>
+
+            <div class="linha">
+                <span class="label">Local</span>
+                <span class="valor">
+                    ${venda.eventoLocal || "--"}
+                </span>
+            </div>
+
+            <div class="linha">
+                <span class="label">Data do evento</span>
+                <span class="valor">
+                    ${formatarDataHora(venda.eventoData)}
                 </span>
             </div>
 
@@ -243,7 +258,7 @@
             </div>
 
             <div class="linha">
-                <span class="label">Data</span>
+                <span class="label">Emitido em</span>
                 <span class="valor">
                     ${formatarDataHora(venda.dataVenda)}
                 </span>
@@ -255,8 +270,50 @@
                     ${formatarMoeda(venda.valor)}
                 </span>
             </div>
+
+            <div class="qr-container">
+                <canvas id="qr-canvas"></canvas>
+                <div class="ticket-codigo" id="ticket-codigo">${venda.codigoTicket}</div>
+                <small class="qr-dica">Apresente este ticket na entrada do evento.</small>
+            </div>
         `;
+
         modal.classList.remove("oculto");
+
+        // --- RENDERIZA O QR CODE ---
+        renderizarQrCode(venda);
+    }
+
+    function renderizarQrCode(venda) {
+        const canvas = document.getElementById("qr-canvas");
+        const codigoFallback = document.getElementById("ticket-codigo");
+
+        if (!canvas) {
+            return;
+        }
+
+        // --- PAYLOAD DO QR (texto simples se a lib não carregar) ---
+        const payload = JSON.stringify({
+            t:  venda.codigoTicket,
+            id: venda.id,
+            ev: venda.eventoId,
+            as: venda.assentoId
+        });
+
+        if (typeof QRCode === "undefined") {
+            // --- FALLBACK: mostra só o código do ticket ---
+            canvas.style.display = "none";
+            if (codigoFallback) {
+                codigoFallback.textContent = venda.codigoTicket;
+            }
+            return;
+        }
+
+        QRCode.toCanvas(canvas, payload, { width: 200, margin: 1 }, (err) => {
+            if (err) {
+                canvas.style.display = "none";
+            }
+        });
     }
 
     function fecharComprovante() {
@@ -289,6 +346,7 @@
         const eventoId  = selEvento.value;
         const assentoId = inputAssentoId.value;
         const metodo    = form.elements["metodoPagamento"].value;
+        const valor     = parseFloat(inputValor.value);
 
         if (!eventoId)  {
             return exibirFeedback("erro", "Selecione um evento.");
@@ -302,12 +360,17 @@
             return exibirFeedback("erro", "Escolha o método de pagamento.");
         }
 
+        if (!valor || valor <= 0) {
+            return exibirFeedback("erro", "Valor inválido para a venda.");
+        }
+
         alternarBotaoSalvando(true);
         try {
-            const venda = await Api.post("/vendas-fisicas", {
+            const venda = await Api.post("/pontovenda/registrar", {
                 eventoId:        eventoId,
                 assentoId:       assentoId,
-                metodoPagamento: metodo
+                metodoPagamento: metodo,
+                valor:           valor
             });
 
             salvarVendaNoHistorico(venda);

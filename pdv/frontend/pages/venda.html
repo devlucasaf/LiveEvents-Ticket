@@ -46,6 +46,22 @@
                     <div id="resumo-assento" class="resumo-assento oculto"></div>
                 </div>
 
+                <!-- VALOR -->
+                <div class="campo">
+                    <label for="valor">Valor (R$)</label>
+                    <input
+                        type="number"
+                        id="valor"
+                        name="valor"
+                        step="0.01"
+                        min="0.01"
+                        max="99999.99"
+                        placeholder="0,00"
+                        required
+                        readonly />
+                    <small class="campo-dica">Preenchido automaticamente conforme o assento selecionado.</small>
+                </div>
+
                 <!-- PAGAMENTO -->
                 <div class="campo">
                     <label>Método de pagamento</label>
@@ -94,6 +110,7 @@
 
     <script src="../scripts/api.js"></script>
     <script src="../scripts/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="../scripts/venda.js"></script>
 </body>
 </html>

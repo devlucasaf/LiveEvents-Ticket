@@ -14,4 +14,8 @@ public class CriarVendaFisicaDto
     [Required(ErrorMessage = "O método de pagamento é obrigatório.")]
     [EnumDataType(typeof(MetodoPagamento), ErrorMessage = "Método de pagamento inválido. Valores aceitos: Dinheiro, Cartao, Pix.")]
     public MetodoPagamento MetodoPagamento { get; set; }
+
+    [Required(ErrorMessage = "O valor é obrigatório.")]
+    [Range(0.01, 99999.99, ErrorMessage = "O valor deve ser maior que zero.")]
+    public decimal Valor { get; set; }
 }
