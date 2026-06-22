@@ -40,6 +40,13 @@
                 </div>
             </div>
 
+            <!-- ABAS DE RELATÓRIO -->
+            <div class="abas" role="tablist">
+                <button class="aba ativa" data-aba="todas"     role="tab">Todas as vendas</button>
+                <button class="aba"       data-aba="evento"    role="tab">Por evento</button>
+                <button class="aba"       data-aba="atendente" role="tab">Por atendente</button>
+            </div>
+
             <!-- CARDS DE TOTAIS -->
             <div class="grade-totais">
                 <div class="card-total">
@@ -56,19 +63,58 @@
                 </div>
             </div>
 
-            <!-- TABELA -->
-            <div class="tabela-wrapper">
+            <!-- TABELA: TODAS AS VENDAS -->
+            <div class="tabela-wrapper" id="tabela-todas">
                 <table class="tabela">
                     <thead>
                         <tr>
                             <th>Data</th>
-                            <th>ID da Venda</th>
+                            <th>Ticket</th>
+                            <th>Evento</th>
                             <th>Assento</th>
+                            <th>Atendente</th>
                             <th>Pagamento</th>
                             <th class="alinhar-direita">Valor</th>
                         </tr>
                     </thead>
                     <tbody id="corpo-tabela">
+                        <tr><td colspan="7" class="celula-vazia">Carregando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TABELA: POR EVENTO -->
+            <div class="tabela-wrapper oculto" id="tabela-evento">
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Evento</th>
+                            <th>Local</th>
+                            <th>Data do evento</th>
+                            <th class="alinhar-direita">Qtd. vendas</th>
+                            <th class="alinhar-direita">Faturamento</th>
+                            <th class="alinhar-direita">Ticket médio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-tabela-evento">
+                        <tr><td colspan="6" class="celula-vazia">Carregando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TABELA: POR ATENDENTE -->
+            <div class="tabela-wrapper oculto" id="tabela-atendente">
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Atendente</th>
+                            <th>Login</th>
+                            <th class="alinhar-direita">Qtd. vendas</th>
+                            <th class="alinhar-direita">Faturamento</th>
+                            <th class="alinhar-direita">Ticket médio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-tabela-atendente">
                         <tr><td colspan="5" class="celula-vazia">Carregando...</td></tr>
                     </tbody>
                 </table>

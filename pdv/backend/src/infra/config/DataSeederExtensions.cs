@@ -42,11 +42,11 @@ public static class DataSeederExtensions
         {
             var evento = new Evento
             {
-                Nome        = "Show Internacional 2026",
-                Local       = "Estádio Central - São Paulo/SP",
-                DataEvento  = new DateTime(2026, 12, 15, 21, 0, 0, DateTimeKind.Utc),
-                Descricao   = "Turnê mundial com convidados especiais. Abertura dos portões às 18h.",
-                Ativo       = true
+                Nome = "Show Internacional 2026",
+                Local = "Estádio Central - São Paulo/SP",
+                DataEvento = new DateTime(2026, 12, 15, 21, 0, 0, DateTimeKind.Utc),
+                Descricao = "Turnê mundial com convidados especiais. Abertura dos portões às 18h.",
+                Ativo = true
             };
 
             // --- CAMAROTE VIP ---
@@ -56,12 +56,12 @@ public static class DataSeederExtensions
                 {
                     evento.Assentos.Add(new Assento
                     {
-                        EventoId    = evento.Id,
-                        Setor       = "CAMAROTE_VIP",
-                        Fileira     = fileira.ToString(),
-                        Numero      = num,
-                        Preco       = 800.00m,
-                        Status      = "DISPONIVEL"
+                        EventoId = evento.Id,
+                        Setor = "CAMAROTE_VIP",
+                        Fileira = fileira.ToString(),
+                        Numero = num,
+                        Preco = 800.00m,
+                        Status = "DISPONIVEL"
                     });
                 }
             }
@@ -73,12 +73,12 @@ public static class DataSeederExtensions
                 {
                     evento.Assentos.Add(new Assento
                     {
-                        EventoId    = evento.Id,
-                        Setor       = "PISTA_PREMIUM",
-                        Fileira     = fileira.ToString(),
-                        Numero      = num,
-                        Preco       = 350.00m,
-                        Status      = "DISPONIVEL"
+                        EventoId = evento.Id,
+                        Setor = "PISTA_PREMIUM",
+                        Fileira = fileira.ToString(),
+                        Numero = num,
+                        Preco = 350.00m,
+                        Status = "DISPONIVEL"
                     });
                 }
             }
@@ -90,12 +90,12 @@ public static class DataSeederExtensions
                 {
                     evento.Assentos.Add(new Assento
                     {
-                        EventoId    = evento.Id,
-                        Setor       = "ARQUIBANCADA",
-                        Fileira     = fileira.ToString(),
-                        Numero      = num,
-                        Preco       = 150.00m,
-                        Status      = "DISPONIVEL"
+                        EventoId = evento.Id,
+                        Setor = "ARQUIBANCADA",
+                        Fileira = fileira.ToString(),
+                        Numero = num,
+                        Preco = 150.00m,
+                        Status = "DISPONIVEL"
                     });
                 }
             }

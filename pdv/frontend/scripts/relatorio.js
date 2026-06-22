@@ -1,16 +1,28 @@
 (function () {
     Auth.exigirLogin();
 
-    const corpoTabela       = document.getElementById("corpo-tabela");
-    const filtroPagamento   = document.getElementById("filtro-pagamento");
-    const btnAtualizar      = document.getElementById("btn-atualizar");
-    const totalVendasLbl    = document.getElementById("total-vendas");
-    const totalFatLbl       = document.getElementById("total-faturamento");
-    const totalTicketLbl    = document.getElementById("total-ticket-medio");
-    const msgFeedback       = document.getElementById("msg-feedback");
+    // --- ELEMENTOS DO DOM ---
+    const corpoTabela            = document.getElementById("corpo-tabela");
+    const corpoTabelaEvento      = document.getElementById("corpo-tabela-evento");
+    const corpoTabelaAtendente   = document.getElementById("corpo-tabela-atendente");
+    const filtroPagamento        = document.getElementById("filtro-pagamento");
+    const btnAtualizar           = document.getElementById("btn-atualizar");
+    const totalVendasLbl         = document.getElementById("total-vendas");
+    const totalFatLbl            = document.getElementById("total-faturamento");
+    const totalTicketLbl         = document.getElementById("total-ticket-medio");
+    const msgFeedback            = document.getElementById("msg-feedback");
+    const abas                   = document.querySelectorAll(".aba");
+    const wrapperTodas           = document.getElementById("tabela-todas");
+    const wrapperEvento          = document.getElementById("tabela-evento");
+    const wrapperAtendente       = document.getElementById("tabela-atendente");
 
-    let cacheVendas = [];
+    // --- ESTADO ---
+    let abaAtiva       = "todas";
+    let cacheVendas    = [];
+    let cacheEventos   = [];
+    let cacheAtendentes = [];
 
+    // --- FORMATADORES ---
     const formatadorBRL = new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL"
@@ -21,8 +33,19 @@
     }
 
     function formatarDataHora(iso) {
-        if (!iso) return "--";
+        if (!iso) {
+            return "--";
+        }
+
         return new Date(iso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+    }
+
+    function formatarData(iso) {
+        if (!iso) {
+            return "--";
+        }
+
+        return new Date(iso).toLocaleDateString("pt-BR");
     }
 
     function tagPagamento(metodo) {
@@ -40,90 +63,119 @@
         msgFeedback.classList.add("oculto");
     }
 
-    // --- HISTÓRICO LOCAL ---
+    // --- ABAS ---
 
-    function obterHistoricoLocal() {
-        try {
-            return JSON.parse(localStorage.getItem("pdv:historico") || "[]");
-        } catch {
-            return [];
+    function trocarAba(nome) {
+        abaAtiva = nome;
+
+        abas.forEach((a) => a.classList.toggle("ativa", a.dataset.aba === nome));
+
+        wrapperTodas.classList.toggle("oculto", nome !== "todas");
+        wrapperEvento.classList.toggle("oculto", nome !== "evento");
+        wrapperAtendente.classList.toggle("oculto", nome !== "atendente");
+
+        filtroPagamento.disabled = nome !== "todas";
+
+        carregar();
+    }
+
+    abas.forEach((a) => a.addEventListener("click", () => trocarAba(a.dataset.aba)));
+
+    // --- CARREGAMENTO POR ABA ---
+    async function carregar() {
+        limparFeedback();
+        if (abaAtiva === "todas") {
+            return carregarVendas();
+        }
+
+        if (abaAtiva === "evento") {
+            return carregarPorEvento();
+        }
+
+        if (abaAtiva === "atendente") {
+            return carregarPorAtendente();
         }
     }
-
-    function mesclarComLocal(vendasBackend) {
-        const locais = obterHistoricoLocal();
-        const mapaLabels = {};
-        locais.forEach((v) => {
-            if (v.id) mapaLabels[v.id] = v.assentoLabel;
-        });
-
-        return vendasBackend.map((v) => ({
-            ...v,
-            assentoLabel: mapaLabels[v.id] || "--"
-        }));
-    }
-
-    // --- CARREGAR VENDAS ---
 
     async function carregarVendas() {
-        corpoTabela.innerHTML = "<tr><td colspan='5' class='celula-vazia'>Carregando...</td></tr>";
-        limparFeedback();
+        corpoTabela.innerHTML = "<tr><td colspan='7' class='celula-vazia'>Carregando...</td></tr>";
 
         try {
-            const vendas = await Api.get("/vendas-fisicas");
-            cacheVendas = mesclarComLocal(vendas || []);
-            renderizar();
+            const vendas = await Api.get("/pontovenda/vendas");
+            cacheVendas = vendas || [];
+            renderizarTodas();
         } catch (erro) {
-            // --- Fallback: usa apenas o histórico local ---
-            const locais = obterHistoricoLocal();
-            cacheVendas = locais;
-            renderizar();
-            exibirFeedback("erro", `Backend indisponível, mostrando histórico local: ${erro.message}`);
+            cacheVendas = [];
+            renderizarTodas();
+            exibirFeedback("erro", `Falha ao carregar vendas: ${erro.message}`);
         }
     }
 
-    // --- RENDERIZAÇÃO ---
+    async function carregarPorEvento() {
+        corpoTabelaEvento.innerHTML = "<tr><td colspan='6' class='celula-vazia'>Carregando...</td></tr>";
 
-    function renderizar() {
+        try {
+            cacheEventos = await Api.get("/pontovenda/relatorios/por-evento") || [];
+            renderizarEvento();
+            renderizarTotaisAgregado(cacheEventos);
+        } catch (erro) {
+            cacheEventos = [];
+            renderizarEvento();
+            exibirFeedback("erro", `Falha ao carregar relatório por evento: ${erro.message}`);
+        }
+    }
+
+    async function carregarPorAtendente() {
+        corpoTabelaAtendente.innerHTML = "<tr><td colspan='5' class='celula-vazia'>Carregando...</td></tr>";
+
+        try {
+            cacheAtendentes = await Api.get("/pontovenda/relatorios/por-atendente") || [];
+            renderizarAtendente();
+            renderizarTotaisAgregado(cacheAtendentes);
+        } catch (erro) {
+            cacheAtendentes = [];
+            renderizarAtendente();
+            exibirFeedback("erro", `Falha ao carregar relatório por atendente: ${erro.message}`);
+        }
+    }
+
+    // --- RENDERIZAÇÃO: TODAS AS VENDAS ---
+
+    function renderizarTodas() {
         const filtro = filtroPagamento.value;
         const vendasFiltradas = filtro
             ? cacheVendas.filter((v) => v.metodoPagamento === filtro)
             : cacheVendas;
 
-        renderizarTotais(vendasFiltradas);
-        renderizarTabela(vendasFiltradas);
-    }
+        renderizarTotaisVendas(vendasFiltradas);
 
-    function renderizarTotais(vendas) {
-        const qtd          = vendas.length;
-        const faturamento  = vendas.reduce((acc, v) => acc + (Number(v.valor) || 0), 0);
-        const ticket       = qtd > 0 ? faturamento / qtd : 0;
-
-        totalVendasLbl.textContent = qtd.toString();
-        totalFatLbl.textContent    = formatarMoeda(faturamento);
-        totalTicketLbl.textContent = formatarMoeda(ticket);
-    }
-
-    function renderizarTabela(vendas) {
-        if (vendas.length === 0) {
-            corpoTabela.innerHTML = "<tr><td colspan='5' class='celula-vazia'>Nenhuma venda registrada.</td></tr>";
+        if (vendasFiltradas.length === 0) {
+            corpoTabela.innerHTML = "<tr><td colspan='7' class='celula-vazia'>Nenhuma venda registrada.</td></tr>";
             return;
         }
 
-        const html = vendas.map((v) => `
+        const html = vendasFiltradas.map((v) => `
             <tr>
                 <td>
                     ${formatarDataHora(v.dataVenda)}
                 </td>
 
-                <td>    
+                <td>
                     <span class="codigo-curto">
-                        ${(v.id || "").slice(0, 8).toUpperCase()}
+                        ${v.codigoTicket || (v.id || "").slice(0, 8).toUpperCase()}
                     </span>
                 </td>
 
                 <td>
-                    ${v.assentoLabel || "--"}
+                    ${v.eventoNome || "--"}
+                </td>
+
+                <td>
+                    ${formatarAssento(v)}
+                </td>
+
+                <td>
+                    ${v.operadorNome || "--"}
                 </td>
 
                 <td>
@@ -139,10 +191,116 @@
         corpoTabela.innerHTML = html;
     }
 
+    function formatarAssento(v) {
+        if (!v.assentoSetor) {
+            return "--";
+        }
+
+        return `${(v.assentoSetor || "").replace(/_/g, " ")} • ${v.assentoFileira}${v.assentoNumero}`;
+    }
+
+    function renderizarTotaisVendas(vendas) {
+        const qtd          = vendas.length;
+        const faturamento  = vendas.reduce((acc, v) => acc + (Number(v.valor) || 0), 0);
+        const ticket       = qtd > 0 ? faturamento / qtd : 0;
+
+        totalVendasLbl.textContent = qtd.toString();
+        totalFatLbl.textContent    = formatarMoeda(faturamento);
+        totalTicketLbl.textContent = formatarMoeda(ticket);
+    }
+
+    function renderizarTotaisAgregado(linhas) {
+        const qtd         = linhas.reduce((acc, l) => acc + (Number(l.quantidadeVendas) || 0), 0);
+        const faturamento = linhas.reduce((acc, l) => acc + (Number(l.faturamentoTotal) || 0), 0);
+        const ticket      = qtd > 0 ? faturamento / qtd : 0;
+
+        totalVendasLbl.textContent = qtd.toString();
+        totalFatLbl.textContent    = formatarMoeda(faturamento);
+        totalTicketLbl.textContent = formatarMoeda(ticket);
+    }
+
+    // --- RENDERIZAÇÃO ---
+    function renderizarEvento() {
+        if (cacheEventos.length === 0) {
+            corpoTabelaEvento.innerHTML = "<tr><td colspan='6' class='celula-vazia'>Nenhum evento com vendas.</td></tr>";
+            return;
+        }
+
+        const html = cacheEventos.map((r) => `
+            <tr>
+                <td>    
+                    ${r.eventoNome || "--"}
+                </td>
+
+                <td>
+                    ${r.eventoLocal || "--"}
+                </td>
+
+                <td>
+                    ${formatarData(r.eventoData)}
+                </td>
+
+                <td class="alinhar-direita">
+                    ${r.quantidadeVendas}
+                </td>
+
+                <td class="alinhar-direita">
+                    ${formatarMoeda(r.faturamentoTotal)}
+                </td>
+                
+                <td class="alinhar-direita">
+                    ${formatarMoeda(r.ticketMedio)}
+                </td>
+            </tr>
+        `).join("");
+
+        corpoTabelaEvento.innerHTML = html;
+    }
+
+    // --- RENDERIZAÇÃO: POR ATENDENTE ---
+    function renderizarAtendente() {
+        if (cacheAtendentes.length === 0) {
+            corpoTabelaAtendente.innerHTML = "<tr><td colspan='5' class='celula-vazia'>Nenhum atendente com vendas.</td></tr>";
+            return;
+        }
+
+        const html = cacheAtendentes.map((r) => `
+            <tr>
+                <td>
+                    ${r.operadorNome || "(desconhecido)"}
+                </td>
+
+                <td>    
+                    <span class="codigo-curto">
+                        ${r.operadorLogin || "--"}
+                    </span>
+                </td>
+
+                <td class="alinhar-direita">
+                    ${r.quantidadeVendas}
+                </td>
+
+                <td class="alinhar-direita">
+                    ${formatarMoeda(r.faturamentoTotal)}
+                </td>
+
+                <td class="alinhar-direita">
+                    ${formatarMoeda(r.ticketMedio)}
+                </td>
+            </tr>
+        `).join("");
+
+        corpoTabelaAtendente.innerHTML = html;
+    }
+
     // --- HANDLERS ---
+    filtroPagamento.addEventListener("change", () => {
+        if (abaAtiva === "todas") {
+            renderizarTodas();
+        }
+    });
 
-    filtroPagamento.addEventListener("change", renderizar);
-    btnAtualizar.addEventListener("click", carregarVendas);
+    btnAtualizar.addEventListener("click", carregar);
 
-    carregarVendas();
+    carregar();
 })();

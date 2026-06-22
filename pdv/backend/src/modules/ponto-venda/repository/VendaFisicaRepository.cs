@@ -35,6 +35,24 @@ public class VendaFisicaRepository : IVendaFisicaRepository
             .ToListAsync(cancellationToken);
     }
 
+    // --- LISTAR VENDAS DE UM EVENTO ESPECÍFICO ---
+    public Task<List<VendaFisica>> ListarPorEventoAsync(Guid eventoId, CancellationToken cancellationToken = default)
+    {
+        return _context.VendasFisicas
+            .Where(v => v.EventoId == eventoId)
+            .OrderByDescending(v => v.DataVenda)
+            .ToListAsync(cancellationToken);
+    }
+
+    // --- LISTAR VENDAS REGISTRADAS POR UM ATENDENTE ESPECÍFICO ---
+    public Task<List<VendaFisica>> ListarPorOperadorAsync(int operadorId, CancellationToken cancellationToken = default)
+    {
+        return _context.VendasFisicas
+            .Where(v => v.OperadorId == operadorId)
+            .OrderByDescending(v => v.DataVenda)
+            .ToListAsync(cancellationToken);
+    }
+
     // --- BUSCAR VENDA FÍSICA POR ID ---
     public Task<VendaFisica?> BuscarPorIdAsync(Guid id, CancellationToken cancellationToken = default)
     {

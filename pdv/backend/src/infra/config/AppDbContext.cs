@@ -104,6 +104,9 @@ public class AppDbContext : DbContext
             .HasIndex(v => v.EventoId);
 
         modelBuilder.Entity<VendaFisica>()
+            .HasIndex(v => v.OperadorId);
+
+        modelBuilder.Entity<VendaFisica>()
             .HasIndex(v => v.AssentoId)
             .IsUnique();
     }
