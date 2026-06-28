@@ -6,15 +6,15 @@ import "../../styles/admin.css";
 
 export default function CriarEventoPage() {
     const navigate = useNavigate();
-    const [titulo, setTitulo] = useState("");
-    const [categoria, setCategoria] = useState("");
-    const [local, setLocal] = useState("");
-    const [dataEvento, setDataEvento] = useState("");
-    const [descricao, setDescricao] = useState("");
-    const [imagemUrl, setImagemUrl] = useState("");
-    const [ingressos, setIngressos] = useState([{ setor: "", preco: "", quantidade: "" }]);
-    const [erro, setErro] = useState("");
-    const [salvando, setSalvando] = useState(false);
+    const [titulo,      setTitulo]      = useState("");
+    const [categoria,   setCategoria]   = useState("");
+    const [local,       setLocal]       = useState("");
+    const [dataEvento,  setDataEvento]  = useState("");
+    const [descricao,   setDescricao]   = useState("");
+    const [imagemUrl,   setImagemUrl]   = useState("");
+    const [ingressos,   setIngressos]   = useState([{ setor: "", preco: "", quantidade: "" }]);
+    const [erro,        setErro]        = useState("");
+    const [salvando,    setSalvando]    = useState(false);
 
     function adicionarSetor() {
         setIngressos([...ingressos, { setor: "", preco: "", quantidade: "" }]);
@@ -82,7 +82,7 @@ export default function CriarEventoPage() {
 
                     <div className="admin-criar__row">
                         <div className="admin-criar__field">
-                        <label>Categoria</label>
+                            <label>Categoria</label>
                             <select value={categoria} onChange={(e) => setCategoria(e.target.value)} required>
                                 <option value="">Selecione...</option>
                                 <option value="Show">Show</option>

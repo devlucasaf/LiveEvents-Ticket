@@ -1,131 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PDV — Relatório de Vendas</title>
-    <link rel="stylesheet" href="../styles/styles.css" />
-</head>
-<body>
-    <header class="topbar">
-        <div class="topbar-marca">
-            <span class="logo-icon"></span>
-            <strong>PDV Bilheteria</strong>
-        </div>
-        <nav class="topbar-nav">
-            <a href="venda.html">Nova Venda</a>
-            <a href="relatorio.html" class="ativo">Relatório</a>
-        </nav>
-        <div class="topbar-user">
-            <span id="lbl-usuario">--</span>
-            <button id="btn-sair" class="btn btn-link">Sair</button>
-        </div>
-    </header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>PDV — Relatório de Vendas</title>
+        <link rel="stylesheet" href="../styles/styles.css" />
+    </head>
+    <body>
+        <header class="topbar">
+            <div class="topbar-marca">
+                <span class="logo-icon"></span>
+                <strong>PDV Bilheteria</strong>
+            </div>
+            <nav class="topbar-nav">
+                <a href="venda.html">Nova Venda</a>
+                <a href="relatorio.html" class="ativo">Relatório</a>
+            </nav>
+            <div class="topbar-user">
+                <span id="lbl-usuario">--</span>
+                <button id="btn-sair" class="btn btn-link">Sair</button>
+            </div>
+        </header>
 
-    <main class="container">
-        <section class="painel">
-            <div class="painel-cabecalho">
-                <div>
-                    <h1>Relatório de Vendas</h1>
-                    <p class="painel-subtitulo">Lista de vendas registradas pela bilheteria.</p>
+        <main class="container">
+            <section class="painel">
+                <div class="painel-cabecalho">
+                    <div>
+                        <h1>Relatório de Vendas</h1>
+                        <p class="painel-subtitulo">Lista de vendas registradas pela bilheteria.</p>
+                    </div>
+                    <div class="acoes-cabecalho">
+                        <select id="filtro-pagamento">
+                            <option value="">Todos os pagamentos</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Cartao">Cartão</option>
+                            <option value="Pix">Pix</option>
+                        </select>
+                        <button id="btn-atualizar" class="btn btn-secundario">⟳ Atualizar</button>
+                    </div>
                 </div>
-                <div class="acoes-cabecalho">
-                    <select id="filtro-pagamento">
-                        <option value="">Todos os pagamentos</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                        <option value="Cartao">Cartão</option>
-                        <option value="Pix">Pix</option>
-                    </select>
-                    <button id="btn-atualizar" class="btn btn-secundario">⟳ Atualizar</button>
+
+                <!-- ABAS DE RELATÓRIO -->
+                <div class="abas" role="tablist">
+                    <button class="aba ativa" data-aba="todas" role="tab">Todas as vendas</button>
+                    <button class="aba" data-aba="evento" role="tab">Por evento</button>
+                    <button class="aba" data-aba="atendente" role="tab">Por atendente</button>
                 </div>
-            </div>
 
-            <!-- ABAS DE RELATÓRIO -->
-            <div class="abas" role="tablist">
-                <button class="aba ativa" data-aba="todas"     role="tab">Todas as vendas</button>
-                <button class="aba"       data-aba="evento"    role="tab">Por evento</button>
-                <button class="aba"       data-aba="atendente" role="tab">Por atendente</button>
-            </div>
+                <!-- CARDS DE TOTAIS -->
+                <div class="grade-totais">
+                    <div class="card-total">
+                        <span class="card-label">Vendas</span>
+                        <strong id="total-vendas" class="card-valor">0</strong>
+                    </div>
 
-            <!-- CARDS DE TOTAIS -->
-            <div class="grade-totais">
-                <div class="card-total">
-                    <span class="card-label">Vendas</span>
-                    <strong id="total-vendas" class="card-valor">0</strong>
+                    <div class="card-total">
+                        <span class="card-label">Faturamento total</span>
+                        <strong id="total-faturamento" class="card-valor">R$ 0,00</strong>
+                    </div>
+
+                    <div class="card-total">
+                        <span class="card-label">Ticket médio</span>
+                        <strong id="total-ticket-medio" class="card-valor">R$ 0,00</strong>
+                    </div>
                 </div>
-                <div class="card-total">
-                    <span class="card-label">Faturamento total</span>
-                    <strong id="total-faturamento" class="card-valor">R$ 0,00</strong>
+
+                <!-- TABELA: TODAS AS VENDAS -->
+                <div class="tabela-wrapper" id="tabela-todas">
+                    <table class="tabela">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Ticket</th>
+                                <th>Evento</th>
+                                <th>Assento</th>
+                                <th>Atendente</th>
+                                <th>Pagamento</th>
+                                <th class="alinhar-direita">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela">
+                            <tr>
+                                <td colspan="7" class="celula-vazia">Carregando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="card-total">
-                    <span class="card-label">Ticket médio</span>
-                    <strong id="total-ticket-medio" class="card-valor">R$ 0,00</strong>
+
+                <!-- TABELA: POR EVENTO -->
+                <div class="tabela-wrapper oculto" id="tabela-evento">
+                    <table class="tabela">
+                        <thead>
+                            <tr>
+                                <th>Evento</th>
+                                <th>Local</th>
+                                <th>Data do evento</th>
+                                <th class="alinhar-direita">Qtd. vendas</th>
+                                <th class="alinhar-direita">Faturamento</th>
+                                <th class="alinhar-direita">Ticket médio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-evento">
+                            <tr>
+                                <td colspan="6" class="celula-vazia">Carregando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <!-- TABELA: TODAS AS VENDAS -->
-            <div class="tabela-wrapper" id="tabela-todas">
-                <table class="tabela">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Ticket</th>
-                            <th>Evento</th>
-                            <th>Assento</th>
-                            <th>Atendente</th>
-                            <th>Pagamento</th>
-                            <th class="alinhar-direita">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpo-tabela">
-                        <tr><td colspan="7" class="celula-vazia">Carregando...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+                <!-- TABELA: POR ATENDENTE -->
+                <div class="tabela-wrapper oculto" id="tabela-atendente">
+                    <table class="tabela">
+                        <thead>
+                            <tr>
+                                <th>Atendente</th>
+                                <th>Login</th>
+                                <th class="alinhar-direita">Qtd. vendas</th>
+                                <th class="alinhar-direita">Faturamento</th>
+                                <th class="alinhar-direita">Ticket médio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-atendente">
+                            <tr>
+                                <td colspan="5" class="celula-vazia">Carregando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- TABELA: POR EVENTO -->
-            <div class="tabela-wrapper oculto" id="tabela-evento">
-                <table class="tabela">
-                    <thead>
-                        <tr>
-                            <th>Evento</th>
-                            <th>Local</th>
-                            <th>Data do evento</th>
-                            <th class="alinhar-direita">Qtd. vendas</th>
-                            <th class="alinhar-direita">Faturamento</th>
-                            <th class="alinhar-direita">Ticket médio</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpo-tabela-evento">
-                        <tr><td colspan="6" class="celula-vazia">Carregando...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+                <div id="msg-feedback" class="alerta oculto" role="alert"></div>
+            </section>
+        </main>
 
-            <!-- TABELA: POR ATENDENTE -->
-            <div class="tabela-wrapper oculto" id="tabela-atendente">
-                <table class="tabela">
-                    <thead>
-                        <tr>
-                            <th>Atendente</th>
-                            <th>Login</th>
-                            <th class="alinhar-direita">Qtd. vendas</th>
-                            <th class="alinhar-direita">Faturamento</th>
-                            <th class="alinhar-direita">Ticket médio</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpo-tabela-atendente">
-                        <tr><td colspan="5" class="celula-vazia">Carregando...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div id="msg-feedback" class="alerta oculto" role="alert"></div>
-        </section>
-    </main>
-
-    <script src="../scripts/api.js"></script>
-    <script src="../scripts/auth.js"></script>
-    <script src="../scripts/relatorio.js"></script>
-</body>
+        <script src="../scripts/api.js"></script>
+        <script src="../scripts/auth.js"></script>
+        <script src="../scripts/relatorio.js"></script>
+    </body>
 </html>

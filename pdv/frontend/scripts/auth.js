@@ -48,7 +48,7 @@ const Auth = {
     }
 };
 
-/* --- CONFIGURA TOPBAR --- */
+// --- CONFIGURA TOPBAR --- 
 document.addEventListener("DOMContentLoaded", () => {
     const lblUsuario = document.getElementById("lbl-usuario");
     const btnSair    = document.getElementById("btn-sair");

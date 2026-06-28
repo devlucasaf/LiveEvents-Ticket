@@ -19,7 +19,6 @@
     let cacheAssentos      = [];
 
     // --- UTILITÁRIOS ---
-
     const formatadorBRL = new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL"
@@ -55,7 +54,6 @@
     }
 
     // --- CARREGAR EVENTOS ---
-
     async function carregarEventos() {
         try {
             const eventos = await Api.get("/eventos");
@@ -79,7 +77,6 @@
     }
 
     // --- CARREGAR ASSENTOS POR EVENTO ---
-
     async function carregarAssentos(eventoId) {
         if (!eventoId) {
             listaAssentos.innerHTML = "<p class='placeholder-grade'>Selecione um evento para ver os assentos.</p>";
@@ -97,7 +94,6 @@
     }
 
     // --- RENDERIZAR GRADE DE ASSENTOS ---
-
     function renderizarAssentos(assentos) {
         listaAssentos.innerHTML = "";
 
@@ -164,7 +160,6 @@
         assentoSelecionado = assento;
         inputAssentoId.value = assento.id;
 
-        // --- PREENCHE AUTOMATICAMENTE O CAMPO VALOR COM O PREÇO DO ASSENTO ---
         inputValor.value = Number(assento.preco).toFixed(2);
 
         resumoAssento.classList.remove("oculto");
@@ -192,7 +187,6 @@
     }
 
     // --- HISTÓRICO LOCAL ---
-
     function salvarVendaNoHistorico(venda) {
         const historico = JSON.parse(localStorage.getItem("pdv:historico") || "[]");
         historico.unshift({
@@ -209,8 +203,7 @@
         localStorage.setItem("pdv:historico", JSON.stringify(historico.slice(0, 200)));
     }
 
-    // --- MODAL DE COMPROVANTE (TICKET FÍSICO COM QR CODE) ---
-
+    // --- MODAL DE COMPROVANTE ---
     function abrirComprovante(venda) {
         const assentoLabel = `${(venda.assentoSetor || "").replace(/_/g, " ")} — Fileira ${venda.assentoFileira} / Nº ${venda.assentoNumero}`;
 
@@ -280,7 +273,6 @@
 
         modal.classList.remove("oculto");
 
-        // --- RENDERIZA O QR CODE ---
         renderizarQrCode(venda);
     }
 
@@ -292,7 +284,6 @@
             return;
         }
 
-        // --- PAYLOAD DO QR (texto simples se a lib não carregar) ---
         const payload = JSON.stringify({
             t:  venda.codigoTicket,
             id: venda.id,
@@ -301,7 +292,6 @@
         });
 
         if (typeof QRCode === "undefined") {
-            // --- FALLBACK: mostra só o código do ticket ---
             canvas.style.display = "none";
             if (codigoFallback) {
                 codigoFallback.textContent = venda.codigoTicket;
@@ -321,7 +311,6 @@
     }
 
     // --- HANDLERS ---
-
     selEvento.addEventListener("change", (e) => {
         limparSelecao();
         carregarAssentos(e.target.value);
