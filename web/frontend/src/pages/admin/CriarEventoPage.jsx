@@ -2,7 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { eventoService } from "../../services/eventoService";
 import DatePicker from "../../components/DatePicker";
+import Select from "../../components/Select";
 import "../../styles/admin.css";
+
+// --- OPCOES DE CATEGORIA DO EVENTO ---
+const CATEGORIAS = ["Show", "Festival", "Teatro", "Esporte", "Stand-up", "Conferência", "Outro"];
 
 export default function CriarEventoPage() {
     const navigate = useNavigate();
@@ -83,16 +87,14 @@ export default function CriarEventoPage() {
                     <div className="admin-criar__row">
                         <div className="admin-criar__field">
                         <label>Categoria</label>
-                            <select value={categoria} onChange={(e) => setCategoria(e.target.value)} required>
-                                <option value="">Selecione...</option>
-                                <option value="Show">Show</option>
-                                <option value="Festival">Festival</option>
-                                <option value="Teatro">Teatro</option>
-                                <option value="Esporte">Esporte</option>
-                                <option value="Stand-up">Stand-up</option>
-                                <option value="Conferência">Conferência</option>
-                                <option value="Outro">Outro</option>
-                            </select>
+                            {/* --- DROPDOWN CUSTOMIZADO NO PADRAO DO SISTEMA --- */}
+                            <Select
+                                value={categoria}
+                                onChange={setCategoria}
+                                options={CATEGORIAS}
+                                placeholder="Selecione..."
+                                required
+                            />
                         </div>
                         <div className="admin-criar__field">
                             <label>Data do evento</label>
