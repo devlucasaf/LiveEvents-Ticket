@@ -64,7 +64,6 @@
     }
 
     // --- ABAS ---
-
     function trocarAba(nome) {
         abaAtiva = nome;
 
@@ -139,8 +138,7 @@
         }
     }
 
-    // --- RENDERIZAÇÃO: TODAS AS VENDAS ---
-
+    // --- RENDERIZA TODAS AS VENDAS ---
     function renderizarTodas() {
         const filtro = filtroPagamento.value;
         const vendasFiltradas = filtro
@@ -200,9 +198,9 @@
     }
 
     function renderizarTotaisVendas(vendas) {
-        const qtd          = vendas.length;
-        const faturamento  = vendas.reduce((acc, v) => acc + (Number(v.valor) || 0), 0);
-        const ticket       = qtd > 0 ? faturamento / qtd : 0;
+        const qtd = vendas.length;
+        const faturamento = vendas.reduce((acc, v) => acc + (Number(v.valor) || 0), 0);
+        const ticket = qtd > 0 ? faturamento / qtd : 0;
 
         totalVendasLbl.textContent = qtd.toString();
         totalFatLbl.textContent    = formatarMoeda(faturamento);
@@ -210,9 +208,9 @@
     }
 
     function renderizarTotaisAgregado(linhas) {
-        const qtd         = linhas.reduce((acc, l) => acc + (Number(l.quantidadeVendas) || 0), 0);
+        const qtd = linhas.reduce((acc, l) => acc + (Number(l.quantidadeVendas) || 0), 0);
         const faturamento = linhas.reduce((acc, l) => acc + (Number(l.faturamentoTotal) || 0), 0);
-        const ticket      = qtd > 0 ? faturamento / qtd : 0;
+        const ticket = qtd > 0 ? faturamento / qtd : 0;
 
         totalVendasLbl.textContent = qtd.toString();
         totalFatLbl.textContent    = formatarMoeda(faturamento);

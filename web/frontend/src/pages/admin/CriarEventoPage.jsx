@@ -10,15 +10,15 @@ const CATEGORIAS = ["Show", "Festival", "Teatro", "Esporte", "Stand-up", "Confer
 
 export default function CriarEventoPage() {
     const navigate = useNavigate();
-    const [titulo, setTitulo] = useState("");
-    const [categoria, setCategoria] = useState("");
-    const [local, setLocal] = useState("");
-    const [dataEvento, setDataEvento] = useState("");
-    const [descricao, setDescricao] = useState("");
-    const [imagemUrl, setImagemUrl] = useState("");
-    const [ingressos, setIngressos] = useState([{ setor: "", preco: "", quantidade: "" }]);
-    const [erro, setErro] = useState("");
-    const [salvando, setSalvando] = useState(false);
+    const [titulo,      setTitulo]      = useState("");
+    const [categoria,   setCategoria]   = useState("");
+    const [local,       setLocal]       = useState("");
+    const [dataEvento,  setDataEvento]  = useState("");
+    const [descricao,   setDescricao]   = useState("");
+    const [imagemUrl,   setImagemUrl]   = useState("");
+    const [ingressos,   setIngressos]   = useState([{ setor: "", preco: "", quantidade: "" }]);
+    const [erro,        setErro]        = useState("");
+    const [salvando,    setSalvando]    = useState(false);
 
     function adicionarSetor() {
         setIngressos([...ingressos, { setor: "", preco: "", quantidade: "" }]);
@@ -87,14 +87,16 @@ export default function CriarEventoPage() {
                     <div className="admin-criar__row">
                         <div className="admin-criar__field">
                         <label>Categoria</label>
-                            {/* --- DROPDOWN CUSTOMIZADO NO PADRAO DO SISTEMA --- */}
-                            <Select
-                                value={categoria}
-                                onChange={setCategoria}
-                                options={CATEGORIAS}
-                                placeholder="Selecione..."
-                                required
-                            />
+                            <select value={categoria} onChange={(e) => setCategoria(e.target.value)} required>
+                                <option value="">Selecione...</option>
+                                <option value="Show">Show</option>
+                                <option value="Festival">Festival</option>
+                                <option value="Teatro">Teatro</option>
+                                <option value="Esporte">Esporte</option>
+                                <option value="Stand-up">Stand-up</option>
+                                <option value="Conferência">Conferência</option>
+                                <option value="Outro">Outro</option>
+                            </select>
                         </div>
                         <div className="admin-criar__field">
                             <label>Data do evento</label>

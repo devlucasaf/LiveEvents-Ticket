@@ -37,7 +37,6 @@ html, body {
 }
 
 /* --- LOGIN --- */
-
 .tela-login {
     background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0891b2 100%);
     display: flex;
@@ -87,7 +86,6 @@ html, body {
 }
 
 /* --- TOPBAR --- */
-
 .topbar {
     background: var(--cor-fundo);
     color: #f8fafc;
@@ -144,7 +142,6 @@ html, body {
 }
 
 /* --- CONTAINER E PAINEL --- */
-
 .container {
     max-width: 1100px;
     margin: 32px auto;
@@ -186,7 +183,6 @@ html, body {
 }
 
 /* --- FORMULÁRIOS --- */
-
 .campo {
     margin-bottom: 20px;
 }
@@ -229,7 +225,6 @@ select:focus {
 }
 
 /* --- RADIO PAGAMENTO --- */
-
 .grupo-radio {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -263,7 +258,6 @@ select:focus {
 }
 
 /* --- GRADE DE ASSENTOS --- */
-
 .grade-assentos {
     background: #f8fafc;
     border: 1px solid var(--cor-card-borda);
@@ -363,7 +357,6 @@ select:focus {
 }
 
 /* --- BOTÕES --- */
-
 .btn {
     padding: 11px 22px;
     border: none;
@@ -438,7 +431,6 @@ select:focus {
 }
 
 /* --- ALERTAS --- */
-
 .alerta {
     padding: 12px 16px;
     border-radius: 8px;
@@ -459,7 +451,6 @@ select:focus {
 }
 
 /* --- CARDS DE TOTAIS --- */
-
 .grade-totais {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -520,7 +511,6 @@ select:focus {
 }
 
 /* --- TABELA --- */
-
 .tabela-wrapper {
     overflow-x: auto;
     border: 1px solid var(--cor-card-borda);
@@ -601,7 +591,6 @@ select:focus {
 }
 
 /* --- TICKET NO COMPROVANTE --- */
-
 .qr-container {
     display: flex;
     flex-direction: column;
@@ -643,7 +632,6 @@ select:focus {
 }
 
 /* --- MODAL --- */
-
 .modal {
     position: fixed;
     inset: 0;
@@ -716,7 +704,6 @@ select:focus {
 }
 
 /* --- RESPONSIVO --- */
-
 @media (max-width: 700px) {
     .topbar {
         flex-wrap: wrap;
@@ -743,7 +730,6 @@ select:focus {
 }
 
 /* --- PRINT --- */
-
 @media print {
     body * {
         visibility: hidden;
