@@ -284,3 +284,151 @@
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+/* +=+=+=+=+=+=+=+=+=+=+=+=+=+= GESTÃO DE FUNCIONÁRIOS +=+=+=+=+=+=+=+=+=+=+=+=+=+= */
+
+
+/* --- AÇÕES DO CABEÇALHO--- */
+.admin-page__header-actions {
+    display: flex;
+    gap: 0.6rem;
+}
+
+/* --- BOTÃO SECUNDÁRIO --- */
+.admin-page__criar-btn--secundario {
+    background: var(--panel);
+    color: var(--ink);
+    border: 1.5px solid var(--line);
+}
+
+.admin-page__criar-btn--secundario:hover {
+    background: var(--bg-secondary);
+    border-color: var(--brand);
+}
+
+/* --- CARD DO FORMULÁRIO DE FUNCIONÁRIO --- */
+.admin-func__card {
+    margin-bottom: 1.5rem;
+}
+
+.admin-func__card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+}
+
+/* --- AÇÕES DO FORMULÁRIO --- */
+.admin-func__form-actions {
+    display: flex;
+    gap: 0.7rem;
+    margin-top: 0.5rem;
+}
+
+.admin-func__submit {
+    width: auto;
+    flex: 1;
+    margin-top: 0;
+}
+
+.admin-func__cancel-btn {
+    padding: 0.9rem 1.5rem;
+    background: var(--panel);
+    color: var(--ink);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.admin-func__cancel-btn:hover {
+    background: var(--bg-secondary);
+}
+
+/* --- BADGE DE CARGO --- */
+.admin-func__badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.admin-func__badge--admin {
+    background: color-mix(in srgb, #8b5cf6 18%, transparent);
+    color: #6d28d9;
+}
+
+.admin-func__badge--operador {
+    background: color-mix(in srgb, #3b82f6 16%, transparent);
+    color: #1d4ed8;
+}
+
+[data-theme="dark"] .admin-func__badge--admin {
+    color: #c4b5fd;
+}
+
+[data-theme="dark"] .admin-func__badge--operador {
+    color: #93c5fd;
+}
+
+/* --- STATUS ATIVO/INATIVO --- */
+.admin-func__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.admin-func__status::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.admin-func__status--ativo {
+    color: #10b981;
+}
+
+.admin-func__status--inativo {
+    color: var(--muted);
+}
+
+/* --- BOTÕES DE AÇÃO DA TABELA --- */
+.admin-func__actions {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.admin-func__action-btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-sm, 8px);
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1.5px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.admin-func__action-btn--edit:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
+.admin-func__action-btn--off:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.admin-func__action-btn--on:hover {
+    border-color: #10b981;
+    color: #10b981;
+}

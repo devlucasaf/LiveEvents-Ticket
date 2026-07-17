@@ -18,9 +18,14 @@ export default function DashboardAdminPage() {
         <section className="admin-page">
             <div className="admin-page__header">
                 <h2>Dashboard Administrativo</h2>
-                <Link to="/admin/criar-evento" className="admin-page__criar-btn">
-                    + Criar evento
-                </Link>
+                <div className="admin-page__header-actions">
+                    <Link to="/admin/funcionarios" className="admin-page__criar-btn admin-page__criar-btn--secundario">
+                        Funcionários
+                    </Link>
+                    <Link to="/admin/criar-evento" className="admin-page__criar-btn">
+                        + Criar evento
+                    </Link>
+                </div>
             </div>
             {erro && <p className="error">{erro}</p>}
 

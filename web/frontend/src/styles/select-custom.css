@@ -1,0 +1,112 @@
+/* --- DROPDOWN CUSTOMIZADO --- */
+.select-custom {
+    position: relative;
+    width: 100%;
+}
+
+/* --- BOTAO PRINCIPAL --- */
+.select-custom__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    color: var(--ink);
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.select-custom__trigger:hover:not(:disabled) {
+    border-color: var(--brand);
+}
+
+.select-custom__trigger--aberto {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+    outline: none;
+}
+
+.select-custom__placeholder {
+    color: var(--muted);
+}
+
+/* --- SETA (GIRA AO ABRIR) --- */
+.select-custom__seta {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: transform 0.2s;
+}
+
+.select-custom__seta--aberta {
+    transform: rotate(180deg);
+}
+
+/* --- MENU DE OPCOES --- */
+.select-custom__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 30;
+    margin: 0;
+    padding: 0.35rem;
+    list-style: none;
+    background: var(--panel);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    max-height: 260px;
+    overflow-y: auto;
+    animation: select-custom-abrir 0.14s ease;
+}
+
+@keyframes select-custom-abrir {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- OPCAO INDIVIDUAL --- */
+.select-custom__opcao {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+/* --- REALCE AO PASSAR O MOUSE (VERMELHO FRACO) --- */
+.select-custom__opcao:hover {
+    background: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+}
+
+.select-custom__opcao--ativa {
+    color: var(--brand);
+    font-weight: 600;
+}
+
+.select-custom__opcao svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+/* --- ESTADO DESABILITADO --- */
+.select-custom--disabled .select-custom__trigger {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

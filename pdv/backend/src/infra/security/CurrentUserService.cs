@@ -25,4 +25,11 @@ public class CurrentUserService
 
         return userId;
     }
+
+    // --- OBTER O NOME DO OPERADOR LOGADO A PARTIR DO TOKEN ---
+    public string GetUserName()
+    {
+        return _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name)
+               ?? "Operador";
+    }
 }

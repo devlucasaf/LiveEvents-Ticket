@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using PontoVenda.Backend.Exception;
 using PontoVenda.Backend.Infra.Config;
 using PontoVenda.Backend.Infra.Security;
+using PontoVenda.Backend.Modules.Balcao.Service;
 using PontoVenda.Backend.Modules.PontoVenda.Repository;
 using PontoVenda.Backend.Modules.PontoVenda.Service;
 
@@ -22,6 +23,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// --- CONTEXTO COMPARTILHADO COM O WEB ---
+builder.Services.AddDbContext<SharedDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // --- REPOSITORIES ---
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IVendaRepository, VendaRepository>();
@@ -33,9 +38,15 @@ builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<VendaService>();
 builder.Services.AddScoped<OperadorService>();
 builder.Services.AddScoped<VendaFisicaService>();
+builder.Services.AddScoped<BalcaoService>();
 
 // --- CONTROLLERS, SWAGGER E API ---
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -67,8 +78,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("Frontend", policy =>
     {
         policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+                .AllowAnyHeader()
+                .AllowAnyMethod();
     });
 });
 
@@ -85,8 +96,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("Frontend");
 
-// --- FRONTEND ESTÁTICO (HTML/CSS/JS PURO) ---
-// Caminho da pasta /pdv/frontend (um nível acima do backend)
+// --- FRONTEND ---
 var frontendPath = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "..", "frontend"));
 
 if (Directory.Exists(frontendPath))
@@ -109,7 +119,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// --- SEED INICIAL DE DADOS ---
 await app.SeedDataAsync();
 
 const string urlFrontend = "http://localhost:5100";
@@ -127,12 +136,10 @@ Console.WriteLine("    Swagger:    " + urlSwagger);
 Console.WriteLine("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
 Console.WriteLine();
 
-// --- ABRE O NAVEGADOR AUTOMATICAMENTE EM DEVELOPMENT ---
 if (app.Environment.IsDevelopment())
 {
     _ = Task.Run(async () =>
     {
-        // Pequeno delay para o Kestrel terminar de subir
         await Task.Delay(1200);
         try
         {
@@ -144,7 +151,6 @@ if (app.Environment.IsDevelopment())
         }
         catch
         {
-            // Silencioso: se não conseguir abrir, o link continua disponível no console
         }
     });
 }

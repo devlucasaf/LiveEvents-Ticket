@@ -36,6 +36,13 @@ public class IngressoRepository : IIngressoRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
+    // --- ADICIONAR VARIOS INGRESSOS DE UMA VEZ ---
+    public async Task AdicionarVariosAsync(IEnumerable<IngressoEntity> ingressos, CancellationToken cancellationToken = default)
+    {
+        _context.Ingressos.AddRange(ingressos);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
     // --- SALVAR ALTERAÇÕES PENDENTES ---
     public Task AtualizarAsync(CancellationToken cancellationToken = default)
     {

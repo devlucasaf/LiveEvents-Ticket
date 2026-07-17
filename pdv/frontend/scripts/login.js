@@ -1,6 +1,6 @@
 (function () {
     if (Auth.estaAutenticado()) {
-        window.location.href = Rotas.venda;
+        window.location.href = Rotas.home;
         return;
     }
 
@@ -56,7 +56,7 @@
             };
 
             Auth.salvarSessao(token, usuario);
-            window.location.href = Rotas.venda;
+            window.location.href = Rotas.home;
         } catch (erro) {
             exibirErro(erro.message || "Não foi possível efetuar login.");
         } finally {

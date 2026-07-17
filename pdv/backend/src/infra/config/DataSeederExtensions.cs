@@ -1,4 +1,7 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using PontoVenda.Backend.Modules.PontoVenda.Model;
 
 namespace PontoVenda.Backend.Infra.Config;
@@ -10,8 +13,10 @@ public static class DataSeederExtensions
     {
         using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await EnsureTablesCreatedAsync(context);
 
-        await context.Database.EnsureCreatedAsync();
+        // --- GARANTE A COLUNA "Ativo" EM BANCOS ANTIGOS (SOFT-DELETE DE OPERADOR) ---
+        await GarantirColunaAtivoAsync(context);
 
         // --- SEED DO OPERADOR ADMIN ---
         if (!await context.Operadores.AnyAsync())
@@ -104,5 +109,37 @@ public static class DataSeederExtensions
         }
 
         await context.SaveChangesAsync();
+    }
+
+    // --- CRIA O BANCO E AS TABELAS DESTE MODULO ---
+    private static async Task EnsureTablesCreatedAsync(AppDbContext context)
+    {
+        var creator = context.GetService<IRelationalDatabaseCreator>();
+
+        if (!await creator.ExistsAsync())
+        {
+            await creator.CreateAsync();
+        }
+
+        try
+        {
+            await creator.CreateTablesAsync();
+        }
+        catch (SqlException)
+        {}
+    }
+
+    // --- ADICIONA A COLUNA "Ativo" NA TABELA Operadores SE AINDA NAO EXISTIR ---
+    private static async Task GarantirColunaAtivoAsync(AppDbContext context)
+    {
+        try
+        {
+            // SO ALTERA SE A COLUNA NAO EXISTIR (IDEMPOTENTE)
+            await context.Database.ExecuteSqlRawAsync(
+                "IF COL_LENGTH('Operadores', 'Ativo') IS NULL " +
+                "ALTER TABLE Operadores ADD Ativo bit NOT NULL DEFAULT 1;");
+        }
+        catch (SqlException)
+        {}
     }
 }

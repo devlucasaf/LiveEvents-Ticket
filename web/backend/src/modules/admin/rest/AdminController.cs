@@ -13,11 +13,13 @@ namespace LiveEventsTicket.Backend.Modules.Admin.Rest;
 public class AdminController : ControllerBase
 {
     private readonly AdminService _service;
+    private readonly FuncionarioService _funcionarioService;
 
     // --- INJEÇÃO DE DEPENDÊNCIA DO ADMIN SERVICE ---
-    public AdminController(AdminService service)
+    public AdminController(AdminService service, FuncionarioService funcionarioService)
     {
         _service = service;
+        _funcionarioService = funcionarioService;
     }
 
     // --- CRIAR NOVO EVENTO ---
@@ -56,5 +58,34 @@ public class AdminController : ControllerBase
     {
         var usuario = await _service.AlterarRoleAsync(id, dto.Role, cancellationToken);
         return Ok(usuario);
+    }
+
+    // --- LISTAR FUNCIONÁRIOS DO PDV ---
+    [HttpGet("funcionarios")]
+    public async Task<IActionResult> ListarFuncionarios(CancellationToken cancellationToken)
+    {
+        return Ok(await _funcionarioService.ListarAsync(cancellationToken));
+    }
+
+    // --- CADASTRAR NOVO FUNCIONÁRIO ---
+    [HttpPost("funcionarios")]
+    public async Task<IActionResult> CriarFuncionario([FromBody] FuncionarioCriarDto dto, CancellationToken cancellationToken)
+    {
+        var funcionario = await _funcionarioService.CriarAsync(dto, cancellationToken);
+        return Created($"api/admin/funcionarios/{funcionario.Id}", funcionario);
+    }
+
+    // --- EDITAR FUNCIONÁRIO ---
+    [HttpPut("funcionarios/{id:int}")]
+    public async Task<IActionResult> AtualizarFuncionario(int id, [FromBody] FuncionarioAtualizarDto dto, CancellationToken cancellationToken)
+    {
+        return Ok(await _funcionarioService.AtualizarAsync(id, dto, cancellationToken));
+    }
+
+    // --- ATIVAR/DESATIVAR FUNCIONÁRIO ---
+    [HttpPatch("funcionarios/{id:int}/status")]
+    public async Task<IActionResult> AlterarStatusFuncionario(int id, [FromBody] FuncionarioStatusDto dto, CancellationToken cancellationToken)
+    {
+        return Ok(await _funcionarioService.AlterarStatusAsync(id, dto.Ativo, cancellationToken));
     }
 }

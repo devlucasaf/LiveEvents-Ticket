@@ -27,6 +27,10 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// --- CONTEXTO DA TABELA Operadores PARA GERENCIAR FUNCIONARIOS ---
+builder.Services.AddDbContext<PdvDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IIngressoRepository, IngressoRepository>();
@@ -39,6 +43,7 @@ builder.Services.AddScoped<PagamentoService>();
 builder.Services.AddScoped<PedidoService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<FuncionarioService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

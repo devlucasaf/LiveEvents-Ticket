@@ -24,6 +24,13 @@ public class IngressoController : ControllerBase
         return Ok(await _service.ListarPorEventoAsync(eventoId, cancellationToken));
     }
 
+    // --- LISTAR MODALIDADES DISPONIVEIS ---
+    [HttpGet("modalidades")]
+    public IActionResult ListarModalidades()
+    {
+        return Ok(_service.ObterModalidades());
+    }
+
     // --- CRIAR NOVO INGRESSO ---
     [HttpPost]
     [Authorize(Roles = "ADMIN")]

@@ -136,3 +136,187 @@
         gap: 0.75rem;
     }
 }
+
+/* --- CABECALHO DA LISTA DE INGRESSOS + LINK PARA O CARRINHO --- */
+.evento-detalhe__ingressos-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.evento-detalhe__ver-carrinho {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand);
+    text-decoration: none;
+}
+
+.evento-detalhe__ver-carrinho:hover {
+    text-decoration: underline;
+}
+
+/* --- GRADE DE SETORES --- */
+.evento-detalhe__setores {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+/* --- CARD DE UM SETOR --- */
+.setor-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+}
+
+.setor-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.setor-card__head strong {
+    font-size: 1rem;
+}
+
+.setor-card__estoque {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+/* --- BOTOES DE MODALIDADE (INTEIRA / MEIA / SOCIAL) --- */
+.setor-card__modalidades {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.setor-card__mod {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.55rem 0.35rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink, inherit);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.setor-card__mod span {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.setor-card__mod strong {
+    font-size: 0.9rem;
+}
+
+.setor-card__mod:hover {
+    border-color: var(--brand);
+}
+
+.setor-card__mod--ativo {
+    border-color: var(--brand);
+    background: var(--brand-light);
+}
+
+.setor-card__mod--ativo strong {
+    color: var(--brand);
+}
+
+/* --- SELETOR DO SUBTIPO DE MEIA --- */
+.setor-card__meia {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.setor-card__meia label {
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.setor-card__meia select {
+    padding: 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+    color: inherit;
+}
+
+/* --- AVISO DO INGRESSO SOCIAL --- */
+.setor-card__social-info {
+    margin: 0;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+}
+
+/* --- QUANTIDADE + ADICIONAR --- */
+.setor-card__acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.setor-card__qtd {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.setor-card__qtd button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.setor-card__qtd button:hover {
+    background: var(--bg-secondary);
+}
+
+.setor-card__qtd span {
+    min-width: 22px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.setor-card__add {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.setor-card__add:hover:not(:disabled) {
+    background: var(--brand-hover);
+}
+
+.setor-card__add:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}

@@ -1,10 +1,12 @@
 const CHAVE_TOKEN   = "pdv:token";
 const CHAVE_USUARIO = "pdv:usuario";
+const CHAVE_TEMA    = "theme";
 
 const _estaEmSubpastaPages = window.location.pathname.toLowerCase().includes("/pages/");
 
 const Rotas = {
     login: _estaEmSubpastaPages ? "../index.html" : "index.html",
+    home: _estaEmSubpastaPages ? "home.html" : "pages/home.html",
     venda: _estaEmSubpastaPages ? "venda.html" : "pages/venda.html",
     relatorio: _estaEmSubpastaPages ? "relatorio.html" : "pages/relatorio.html"
 };
@@ -48,10 +50,35 @@ const Auth = {
     }
 };
 
+// --- TEMA: APLICA O TEMA SALVO (PADRAO: CLARO) ---
+function aplicarTemaInicial() {
+    const temaSalvo = localStorage.getItem(CHAVE_TEMA) || "light";
+    document.documentElement.setAttribute("data-theme", temaSalvo);
+}
+
+// --- TEMA: ALTERNA ENTRE LIGHT E DARK ---
+function alternarTema() {
+    const temaAtual = document.documentElement.getAttribute("data-theme") || "light";
+    const proximoTema = temaAtual === "dark" ? "light" : "dark";
+
+    document.documentElement.setAttribute("data-theme", proximoTema);
+    localStorage.setItem(CHAVE_TEMA, proximoTema);
+
+    const btnTema = document.getElementById("btn-tema");
+    if (btnTema) {
+        btnTema.setAttribute("aria-label", proximoTema === "dark" ? "Ativar modo claro" : "Ativar modo escuro");
+        btnTema.setAttribute("title", proximoTema === "dark" ? "Ativar modo claro" : "Ativar modo escuro");
+        btnTema.textContent = proximoTema === "dark" ? "☀" : "◐";
+    }
+}
+
 // --- CONFIGURA TOPBAR --- 
 document.addEventListener("DOMContentLoaded", () => {
+    aplicarTemaInicial();
+
     const lblUsuario = document.getElementById("lbl-usuario");
     const btnSair    = document.getElementById("btn-sair");
+    const btnTema    = document.getElementById("btn-tema");
 
     if (lblUsuario) {
         const usuario = Auth.obterUsuario();
@@ -63,5 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
             Auth.encerrarSessao();
             window.location.href = Rotas.login;
         });
+    }
+
+    if (btnTema) {
+        const temaAtual = document.documentElement.getAttribute("data-theme") || "light";
+        btnTema.setAttribute("aria-label", temaAtual === "dark" ? "Ativar modo claro" : "Ativar modo escuro");
+        btnTema.setAttribute("title", temaAtual === "dark" ? "Ativar modo claro" : "Ativar modo escuro");
+        btnTema.textContent = temaAtual === "dark" ? "☀" : "◐";
+        btnTema.addEventListener("click", alternarTema);
     }
 });

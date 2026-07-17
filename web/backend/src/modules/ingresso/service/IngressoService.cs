@@ -1,4 +1,5 @@
 using LiveEventsTicket.Backend.Modules.Ingresso.Dto;
+using LiveEventsTicket.Backend.Modules.Ingresso.Model;
 using LiveEventsTicket.Backend.Modules.Ingresso.Repository;
 using IngressoEntity = LiveEventsTicket.Backend.Modules.Ingresso.Model.Ingresso;
 
@@ -14,18 +15,80 @@ public class IngressoService
         _repository = repository;
     }
 
-    // --- LISTAR INGRESSOS DISPONÍVEIS POR EVENTO ---
+    // --- LISTAR OS 5 SETORES OFICIAIS DO EVENTO COM PRECOS INTEIRA/MEIA/SOCIAL ---
     public async Task<List<IngressoDisponivelDto>> ListarPorEventoAsync(int eventoId, CancellationToken cancellationToken = default)
     {
-        var ingressos = await _repository.ListarPorEventoAsync(eventoId, cancellationToken);
-        return ingressos.Select(i => new IngressoDisponivelDto
+        // --- GARANTE QUE OS SETORES PADRAO EXISTAM ANTES DE LISTAR ---
+        var ingressos = await GarantirSetoresPadraoAsync(eventoId, cancellationToken);
+
+        // --- MONTA A LISTA APENAS COM OS SETORES CANONICOS, NA ORDEM DO CATALOGO ---
+        var resultado = new List<IngressoDisponivelDto>();
+        foreach (var setor in CatalogoIngresso.Setores)
         {
-            Id = i.Id,
-            EventoId = i.EventoId,
-            Setor = i.Setor,
-            Preco = i.Preco,
-            QuantidadeDisponivel = i.QuantidadeDisponivel
-        }).ToList();
+            var ingresso = ingressos.FirstOrDefault(i =>
+                string.Equals(i.Setor, setor.Nome, StringComparison.OrdinalIgnoreCase));
+
+            if (ingresso is null)
+            {
+                continue;
+            }
+
+            // --- CALCULA OS PRECOS DAS 3 MODALIDADES A PARTIR DA INTEIRA ---
+            resultado.Add(new IngressoDisponivelDto
+            {
+                Id = ingresso.Id,
+                EventoId = ingresso.EventoId,
+                SetorCodigo = setor.Codigo,
+                Setor = ingresso.Setor,
+                Preco = ingresso.Preco,
+                PrecoMeia = CatalogoIngresso.CalcularPreco(ingresso.Preco, CatalogoIngresso.ModalidadeMeia),
+                PrecoSocial = CatalogoIngresso.CalcularPreco(ingresso.Preco, CatalogoIngresso.ModalidadeSocial),
+                QuantidadeDisponivel = ingresso.QuantidadeDisponivel
+            });
+        }
+
+        return resultado;
+    }
+
+    // --- RETORNA O CATALOGO DE MODALIDADES (SUBTIPOS DE MEIA + REGRA SOCIAL) ---
+    public ModalidadesDto ObterModalidades()
+    {
+        return new ModalidadesDto
+        {
+            MeiaFator = CatalogoIngresso.MeiaFator,
+            SocialAcrescimo = CatalogoIngresso.SocialAcrescimo,
+            MeiaSubtipos = CatalogoIngresso.MeiaSubtipos
+                .Select(s => new MeiaSubtipoDto { Codigo = s.Codigo, Nome = s.Nome })
+                .ToList()
+        };
+    }
+
+    // --- CRIA OS SETORES CANONICOS QUE AINDA NAO EXISTEM NO EVENTO ---
+    private async Task<List<IngressoEntity>> GarantirSetoresPadraoAsync(int eventoId, CancellationToken cancellationToken)
+    {
+        var existentes = await _repository.ListarPorEventoAsync(eventoId, cancellationToken);
+
+        // --- DESCOBRE QUAIS SETORES OFICIAIS AINDA FALTAM ---
+        var faltantes = CatalogoIngresso.Setores
+            .Where(setor => !existentes.Any(i =>
+                string.Equals(i.Setor, setor.Nome, StringComparison.OrdinalIgnoreCase)))
+            .Select(setor => new IngressoEntity
+            {
+                EventoId = eventoId,
+                Setor = setor.Nome,
+                Preco = setor.PrecoPadrao,
+                QuantidadeDisponivel = 500
+            })
+            .ToList();
+
+        // --- PERSISTE OS SETORES FALTANTES E RECARREGA A LISTA ATUALIZADA ---
+        if (faltantes.Count > 0)
+        {
+            await _repository.AdicionarVariosAsync(faltantes, cancellationToken);
+            existentes = await _repository.ListarPorEventoAsync(eventoId, cancellationToken);
+        }
+
+        return existentes;
     }
 
     // --- CRIAR NOVO INGRESSO A PARTIR DO DTO ---
@@ -47,6 +110,8 @@ public class IngressoService
             EventoId = ingresso.EventoId,
             Setor = ingresso.Setor,
             Preco = ingresso.Preco,
+            PrecoMeia = CatalogoIngresso.CalcularPreco(ingresso.Preco, CatalogoIngresso.ModalidadeMeia),
+            PrecoSocial = CatalogoIngresso.CalcularPreco(ingresso.Preco, CatalogoIngresso.ModalidadeSocial),
             QuantidadeDisponivel = ingresso.QuantidadeDisponivel
         };
     }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PontoVenda.Backend.Modules.Balcao.Model;
 using PontoVenda.Backend.Modules.PontoVenda.Model;
 
 namespace PontoVenda.Backend.Infra.Config;
@@ -19,6 +20,9 @@ public class AppDbContext : DbContext
     public DbSet<Evento>        Eventos         => Set<Evento>();
     public DbSet<Assento>       Assentos        => Set<Assento>();
     public DbSet<VendaFisica>   VendasFisicas   => Set<VendaFisica>();
+
+    // --- REGISTRO LOCAL DAS VENDAS DE BALCÃO (COM ENDEREÇO DO CLIENTE) ---
+    public DbSet<VendaBalcao>   VendasBalcao    => Set<VendaBalcao>();
 
     // --- CONFIGURAÇÃO DO MODELO ---
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -53,6 +57,9 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         // --- EVENTO ---
+        modelBuilder.Entity<Evento>()
+            .ToTable("EventosPdv");
+
         modelBuilder.Entity<Evento>()
             .Property(e => e.Nome)
             .HasMaxLength(150)
@@ -108,6 +115,22 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<VendaFisica>()
             .HasIndex(v => v.AssentoId)
+            .IsUnique();
+
+        // --- VENDA DE BALCÃO ---
+        modelBuilder.Entity<VendaBalcao>()
+            .Property(v => v.ValorUnitario)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<VendaBalcao>()
+            .Property(v => v.ValorTotal)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<VendaBalcao>()
+            .HasIndex(v => v.DataVenda);
+
+        modelBuilder.Entity<VendaBalcao>()
+            .HasIndex(v => v.CodigoTicket)
             .IsUnique();
     }
 }

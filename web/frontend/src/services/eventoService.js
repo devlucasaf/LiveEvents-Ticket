@@ -13,6 +13,10 @@ export const eventoService = {
         return apiRequest(`/ingresso/evento/${eventoId}`);
     },
 
+    listarModalidades() {
+        return apiRequest("/ingresso/modalidades");
+    },
+
     criar(payload) {
         return apiRequest("/admin/evento", {
             method: "POST",

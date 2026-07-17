@@ -28,6 +28,11 @@ public class OperadorService
             throw new InvalidOperationException("Login ou senha inválidos.");
         }
 
+        if (!operador.Ativo)
+        {
+            throw new InvalidOperationException("Este funcionário está desativado. Contate o administrador.");
+        }
+
         return new TokenRespostaDto
         {
             Token = _jwtTokenService.GenerateToken(operador),

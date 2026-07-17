@@ -1,3 +1,4 @@
+using LiveEventsTicket.Backend.Modules.Ingresso.Model;
 using LiveEventsTicket.Backend.Modules.Ingresso.Repository;
 using LiveEventsTicket.Backend.Modules.Pagamento.Service;
 using LiveEventsTicket.Backend.Modules.Pedido.Dto;
@@ -28,7 +29,6 @@ public class PedidoService
     // --- CRIAR PEDIDO COM VALIDAÇÃO ---
     public async Task<PedidoRespostaDto> CriarAsync(int usuarioId, CriarPedidoDto dto, CancellationToken cancellationToken = default)
     {
-        // --- VALIDAR QUE O PEDIDO TEM AO MENOS UM ITEM ---
         if (dto.Itens.Count == 0)
         {
             throw new InvalidOperationException("Pedido deve conter ao menos um ingresso.");
@@ -47,17 +47,36 @@ public class PedidoService
                 throw new InvalidOperationException($"Quantidade indisponível para ingresso {item.IngressoId}.");
             }
 
+            if (!CatalogoIngresso.ModalidadeValida(item.Modalidade))
+            {
+                throw new InvalidOperationException($"Modalidade inválida para ingresso {item.IngressoId}.");
+            }
+
+            var modalidade = item.Modalidade.Trim().ToUpperInvariant();
+            string? subtipo = null;
+
+            if (modalidade == CatalogoIngresso.ModalidadeMeia)
+            {
+                if (!CatalogoIngresso.SubtipoMeiaValido(item.SubtipoMeia))
+                {
+                    throw new InvalidOperationException($"Subtipo de meia inválido para ingresso {item.IngressoId}.");
+                }
+                subtipo = item.SubtipoMeia!.Trim().ToUpperInvariant();
+            }
+
+            // --- BAIXA O ESTOQUE E CALCULA O PRECO UNITARIO PELA MODALIDADE ---
             ingresso.QuantidadeDisponivel -= item.Quantidade;
 
             pedido.Itens.Add(new ItemPedido
             {
                 IngressoId = ingresso.Id,
                 Quantidade = item.Quantidade,
-                PrecoUnitario = ingresso.Preco
+                PrecoUnitario = CatalogoIngresso.CalcularPreco(ingresso.Preco, modalidade),
+                Modalidade = modalidade,
+                Subtipo = subtipo
             });
         }
 
-        // --- CALCULAR VALOR TOTAL DO PEDIDO ---
         pedido.ValorTotal = pedido.Itens.Sum(i => i.Quantidade * i.PrecoUnitario);
 
         // --- SALVAR PEDIDO E ATUALIZAR ESTOQUE DE INGRESSOS ---
@@ -93,7 +112,6 @@ public class PedidoService
     {
         var pedidos = await _pedidoRepository.ListarPorUsuarioAsync(usuarioId, cancellationToken);
 
-        // --- BUSCAR DADOS DOS INGRESSOS USADOS NOS PEDIDOS PARA OBTER EVENTO ---
         var ingressoIds = pedidos.SelectMany(p => p.Itens).Select(i => i.IngressoId).Distinct().ToList();
         var ingressos = new Dictionary<int, IngressoEntity>();
         foreach (var id in ingressoIds)

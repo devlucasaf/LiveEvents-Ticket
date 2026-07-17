@@ -136,3 +136,4 @@ C:\Users\lucasfreitas\.vscode\LiveEvents-Ticket\LiveEvents-Ticket\pdv\backend\ob
 C:\Users\lucasfreitas\.vscode\LiveEvents-Ticket\LiveEvents-Ticket\pdv\backend\obj\Debug\net8.0\PontoVenda.Backend.pdb
 C:\Users\lucasfreitas\.vscode\LiveEvents-Ticket\LiveEvents-Ticket\pdv\backend\obj\Debug\net8.0\PontoVenda.Backend.genruntimeconfig.cache
 C:\Users\lucasfreitas\.vscode\LiveEvents-Ticket\LiveEvents-Ticket\pdv\backend\obj\Debug\net8.0\ref\PontoVenda.Backend.dll
+c:\Users\lucasfreitas\.vscode\LiveEvents-Ticket\LiveEvents-Ticket\pdv\backend\bin\Debug\net8.0\QRCoder.dll
