@@ -48,4 +48,28 @@ public class BalcaoController : ControllerBase
         var resposta = await _service.RegistrarVendaAsync(dto, operadorId, operadorNome, cancellationToken);
         return Ok(resposta);
     }
+
+    // --- LISTA TODAS AS VENDAS DE BALCAO PARA O RELATORIO ---
+    [HttpGet("vendas")]
+    public async Task<ActionResult<List<VendaRelatorioBalcaoDto>>> ListarVendas(CancellationToken cancellationToken)
+    {
+        var vendas = await _service.ListarVendasAsync(cancellationToken);
+        return Ok(vendas);
+    }
+
+    // --- RESUMO DE VENDAS AGRUPADO POR EVENTO ---
+    [HttpGet("relatorios/por-evento")]
+    public async Task<ActionResult<List<RelatorioEventoBalcaoDto>>> RelatorioPorEvento(CancellationToken cancellationToken)
+    {
+        var resumo = await _service.ResumoPorEventoAsync(cancellationToken);
+        return Ok(resumo);
+    }
+
+    // --- RESUMO DE VENDAS AGRUPADO POR ATENDENTE ---
+    [HttpGet("relatorios/por-atendente")]
+    public async Task<ActionResult<List<RelatorioAtendenteBalcaoDto>>> RelatorioPorAtendente(CancellationToken cancellationToken)
+    {
+        var resumo = await _service.ResumoPorAtendenteAsync(cancellationToken);
+        return Ok(resumo);
+    }
 }

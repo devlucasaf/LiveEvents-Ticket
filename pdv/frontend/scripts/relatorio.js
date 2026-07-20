@@ -48,9 +48,18 @@
         return new Date(iso).toLocaleDateString("pt-BR");
     }
 
+    // --- ROTULOS AMIGAVEIS DAS FORMAS DE PAGAMENTO ---
+    const ROTULOS_PAGAMENTO = {
+        CREDITO: "Crédito",
+        DEBITO: "Débito",
+        PIX: "Pix"
+    };
+
     function tagPagamento(metodo) {
+        const chave = (metodo || "").toUpperCase();
+        const rotulo = ROTULOS_PAGAMENTO[chave] || metodo || "—";
         const classe = `tag tag-${(metodo || "").toLowerCase()}`;
-        return `<span class="${classe}">${metodo || "—"}</span>`;
+        return `<span class="${classe}">${rotulo}</span>`;
     }
 
     function exibirFeedback(tipo, mensagem) {
@@ -100,7 +109,7 @@
         corpoTabela.innerHTML = "<tr><td colspan='7' class='celula-vazia'>Carregando...</td></tr>";
 
         try {
-            const vendas = await Api.get("/pontovenda/vendas");
+            const vendas = await Api.get("/balcao/vendas");
             cacheVendas = vendas || [];
             renderizarTodas();
         } catch (erro) {
@@ -114,7 +123,7 @@
         corpoTabelaEvento.innerHTML = "<tr><td colspan='6' class='celula-vazia'>Carregando...</td></tr>";
 
         try {
-            cacheEventos = await Api.get("/pontovenda/relatorios/por-evento") || [];
+            cacheEventos = await Api.get("/balcao/relatorios/por-evento") || [];
             renderizarEvento();
             renderizarTotaisAgregado(cacheEventos);
         } catch (erro) {
@@ -128,7 +137,7 @@
         corpoTabelaAtendente.innerHTML = "<tr><td colspan='5' class='celula-vazia'>Carregando...</td></tr>";
 
         try {
-            cacheAtendentes = await Api.get("/pontovenda/relatorios/por-atendente") || [];
+            cacheAtendentes = await Api.get("/balcao/relatorios/por-atendente") || [];
             renderizarAtendente();
             renderizarTotaisAgregado(cacheAtendentes);
         } catch (erro) {
@@ -142,7 +151,7 @@
     function renderizarTodas() {
         const filtro = filtroPagamento.value;
         const vendasFiltradas = filtro
-            ? cacheVendas.filter((v) => v.metodoPagamento === filtro)
+            ? cacheVendas.filter((v) => (v.tipoEntrada || "").toUpperCase() === filtro)
             : cacheVendas;
 
         renderizarTotaisVendas(vendasFiltradas);
@@ -169,7 +178,7 @@
                 </td>
 
                 <td>
-                    ${formatarAssento(v)}
+                    ${formatarSetor(v)}
                 </td>
 
                 <td>
@@ -189,12 +198,22 @@
         corpoTabela.innerHTML = html;
     }
 
-    function formatarAssento(v) {
-        if (!v.assentoSetor) {
+    function formatarSetor(v) {
+        if (!v.setor) {
             return "--";
         }
 
-        return `${(v.assentoSetor || "").replace(/_/g, " ")} • ${v.assentoFileira}${v.assentoNumero}`;
+        // --- MONTA "SETOR • TIPO (xQTD)" ---
+        const setor = (v.setor || "").replace(/_/g, " ");
+        const tipo = v.tipoEntrada ? capitalizar(v.tipoEntrada) : "";
+        const qtd = Number(v.quantidade) > 1 ? ` (x${v.quantidade})` : "";
+        return tipo ? `${setor} • ${tipo}${qtd}` : `${setor}${qtd}`;
+    }
+
+    // --- CAPITALIZA A PRIMEIRA LETRA (INTEIRA -> Inteira) ---
+    function capitalizar(texto) {
+        const t = (texto || "").toLowerCase();
+        return t.charAt(0).toUpperCase() + t.slice(1);
     }
 
     function renderizarTotaisVendas(vendas) {

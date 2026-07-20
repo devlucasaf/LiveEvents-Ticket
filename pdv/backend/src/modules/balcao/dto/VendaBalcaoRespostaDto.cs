@@ -12,6 +12,7 @@ public class VendaBalcaoRespostaDto
     public string   Setor           { get; set; } = string.Empty;
     public string   TipoEntrada     { get; set; } = string.Empty;
     public int      Quantidade      { get; set; }
+    public string   FormaPagamento  { get; set; } = string.Empty;
     public decimal  ValorTotal      { get; set; }
     public DateTime DataVenda       { get; set; }
     public string?  QrCodeBase64    { get; set; }
