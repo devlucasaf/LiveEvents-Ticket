@@ -52,6 +52,11 @@ function SetorCard({ ingresso, evento, modalidades }) {
       return;
     }
 
+    // --- DESCOBRE OS CAMPOS DE DOCUMENTO EXIGIDOS PELA MEIA ESCOLHIDA ---
+    const subInfo = modalidade === "MEIA"
+      ? modalidades?.meiaSubtipos.find((s) => s.codigo === subtipoMeia)
+      : null;
+
     // --- MONTA A LINHA DO CARRINHO COM OS DADOS DO EVENTO E DA MODALIDADE ---
     const linha = {
       ingressoId: ingresso.id,
@@ -65,6 +70,7 @@ function SetorCard({ ingresso, evento, modalidades }) {
       modalidade,
       modalidadeLabel: rotuloModalidade(),
       subtipoMeia: modalidade === "MEIA" ? subtipoMeia : null,
+      camposDocumento: subInfo?.campos || [],
       precoUnitario: precoDaModalidade(),
       quantidade
     };
@@ -87,7 +93,7 @@ function SetorCard({ ingresso, evento, modalidades }) {
         <span className="setor-card__estoque">{ingresso.quantidadeDisponivel} disponíveis</span>
       </div>
 
-      {/* --- SELETOR DE MODALIDADE (INTEIRA / MEIA / SOCIAL) --- */}
+      {/* --- SELETOR DE MODALIDADE --- */}
       <div className="setor-card__modalidades">
         <button
           type="button"
@@ -131,7 +137,7 @@ function SetorCard({ ingresso, evento, modalidades }) {
       {/* --- AVISO DO INGRESSO SOCIAL --- */}
       {modalidade === "SOCIAL" && (
         <p className="setor-card__social-info">
-          Leve 1kg de alimento não perecível no dia do evento. Valor: meia + {formatarMoeda(40)}.
+          Leve 1kg de alimento não perecível no dia do evento. Valor: meia + {formatarMoeda(20)}.
         </p>
       )}
 

@@ -54,6 +54,7 @@ public class PedidoService
 
             var modalidade = item.Modalidade.Trim().ToUpperInvariant();
             string? subtipo = null;
+            string? documentosJson = null;
 
             if (modalidade == CatalogoIngresso.ModalidadeMeia)
             {
@@ -62,6 +63,20 @@ public class PedidoService
                     throw new InvalidOperationException($"Subtipo de meia inválido para ingresso {item.IngressoId}.");
                 }
                 subtipo = item.SubtipoMeia!.Trim().ToUpperInvariant();
+
+                var documentos = item.Documentos ?? new List<Dictionary<string, string?>>();
+                if (documentos.Count != item.Quantidade)
+                {
+                    throw new InvalidOperationException(
+                        $"Informe os documentos da meia entrada para cada ingresso do setor (esperado {item.Quantidade}).");
+                }
+
+                foreach (var doc in documentos)
+                {
+                    CatalogoIngresso.ValidarDocumentos(subtipo, doc);
+                }
+
+                documentosJson = System.Text.Json.JsonSerializer.Serialize(documentos);
             }
 
             // --- BAIXA O ESTOQUE E CALCULA O PRECO UNITARIO PELA MODALIDADE ---
@@ -73,7 +88,8 @@ public class PedidoService
                 Quantidade = item.Quantidade,
                 PrecoUnitario = CatalogoIngresso.CalcularPreco(ingresso.Preco, modalidade),
                 Modalidade = modalidade,
-                Subtipo = subtipo
+                Subtipo = subtipo,
+                DocumentosJson = documentosJson
             });
         }
 

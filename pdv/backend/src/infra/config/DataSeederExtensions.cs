@@ -14,11 +14,9 @@ public static class DataSeederExtensions
         using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await EnsureTablesCreatedAsync(context);
-
-        // --- GARANTE A COLUNA "Ativo" EM BANCOS ANTIGOS (SOFT-DELETE DE OPERADOR) ---
         await GarantirColunaAtivoAsync(context);
+        await GarantirTabelaVendasBalcaoAsync(context);
 
-        // --- SEED DO OPERADOR ADMIN ---
         if (!await context.Operadores.AnyAsync())
         {
             context.Operadores.Add(new Operador
@@ -134,12 +132,75 @@ public static class DataSeederExtensions
     {
         try
         {
-            // SO ALTERA SE A COLUNA NAO EXISTIR (IDEMPOTENTE)
             await context.Database.ExecuteSqlRawAsync(
                 "IF COL_LENGTH('Operadores', 'Ativo') IS NULL " +
                 "ALTER TABLE Operadores ADD Ativo bit NOT NULL DEFAULT 1;");
         }
         catch (SqlException)
         {}
+    }
+
+    // --- CRIA A TABELA VendasBalcao SE AINDA NAO EXISTIR ---
+    private static async Task GarantirTabelaVendasBalcaoAsync(AppDbContext context)
+    {
+        await context.Database.ExecuteSqlRawAsync(@"
+IF OBJECT_ID('VendasBalcao', 'U') IS NULL
+BEGIN
+    CREATE TABLE VendasBalcao (
+        Id                    uniqueidentifier NOT NULL CONSTRAINT PK_VendasBalcao PRIMARY KEY,
+        OperadorId            int              NOT NULL,
+        OperadorNome          nvarchar(max)    NOT NULL,
+        ClienteWebId          int              NOT NULL,
+        ClienteNome           nvarchar(max)    NOT NULL,
+        ClienteSobrenome      nvarchar(max)    NOT NULL,
+        ClienteEmail          nvarchar(max)    NOT NULL,
+        ClienteCpf            nvarchar(max)    NOT NULL,
+        ClienteTelefone       nvarchar(max)    NOT NULL,
+        ClienteDataNascimento datetime2        NULL,
+        Cep                   nvarchar(max)    NULL,
+        Logradouro            nvarchar(max)    NULL,
+        Numero                nvarchar(max)    NULL,
+        Complemento           nvarchar(max)    NULL,
+        Bairro                nvarchar(max)    NULL,
+        Cidade                nvarchar(max)    NULL,
+        Estado                nvarchar(max)    NULL,
+        PedidoWebId           int              NOT NULL,
+        EventoId              int              NOT NULL,
+        EventoTitulo          nvarchar(max)    NOT NULL,
+        IngressoId            int              NOT NULL,
+        Setor                 nvarchar(max)    NOT NULL,
+        TipoEntrada           nvarchar(max)    NOT NULL,
+        FormaPagamento        nvarchar(max)    NOT NULL CONSTRAINT DF_VendasBalcao_FormaPagamento DEFAULT 'CREDITO',
+        Quantidade            int              NOT NULL,
+        ValorUnitario         decimal(18,2)    NOT NULL,
+        ValorTotal            decimal(18,2)    NOT NULL,
+        CodigoTicket          nvarchar(450)    NOT NULL,
+        DataVenda             datetime2        NOT NULL,
+        CreatedAt             datetime2        NOT NULL,
+        UpdatedAt             datetime2        NULL,
+        AcompanhantesJson     nvarchar(max)    NULL,
+        Subtipo               nvarchar(max)    NULL,
+        DocumentosJson        nvarchar(max)    NULL
+    );
+END;
+
+IF COL_LENGTH('VendasBalcao', 'AcompanhantesJson') IS NULL
+    ALTER TABLE VendasBalcao ADD AcompanhantesJson nvarchar(max) NULL;
+
+IF COL_LENGTH('VendasBalcao', 'FormaPagamento') IS NULL
+    ALTER TABLE VendasBalcao ADD FormaPagamento nvarchar(max) NOT NULL CONSTRAINT DF_VendasBalcao_FormaPagamento DEFAULT 'CREDITO';
+
+IF COL_LENGTH('VendasBalcao', 'Subtipo') IS NULL
+    ALTER TABLE VendasBalcao ADD Subtipo nvarchar(max) NULL;
+
+IF COL_LENGTH('VendasBalcao', 'DocumentosJson') IS NULL
+    ALTER TABLE VendasBalcao ADD DocumentosJson nvarchar(max) NULL;
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_VendasBalcao_DataVenda' AND object_id = OBJECT_ID('VendasBalcao'))
+    CREATE INDEX IX_VendasBalcao_DataVenda ON VendasBalcao (DataVenda);
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_VendasBalcao_CodigoTicket' AND object_id = OBJECT_ID('VendasBalcao'))
+    CREATE UNIQUE INDEX IX_VendasBalcao_CodigoTicket ON VendasBalcao (CodigoTicket);
+");
     }
 }

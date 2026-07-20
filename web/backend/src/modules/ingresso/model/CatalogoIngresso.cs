@@ -3,7 +3,55 @@ namespace LiveEventsTicket.Backend.Modules.Ingresso.Model;
 public static class CatalogoIngresso
 {
     public const decimal MeiaFator = 0.5m;
-    public const decimal SocialAcrescimo = 40m;
+    public const decimal SocialAcrescimo = 20m;
+
+    // --- CAMPOS DE DOCUMENTO COMUNS A TODO SUBTIPO DE MEIA ---
+    private static readonly IReadOnlyList<DocumentoCampoInfo> CamposComuns = new List<DocumentoCampoInfo>
+    {
+        new("nome",           "Nome completo"),
+        new("cpf",            "CPF"),
+        new("dataNascimento", "Data de nascimento", "date")
+    };
+
+    // --- CAMPOS ESPECIFICOS EXIGIDOS POR CADA SUBTIPO DE MEIA ---
+    private static readonly IReadOnlyDictionary<string, List<DocumentoCampoInfo>> CamposPorSubtipo =
+        new Dictionary<string, List<DocumentoCampoInfo>>
+        {
+            ["ESTUDANTIL"] = new()
+            {
+                new("instituicaoEnsino",     "Instituição de ensino"),
+                new("matricula",             "Matrícula"),
+                new("dataPrevistaConclusao", "Data prevista de conclusão", "date"),
+                new("curso",                 "Curso (se faculdade)", "text", false)
+            },
+            ["PCD"] = new()
+            {
+                new("cartaoBpc",  "Cartão BPC"),
+                new("cidOuInss",  "CID ou nº do INSS")
+            },
+            ["PROFESSOR"] = new()
+            {
+                new("numeroCarteiraFuncional", "Número da carteira funcional"),
+                new("matricula",               "Matrícula"),
+                new("dataValidadeCarteira",    "Data de validade da carteira", "date")
+            },
+            ["JOVEM_BAIXA_RENDA"] = new()
+            {
+                new("carteiraIdentidadeJovem", "Carteira de identidade jovem"),
+                new("dataValidadeCarteira",    "Data de validade da carteira", "date")
+            },
+            ["IDOSO"] = new()
+            {
+                new("numeroInss", "Número do INSS")
+            },
+            ["DOADOR_SANGUE"] = new()
+            {
+                new("idDoador", "ID do doador")
+            },
+            ["MENOR_18"] = new()
+        };
+
+    public const int IdadeMaximaMenor18 = 18;
 
     // --- 5 SETORES OFICIAIS DISPONIVEIS EM TODO EVENTO ---
     public static readonly IReadOnlyList<SetorInfo> Setores = new List<SetorInfo>
@@ -57,5 +105,59 @@ public static class CatalogoIngresso
     {
         var sub = (subtipo ?? string.Empty).Trim().ToUpperInvariant();
         return MeiaSubtipos.Any(s => s.Codigo == sub);
+    }
+
+    // --- RETORNA OS CAMPOS DE DOCUMENTO EXIGIDOS PARA UM SUBTIPO (COMUNS + ESPECIFICOS) ---
+    public static List<DocumentoCampoInfo> CamposDocumento(string? subtipo)
+    {
+        var sub = (subtipo ?? string.Empty).Trim().ToUpperInvariant();
+        var campos = new List<DocumentoCampoInfo>(CamposComuns);
+        if (CamposPorSubtipo.TryGetValue(sub, out var especificos))
+        {
+            campos.AddRange(especificos);
+        }
+        return campos;
+    }
+
+    // --- CALCULA A IDADE COMPLETA A PARTIR DA DATA DE NASCIMENTO ---
+    public static int CalcularIdade(DateTime dataNascimento, DateTime? referencia = null)
+    {
+        var hoje = (referencia ?? DateTime.Today).Date;
+        var idade = hoje.Year - dataNascimento.Year;
+        if (dataNascimento.Date > hoje.AddYears(-idade))
+        {
+            idade--;
+        }
+        return idade;
+    }
+
+    // --- VALIDA OS DOCUMENTOS DE UMA MEIA ENTRADA (CAMPOS OBRIGATORIOS + REGRA DE IDADE) ---
+    public static void ValidarDocumentos(string subtipo, IReadOnlyDictionary<string, string?>? documentos)
+    {
+        var sub = (subtipo ?? string.Empty).Trim().ToUpperInvariant();
+        var campos = CamposDocumento(sub);
+        documentos ??= new Dictionary<string, string?>();
+
+        // --- CONFERE OS CAMPOS OBRIGATORIOS ---
+        foreach (var campo in campos.Where(c => c.Obrigatorio))
+        {
+            documentos.TryGetValue(campo.Chave, out var valor);
+            if (string.IsNullOrWhiteSpace(valor))
+            {
+                throw new InvalidOperationException($"Informe o campo \"{campo.Rotulo}\" da meia entrada.");
+            }
+        }
+
+        // --- REGRA ESPECIFICA DA MEIA MENOR DE 18 ANOS ---
+        documentos.TryGetValue("dataNascimento", out var nascStr);
+        if (DateTime.TryParse(nascStr, out var nascimento))
+        {
+            var idade = CalcularIdade(nascimento);
+            if (sub == "MENOR_18" && idade >= IdadeMaximaMenor18)
+            {
+                throw new InvalidOperationException(
+                    "Cliente com 18 anos ou mais não pode usar a meia Menor de 18. Selecione outra meia (ex.: Estudantil).");
+            }
+        }
     }
 }

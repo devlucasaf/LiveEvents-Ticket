@@ -9,4 +9,5 @@ public class ItemPedido
     public decimal  PrecoUnitario   { get; set; }
     public string   Modalidade      { get; set; } = "INTEIRA";
     public string?  Subtipo         { get; set; }
+    public string?  DocumentosJson  { get; set; }
 }

@@ -108,6 +108,10 @@ public static class DataSeederExtensions
             await context.Database.ExecuteSqlRawAsync(
                 "IF COL_LENGTH('ItensPedido', 'Subtipo') IS NULL " +
                 "ALTER TABLE ItensPedido ADD Subtipo nvarchar(max) NULL;");
+
+            await context.Database.ExecuteSqlRawAsync(
+                "IF COL_LENGTH('ItensPedido', 'DocumentosJson') IS NULL " +
+                "ALTER TABLE ItensPedido ADD DocumentosJson nvarchar(max) NULL;");
         }
         catch (SqlException)
         {

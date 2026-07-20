@@ -18,7 +18,6 @@ public class IngressoService
     // --- LISTAR OS 5 SETORES OFICIAIS DO EVENTO COM PRECOS INTEIRA/MEIA/SOCIAL ---
     public async Task<List<IngressoDisponivelDto>> ListarPorEventoAsync(int eventoId, CancellationToken cancellationToken = default)
     {
-        // --- GARANTE QUE OS SETORES PADRAO EXISTAM ANTES DE LISTAR ---
         var ingressos = await GarantirSetoresPadraoAsync(eventoId, cancellationToken);
 
         // --- MONTA A LISTA APENAS COM OS SETORES CANONICOS, NA ORDEM DO CATALOGO ---
@@ -33,7 +32,6 @@ public class IngressoService
                 continue;
             }
 
-            // --- CALCULA OS PRECOS DAS 3 MODALIDADES A PARTIR DA INTEIRA ---
             resultado.Add(new IngressoDisponivelDto
             {
                 Id = ingresso.Id,
@@ -50,7 +48,7 @@ public class IngressoService
         return resultado;
     }
 
-    // --- RETORNA O CATALOGO DE MODALIDADES (SUBTIPOS DE MEIA + REGRA SOCIAL) ---
+    // --- RETORNA O CATALOGO DE MODALIDADES ---
     public ModalidadesDto ObterModalidades()
     {
         return new ModalidadesDto
@@ -58,7 +56,20 @@ public class IngressoService
             MeiaFator = CatalogoIngresso.MeiaFator,
             SocialAcrescimo = CatalogoIngresso.SocialAcrescimo,
             MeiaSubtipos = CatalogoIngresso.MeiaSubtipos
-                .Select(s => new MeiaSubtipoDto { Codigo = s.Codigo, Nome = s.Nome })
+                .Select(s => new MeiaSubtipoDto
+                {
+                    Codigo = s.Codigo,
+                    Nome = s.Nome,
+                    Campos = CatalogoIngresso.CamposDocumento(s.Codigo)
+                        .Select(c => new DocumentoCampoDto
+                        {
+                            Chave = c.Chave,
+                            Rotulo = c.Rotulo,
+                            Tipo = c.Tipo,
+                            Obrigatorio = c.Obrigatorio
+                        })
+                        .ToList()
+                })
                 .ToList()
         };
     }
@@ -68,7 +79,6 @@ public class IngressoService
     {
         var existentes = await _repository.ListarPorEventoAsync(eventoId, cancellationToken);
 
-        // --- DESCOBRE QUAIS SETORES OFICIAIS AINDA FALTAM ---
         var faltantes = CatalogoIngresso.Setores
             .Where(setor => !existentes.Any(i =>
                 string.Equals(i.Setor, setor.Nome, StringComparison.OrdinalIgnoreCase)))
@@ -81,7 +91,6 @@ public class IngressoService
             })
             .ToList();
 
-        // --- PERSISTE OS SETORES FALTANTES E RECARREGA A LISTA ATUALIZADA ---
         if (faltantes.Count > 0)
         {
             await _repository.AdicionarVariosAsync(faltantes, cancellationToken);

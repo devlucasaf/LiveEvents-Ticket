@@ -18,6 +18,36 @@ function formatarMoeda(valor) {
     return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+// --- CAMPOS COMUNS EXIGIDOS EM QUALQUER MEIA ENTRADA ---
+const CAMPOS_COMUNS = [
+    { chave: "nome",           rotulo: "Nome completo",       tipo: "text", obrigatorio: true },
+    { chave: "cpf",            rotulo: "CPF",                 tipo: "text", obrigatorio: true },
+    { chave: "dataNascimento", rotulo: "Data de nascimento",  tipo: "date", obrigatorio: true }
+];
+
+// --- RETORNA OS CAMPOS DE DOCUMENTO DE UM ITEM DE MEIA ---
+function camposDoItem(item) {
+    return item.camposDocumento && item.camposDocumento.length ? item.camposDocumento : CAMPOS_COMUNS;
+}
+
+// --- CALCULA A IDADE COMPLETA A PARTIR DE UMA DATA ISO ---
+function calcularIdade(dataIso) {
+    if (!dataIso) {
+        return null;
+    }
+    const nasc = new Date(dataIso);
+    if (Number.isNaN(nasc.getTime())) {
+        return null;
+    }
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nasc.getFullYear();
+    const m = hoje.getMonth() - nasc.getMonth();
+    if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) {
+        idade--;
+    }
+    return idade;
+}
+
 // --- TELA DE CHECKOUT: FINALIZA A COMPRA DO CARRINHO ---
 export default function CheckoutPage() {
     const navigate = useNavigate();
@@ -36,7 +66,10 @@ export default function CheckoutPage() {
     const [resultado,       setResultado]       = useState(null);
     const [compraSnapshot,  setCompraSnapshot]  = useState(null);
 
-    // --- GUARDA DE AUTENTICAÇÃO: EXIGE LOGIN PARA PAGAR ---
+    // --- DOCUMENTOS DA MEIA ENTRADA ---
+    const [documentos,      setDocumentos]      = useState({});
+    const [erroDoc,         setErroDoc]         = useState("");
+
     if (!token) {
         return (
         <div className="checkout-page">
@@ -77,6 +110,78 @@ export default function CheckoutPage() {
 
     const maxParcelas = Math.min(12, Math.floor(total / 10) || 1);
 
+    // --- ITENS QUE EXIGEM DOCUMENTOS (MEIA ENTRADA) ---
+    const itensComDocumento = itens
+        .map((item, idx) => ({ item, idx }))
+        .filter(({ item }) => item.modalidade === "MEIA");
+
+    // --- LE O VALOR DE UM DOCUMENTO NO ESTADO ---
+    function valorDoc(idxItem, unidade, chave) {
+        return documentos?.[idxItem]?.[unidade]?.[chave] ?? "";
+    }
+
+    // --- ATUALIZA UM CAMPO DE DOCUMENTO NO ESTADO ---
+    function definirDoc(idxItem, unidade, chave, valor) {
+        setErroDoc("");
+        setDocumentos((prev) => {
+            const copia = { ...prev };
+            const doItem = { ...(copia[idxItem] || {}) };
+            const daUnidade = { ...(doItem[unidade] || {}) };
+            daUnidade[chave] = valor;
+            doItem[unidade] = daUnidade;
+            copia[idxItem] = doItem;
+            return copia;
+        });
+    }
+
+    // --- VALIDA TODOS OS DOCUMENTOS ANTES DE AVANCAR PARA O PAGAMENTO ---
+    function validarDocumentos() {
+        for (const { item, idx } of itensComDocumento) {
+            const campos = camposDoItem(item);
+            for (let u = 0; u < item.quantidade; u++) {
+                for (const campo of campos) {
+                    if (campo.obrigatorio && !String(valorDoc(idx, u, campo.chave)).trim()) {
+                        setErroDoc(`Preencha "${campo.rotulo}" no ${item.setor} (ingresso ${u + 1}).`);
+                        return false;
+                    }
+                }
+
+                // --- REGRA DA MEIA MENOR DE 18 ANOS ---
+                if (item.subtipoMeia === "MENOR_18") {
+                    const idade = calcularIdade(valorDoc(idx, u, "dataNascimento"));
+                    if (idade !== null && idade >= 18) {
+                        setErroDoc(
+                            `No ${item.setor} (ingresso ${u + 1}): cliente com 18 anos ou mais não pode usar a meia Menor de 18. Troque a modalidade (ex.: Estudantil) no carrinho.`
+                        );
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    // --- AVANCA DO CARRINHO: VAI PARA DOCUMENTOS SE HOUVER MEIA, SENAO PARA PAGAMENTO ---
+    function avancarDoCarrinho() {
+        if (itensComDocumento.length > 0) {
+            setEtapa("documentos");
+        } else {
+            setEtapa("pagamento");
+        }
+    }
+
+    // --- MONTA O ARRAY DE DOCUMENTOS (UM POR UNIDADE) DE UM ITEM ---
+    function documentosDoItem(idxItem, item) {
+        if (item.modalidade !== "MEIA") {
+            return null;
+        }
+        const lista = [];
+        for (let u = 0; u < item.quantidade; u++) {
+            lista.push({ ...(documentos?.[idxItem]?.[u] || {}) });
+        }
+        return lista;
+    }
+
     // --- GERA AS OPCOES DE PARCELAMENTO ATE O MAXIMO PERMITIDO ---
     function gerarOpcoesParcelas() {
         const opcoes = [];
@@ -102,11 +207,12 @@ export default function CheckoutPage() {
         setErro("");
         try {
             const data = await pedidoService.checkout({
-                itens: itens.map((i) => ({
+                itens: itens.map((i, idx) => ({
                     ingressoId: i.ingressoId,
                     quantidade: i.quantidade,
                     modalidade: i.modalidade,
-                    subtipoMeia: i.subtipoMeia
+                    subtipoMeia: i.subtipoMeia,
+                    documentos: documentosDoItem(idx, i)
                 })),
                 pagamento: {
                     tipo: tipoPagamento === "cartao" ? "CARTAO" : "PIX",
@@ -216,7 +322,78 @@ export default function CheckoutPage() {
                     </div>
                 </div>
 
-                <button className="checkout-page__btn" onClick={() => setEtapa("pagamento")}>
+                <button className="checkout-page__btn" onClick={avancarDoCarrinho}>
+                    Continuar
+                </button>
+            </div>
+        </div>
+        );
+    }
+
+    // --- DOCUMENTOS DA MEIA ENTRADA ---
+    if (etapa === "documentos") {
+        return (
+        <div className="checkout-page">
+            <div className="checkout-page__card">
+                <div className="checkout-page__step-indicator">
+                    <span className="checkout-page__step checkout-page__step--done">1. Carrinho</span>
+                    <span className="checkout-page__step checkout-page__step--active">2. Documentos</span>
+                    <span className="checkout-page__step">3. Pagamento</span>
+                </div>
+
+                <button className="checkout-page__voltar" onClick={() => setEtapa("carrinho")}>
+                    ← Voltar ao carrinho
+                </button>
+
+                <h2>Documentos da meia entrada</h2>
+                <p className="checkout-page__doc-intro">
+                    Informe os dados do beneficiário de cada meia entrada.
+                </p>
+
+                {itensComDocumento.map(({ item, idx }) => (
+                    <div key={idx} className="checkout-page__doc-item">
+                        <div className="checkout-page__doc-item-head">
+                            <strong>{item.setor}</strong>
+                            <span>{item.modalidadeLabel}</span>
+                        </div>
+
+                        {Array.from({ length: item.quantidade }).map((_, u) => (
+                            <div key={u} className="checkout-page__doc-unidade">
+                                {item.quantidade > 1 && (
+                                    <h4 className="checkout-page__doc-unidade-titulo">Ingresso {u + 1}</h4>
+                                )}
+
+                                <div className="checkout-page__doc-grid">
+                                    {camposDoItem(item).map((campo) => (
+                                        <div key={campo.chave} className="checkout-page__field">
+                                            <label>
+                                                {campo.rotulo}
+                                                {!campo.obrigatorio && <span className="checkout-page__opcional"> (opcional)</span>}
+                                            </label>
+                                            <input
+                                                className="checkout-page__input"
+                                                type={campo.tipo === "date" ? "date" : "text"}
+                                                value={valorDoc(idx, u, campo.chave)}
+                                                onChange={(e) => definirDoc(idx, u, campo.chave, e.target.value)}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ))}
+
+                {erroDoc && <p className="error">{erroDoc}</p>}
+
+                <button
+                    className="checkout-page__btn"
+                    onClick={() => {
+                        if (validarDocumentos()) {
+                            setEtapa("pagamento");
+                        }
+                    }}
+                >
                     Continuar
                 </button>
             </div>
@@ -234,8 +411,8 @@ export default function CheckoutPage() {
                     <span className="checkout-page__step checkout-page__step--active">2. Pagamento</span>
                 </div>
 
-                <button className="checkout-page__voltar" onClick={() => setEtapa("carrinho")}>
-                    ← Voltar ao carrinho
+                <button className="checkout-page__voltar" onClick={() => setEtapa(itensComDocumento.length > 0 ? "documentos" : "carrinho")}>
+                    ← Voltar
                 </button>
 
                 <h2>Forma de pagamento</h2>
