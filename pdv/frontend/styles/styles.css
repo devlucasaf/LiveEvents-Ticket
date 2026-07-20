@@ -89,6 +89,17 @@ html, body {
     min-height: 100vh;
 }
 
+/* --- LAYOUT EM COLUNA PARA FIXAR O RODAPE NA BASE --- */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- CONTEUDO PRINCIPAL OCUPA O ESPACO RESTANTE, EMPURRANDO O RODAPE --- */
+body > main.container {
+    flex: 1 0 auto;
+}
+
 .oculto {
     display: none !important;
 }
@@ -278,6 +289,255 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+/* --- DATE PICKER CUSTOMIZADO --- */
+.datepicker {
+    position: relative;
+    width: 100%;
+}
+
+.datepicker__native {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    border: 0 !important;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    pointer-events: none;
+}
+
+.datepicker__input {
+    cursor: pointer;
+    padding-right: 40px !important;
+}
+
+.datepicker__icone {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.datepicker__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--panel);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 16px;
+    animation: datepicker-fadeIn 0.15s ease;
+}
+
+@keyframes datepicker-fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-4px); 
+    }
+
+    to   { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.datepicker__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+/* --- SELETORES DE MES E ANO --- */
+.datepicker__seletores {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    justify-content: center;
+}
+
+.datepicker__select-wrap {
+    position: relative;
+}
+
+.datepicker__select {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 11px;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-secondary);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.datepicker__select:hover {
+    border-color: var(--brand);
+}
+
+.datepicker__select:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.datepicker__select-seta {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1;
+}
+
+/* --- LISTA DE OPCOES --- */
+.datepicker__opcoes {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 110;
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+    max-height: 192px;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    animation: datepicker-fadeIn 0.12s ease;
+}
+
+.datepicker__opcao {
+    padding: 7px 11px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    white-space: nowrap;
+}
+
+.datepicker__opcao:hover {
+    background: var(--brand-light);
+    color: var(--brand);
+}
+
+.datepicker__opcao--ativa {
+    background: var(--brand);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.datepicker__opcao--ativa:hover {
+    background: var(--brand);
+    color: #ffffff;
+}
+
+/* --- SCROLLBAR DAS LISTAS --- */
+.datepicker__opcoes::-webkit-scrollbar {
+    width: 6px;
+}
+
+.datepicker__opcoes::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.datepicker__opcoes::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 3px;
+}
+
+.datepicker__opcoes::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+}
+
+.datepicker__nav {
+    background: none;
+    border: none;
+    color: var(--brand);
+    font-size: 21px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+}
+
+.datepicker__nav:hover {
+    background: var(--brand-light);
+}
+
+.datepicker__semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 4px;
+}
+
+.datepicker__dia-semana {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 4px 0;
+    text-transform: uppercase;
+}
+
+.datepicker__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.datepicker__dia {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    border: none;
+    background: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s;
+}
+
+.datepicker__dia:hover:not(.datepicker__dia--vazio) {
+    background: var(--brand-light);
+    color: var(--brand);
+}
+
+.datepicker__dia--selecionado {
+    background: var(--brand) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+.datepicker__dia--vazio {
+    cursor: default;
+}
+
 .acoes-form {
     display: flex;
     gap: 12px;
@@ -305,7 +565,8 @@ select:focus {
 
 .opcao-radio:hover {
     border-color: var(--cor-primaria);
-    background: #f8fafc;
+    background: var(--brand-light);
+    color: var(--brand);
 }
 
 .opcao-radio input[type="radio"] {
@@ -314,7 +575,7 @@ select:focus {
 
 .opcao-radio:has(input[type="radio"]:checked) {
     border-color: var(--cor-primaria);
-    background: rgba(37, 99, 235, 0.08);
+    background: var(--brand-light);
     color: var(--cor-primaria);
 }
 
@@ -1277,7 +1538,7 @@ select:focus {
     }
 }
 
-/* ==================== NOVA VENDA: GRID DO FORMULARIO ==================== */
+/* +=+=+=+=+=+=+=+= NOVA VENDA: GRID DO FORMULARIO +=+=+=+=+=+=+=+= */
 /* --- DUAS COLUNAS RESPONSIVAS --- */
 .form-grid {
     display: grid;
@@ -1322,7 +1583,8 @@ select:focus {
     }
 }
 
-/* ==================== TELA HUB (HOME) ==================== */
+/* +=+=+=+=+=+=+=+= TELA HOME +=+=+=+=+=+=+=+= */
+
 .hub-cabecalho {
     margin-bottom: 24px;
 }
@@ -1392,7 +1654,8 @@ select:focus {
     }
 }
 
-/* ==================== COMPROVANTE: CONTA CRIADA + QR ==================== */
+/* +=+=+=+=+=+=+=+= COMPROVANTE: CONTA CRIADA + QR +=+=+=+=+=+=+=+= */
+
 /* --- AVISO DE CONTA CRIADA PARA O CLIENTE --- */
 .aviso-conta {
     margin: 16px 0;
@@ -1428,3 +1691,244 @@ select:focus {
     border: 1px solid var(--cor-card-borda);
     border-radius: 10px;
 }
+
+/* +=+=+=+=+=+=+=+= MODAL DE FORMA DE PAGAMENTO +=+=+=+=+=+=+=+= */
+
+
+/* --- GRADE DAS 3 OPCOES --- */
+.pagamento-opcoes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 8px 0 4px;
+}
+
+/* --- CADA OPCAO CLICAVEL DE PAGAMENTO --- */
+.pagamento-opcao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 12px;
+    border: 2px solid var(--cor-card-borda);
+    border-radius: 12px;
+    background: var(--cor-card);
+    color: var(--cor-texto);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.15s;
+}
+
+.pagamento-opcao:hover {
+    border-color: var(--cor-primaria);
+    background: var(--brand-light);
+    color: var(--cor-primaria);
+}
+
+/* --- OPCAO ATUALMENTE SELECIONADA --- */
+.pagamento-opcao.selecionada {
+    border-color: var(--cor-primaria);
+    background: var(--brand-light);
+    color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cor-primaria) 20%, transparent);
+}
+
+.pagamento-icone {
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+.pagamento-nome {
+    font-size: 14px;
+}
+
+/* --- LINHA DO TOTAL A PAGAR --- */
+.pagamento-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--cor-card-borda);
+}
+
+.pagamento-total .label {
+    color: var(--cor-texto-suave);
+    font-size: 13px;
+}
+
+.pagamento-total .valor-grande {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cor-primaria);
+}
+
+/* --- BLOCO CENTRAL DA ETAPA DE CONFIRMACAO --- */
+.pagamento-confirmacao {
+    text-align: center;
+    padding: 8px 0;
+}
+
+.pagamento-icone-grande {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cor-primaria);
+    margin-bottom: 10px;
+}
+
+.pagamento-icone-grande svg {
+    width: 46px;
+    height: 46px;
+}
+
+.pagamento-confirma-texto {
+    color: var(--cor-texto-suave);
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.pagamento-confirma-forma {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cor-primaria);
+    margin-bottom: 16px;
+}
+
+.pagamento-confirmacao .linha {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 260px;
+    margin: 0 auto;
+    padding: 10px 0;
+    border-top: 1px dashed var(--cor-card-borda);
+}
+
+.pagamento-confirmacao .label {
+    color: var(--cor-texto-suave);
+    font-size: 13px;
+}
+
+.pagamento-confirmacao .valor-grande {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cor-primaria);
+}
+
+@media (max-width: 480px) {
+    .pagamento-opcoes {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- RODAPE --- */
+.rodape {
+    margin-top: auto;
+    border-top: 1px solid var(--cor-card-borda);
+    background: var(--cor-card);
+}
+
+.rodape-conteudo {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 28px 24px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.rodape-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: var(--cor-texto);
+}
+
+.rodape-marca .logo-icon {
+    font-size: 22px;
+}
+
+/* --- LINKS DE REDES SOCIAIS --- */
+.rodape-redes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.rodape-rede {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--cor-card-borda);
+    color: var(--cor-texto-suave);
+    background: var(--bg);
+    transition: transform 0.15s ease, color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.rodape-rede svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+.rodape-rede:hover {
+    color: #ffffff;
+    background: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    transform: translateY(-2px);
+}
+
+.rodape-rede:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+/* --- BASE DO RODAPE --- */
+.rodape-base {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-top: 1px dashed var(--cor-card-borda);
+    padding-top: 16px;
+}
+
+.rodape-base p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.rodape-base a {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.rodape-base a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .rodape-conteudo,
+    .rodape-base {
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
