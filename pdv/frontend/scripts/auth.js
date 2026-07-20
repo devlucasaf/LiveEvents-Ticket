@@ -2,8 +2,10 @@ const CHAVE_TOKEN   = "pdv:token";
 const CHAVE_USUARIO = "pdv:usuario";
 const CHAVE_TEMA    = "theme";
 
+// --- DETECTA SE A PAGINA ATUAL ESTA DENTRO DA PASTA PAGES ---
 const _estaEmSubpastaPages = window.location.pathname.toLowerCase().includes("/pages/");
 
+// --- RESOLVE O CAMINHO CERTO CONFORME A LOCALIZACAO DA PAGINA ---
 const Rotas = {
     login: _estaEmSubpastaPages ? "../index.html" : "index.html",
     home: _estaEmSubpastaPages ? "home.html" : "pages/home.html",
@@ -11,6 +13,7 @@ const Rotas = {
     relatorio: _estaEmSubpastaPages ? "relatorio.html" : "pages/relatorio.html"
 };
 
+// --- OBJETO DE AUTENTICACAO: GERENCIA SESSAO DO ATENDENTE ---
 const Auth = {
     salvarSessao(token, usuario) {
         localStorage.setItem(CHAVE_TOKEN, token);
@@ -21,6 +24,7 @@ const Auth = {
         return localStorage.getItem(CHAVE_TOKEN);
     },
 
+    // --- RECUPERA E DESSERIALIZA O USUARIO SALVO ---
     obterUsuario() {
         const bruto = localStorage.getItem(CHAVE_USUARIO);
         if (!bruto) {
@@ -34,15 +38,18 @@ const Auth = {
         }
     },
 
+    // --- INDICA SE EXISTE UM TOKEN VALIDO GRAVADO ---
     estaAutenticado() {
         return !!this.obterToken();
     },
 
+    // --- REMOVE TOKEN E USUARIO ---
     encerrarSessao() {
         localStorage.removeItem(CHAVE_TOKEN);
         localStorage.removeItem(CHAVE_USUARIO);
     },
 
+    // --- PROTEGE A PAGINA, REDIRECIONANDO AO LOGIN SE NAO AUTENTICADO ---
     exigirLogin() {
         if (!this.estaAutenticado()) {
             window.location.href = Rotas.login;
@@ -50,13 +57,13 @@ const Auth = {
     }
 };
 
-// --- TEMA: APLICA O TEMA SALVO (PADRAO: CLARO) ---
+// --- APLICA O TEMA SALVO ---
 function aplicarTemaInicial() {
     const temaSalvo = localStorage.getItem(CHAVE_TEMA) || "light";
     document.documentElement.setAttribute("data-theme", temaSalvo);
 }
 
-// --- TEMA: ALTERNA ENTRE LIGHT E DARK ---
+// --- TROCA ENTRE OS MODOS CLARO E ESCURO ---
 function alternarTema() {
     const temaAtual = document.documentElement.getAttribute("data-theme") || "light";
     const proximoTema = temaAtual === "dark" ? "light" : "dark";
@@ -72,7 +79,7 @@ function alternarTema() {
     }
 }
 
-// --- CONFIGURA TOPBAR --- 
+// --- CONFIGURA A TOPBAR APOS O CARREGAMENTO DO DOM ---
 document.addEventListener("DOMContentLoaded", () => {
     aplicarTemaInicial();
 

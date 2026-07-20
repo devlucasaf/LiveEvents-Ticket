@@ -132,7 +132,7 @@
 
         select.addEventListener("change", syncFromNative);
 
-        // --- OBSERVA MUDANCAS: OPCOES (carregarEventos) E ESTADO DISABLED ---
+        // --- OBSERVA MUDANCAS ---
         const observer = new MutationObserver(function () {
             buildOptions();
             syncFromNative();
