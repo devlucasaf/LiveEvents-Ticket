@@ -113,28 +113,39 @@ app.MapControllers();
 
 await app.SeedDataAsync();
 
+const string urlBackend = "http://localhost:5000";
+const string urlFrontend = "http://localhost:5173";
+const string urlSwagger  = "http://localhost:5000/swagger";
+
 app.Lifetime.ApplicationStarted.Register(() =>
 {
     Console.ForegroundColor = ConsoleColor.Green;
     Console.WriteLine(@"
+    █████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗
+    ╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝
+
     ██╗     ██╗██╗   ██╗███████╗    ███████╗██╗   ██╗███████╗███╗   ██╗████████╗███████╗    ████████╗██╗ ██████╗██╗  ██╗███████╗████████╗
     ██║     ██║██║   ██║██╔════╝    ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝██╔════╝    ╚══██╔══╝██║██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝
     ██║     ██║██║   ██║█████╗      █████╗  ██║   ██║█████╗  ██╔██╗ ██║   ██║   ███████╗       ██║   ██║██║     █████╔╝ █████╗     ██║   
     ██║     ██║╚██╗ ██╔╝██╔══╝      ██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║   ╚════██║       ██║   ██║██║     ██╔═██╗ ██╔══╝     ██║   
     ███████╗██║ ╚████╔╝ ███████╗    ███████╗ ╚████╔╝ ███████╗██║ ╚████║   ██║   ███████║       ██║   ██║╚██████╗██║  ██╗███████╗   ██║   
     ╚══════╝╚═╝  ╚═══╝  ╚══════╝    ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝       ╚═╝   ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝ 
+
+    █████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗
+    ╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝ 
     ");
     Console.ForegroundColor = ConsoleColor.White;
     Console.WriteLine($@"
-        Aplicação:     LiveEvents-Ticket
-        .NET:          {Environment.Version}
-        Ambiente:      {app.Environment.EnvironmentName}
-        Backend:       http://localhost:5000
-        Frontend:      http://localhost:5173
-        Swagger:       http://localhost:5000/swagger
-        Desenvolvedor: Lucas Freitas
-        GitHub:        https://github.com/devlucasaf/LiveEvents-Ticket
-        ========================================================================================
+        ==================================================================
+        | Aplicação:     LiveEvents-Ticket                               |
+        | .NET:          {Environment.Version}                           |
+        | Ambiente:      {app.Environment.EnvironmentName}               |
+        | Backend:       {urlBackend}                                    |
+        | Frontend:      {urlFrontend}                                   |
+        | Swagger:       {urlSwagger}                                    |
+        | Desenvolvedor: Lucas Freitas                                   | 
+        | GitHub:        https://github.com/devlucasaf/LiveEvents-Ticket |
+        ==================================================================
     ");
     Console.ResetColor();
 });

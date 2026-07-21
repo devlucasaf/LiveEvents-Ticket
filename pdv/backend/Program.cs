@@ -125,16 +125,38 @@ const string urlFrontend = "http://localhost:5100";
 const string urlSwagger  = "http://localhost:5100/swagger";
 
 // --- BANNER DE INICIALIZAÇÃO ---
-Console.WriteLine();
-Console.WriteLine("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
-Console.WriteLine("    PONTO DE VENDA - Aplicação completa");
-Console.WriteLine("    .NET:       8.0");
-Console.WriteLine("    Ambiente:   " + app.Environment.EnvironmentName);
-Console.WriteLine("    Frontend:   " + urlFrontend);
-Console.WriteLine("    API:        " + urlFrontend + "/api");
-Console.WriteLine("    Swagger:    " + urlSwagger);
-Console.WriteLine("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
-Console.WriteLine();
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine(@"
+    █████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗
+    ╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝         
+    
+    ██╗     ██╗██╗   ██╗███████╗    ███████╗██╗   ██╗███████╗███╗   ██╗████████╗███████╗              ██████╗ ██████╗ ██╗   ██╗
+    ██║     ██║██║   ██║██╔════╝    ██╔════╝██║   ██║██╔════╝████╗  ██║╚══██╔══╝██╔════╝              ██╔══██╗██╔══██╗██║   ██║
+    ██║     ██║██║   ██║█████╗      █████╗  ██║   ██║█████╗  ██╔██╗ ██║   ██║   ███████╗    █████╗    ██████╔╝██║  ██║██║   ██║
+    ██║     ██║╚██╗ ██╔╝██╔══╝      ██╔══╝  ╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║   ╚════██║    ╚════╝    ██╔═══╝ ██║  ██║╚██╗ ██╔╝
+    ███████╗██║ ╚████╔╝ ███████╗    ███████╗ ╚████╔╝ ███████╗██║ ╚████║   ██║   ███████║              ██║     ██████╔╝ ╚████╔╝ 
+    ╚══════╝╚═╝  ╚═══╝  ╚══════╝    ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝              ╚═╝     ╚═════╝   ╚═══╝  
+
+    █████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗
+    ╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝ 
+    ");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine($@"
+        ==================================================================
+        | Aplicação:     LiveEvents - PDV                                |
+        | .NET:          {Environment.Version}                           |   
+        | Ambiente:      {app.Environment.EnvironmentName}               |               
+        | Backend:       http://localhost:5000                           |   
+        | Frontend:      {urlFrontend}                                   |                               
+        | Swagger:       {urlSwagger}                                    |
+        | Desenvolvedor: Lucas Freitas                                   |
+        | GitHub:        https://github.com/devlucasaf/LiveEvents-Ticket |
+        ==================================================================
+    ");
+    Console.ResetColor();
+});
 
 if (app.Environment.IsDevelopment())
 {
@@ -154,5 +176,6 @@ if (app.Environment.IsDevelopment())
         }
     });
 }
+
 
 app.Run();
