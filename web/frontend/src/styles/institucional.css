@@ -1,0 +1,215 @@
+/* --- PÁGINAS INSTITUCIONAIS --- */
+.institucional {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2rem 0 3rem;
+}
+
+/* --- CABEÇALHO DA PÁGINA --- */
+.institucional-cabecalho {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line-light);
+}
+
+.institucional-titulo {
+    margin: 0 0 0.5rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.institucional-subtitulo {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--muted);
+}
+
+/* --- CORPO DO CONTEÚDO --- */
+.institucional-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* --- SEÇÕES --- */
+.institucional-secao {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.institucional-secao h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.institucional-secao h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.institucional-secao p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink-secondary);
+}
+
+.institucional-secao a {
+    color: var(--brand);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.institucional-secao a:hover {
+    text-decoration: underline;
+}
+
+/* --- LISTAS --- */
+.institucional-lista {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.institucional-lista li {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink-secondary);
+}
+
+/* --- CARTÕES DE DESTAQUE --- */
+.institucional-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.institucional-card {
+    padding: 1.25rem;
+    border: 1px solid var(--line-light);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    box-shadow: var(--shadow-sm);
+}
+
+.institucional-card h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.institucional-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-secondary);
+}
+
+.institucional-card a {
+    color: var(--brand);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.institucional-card a:hover {
+    text-decoration: underline;
+}
+
+/* --- ITENS EM ACORDÉAO --- */
+.institucional-faq {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.institucional-faq-item {
+    border: 1px solid var(--line-light);
+    border-radius: var(--radius-md);
+    background: var(--panel);
+    overflow: hidden;
+}
+
+.institucional-faq-pergunta {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: left;
+    transition: background 0.15s ease;
+}
+
+.institucional-faq-pergunta:hover {
+    background: var(--panel-hover);
+}
+
+.institucional-faq-pergunta:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: -2px;
+}
+
+.institucional-faq-icone {
+    flex-shrink: 0;
+    color: var(--brand);
+    transition: transform 0.2s ease;
+}
+
+.institucional-faq-item.aberto .institucional-faq-icone {
+    transform: rotate(180deg);
+}
+
+.institucional-faq-resposta {
+    padding: 0 1.25rem 1.15rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--ink-secondary);
+}
+
+/* --- RODAPÉ DA PÁGINA --- */
+.institucional-nota {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--line-light);
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+/* --- BLOCO DE TEXTO DA LICENÇA --- */
+.institucional-licenca {
+    margin: 0;
+    padding: 1.25rem;
+    border: 1px solid var(--line-light);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+    color: var(--ink-secondary);
+    font-family: ui-monospace, "SFMono-Regular", "Consolas", "Liberation Mono", "Menlo", monospace;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+}
+
+/* --- RESPONSIVO --- */
+@media (max-width: 640px) {
+    .institucional-titulo {
+        font-size: 1.6rem;
+    }
+}
