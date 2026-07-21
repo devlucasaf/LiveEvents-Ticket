@@ -12,23 +12,28 @@
     const btnTexto    = btnEntrar.querySelector(".btn-texto");
     const btnSpinner  = btnEntrar.querySelector(".btn-spinner");
 
+    // --- EXIBE A MENSAGEM DE ERRO NA TELA ---
     function exibirErro(mensagem) {
         msgErro.textContent = mensagem;
         msgErro.classList.remove("oculto");
     }
 
+    // --- LIMPA E OCULTA A MENSAGEM DE ERRO ---
     function limparErro() {
         msgErro.classList.add("oculto");
         msgErro.textContent = "";
     }
 
+    // --- ALTERNA O ESTADO DE CARREGANDO DO BOTAO ---
     function alternarCarregando(carregando) {
         btnEntrar.disabled = carregando;
         btnTexto.classList.toggle("oculto", carregando);
         btnSpinner.classList.toggle("oculto", !carregando);
     }
 
+    // --- AUTENTICA O OPERADOR ---
     form.addEventListener("submit", async (evento) => {
+        // EVITA O RECARREGAMENTO PADRAO DA PAGINA
         evento.preventDefault();
         limparErro();
 
@@ -40,6 +45,7 @@
             return;
         }
 
+        // ATIVA O ESTADO DE CARREGANDO ENQUANTO CONSULTA O BACKEND
         alternarCarregando(true);
         try {
             const resposta = await Api.post("/auth/login", { login, senha }, { autenticar: false });

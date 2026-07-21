@@ -33,7 +33,7 @@ function formatarData(date) {
     return `${d}/${m}/${y}`;
 }
 
-export default function DatePicker({ value, onChange, placeholder = "Data de nascimento", required }) {
+export default function DatePicker({ value, onChange, placeholder = "Data de nascimento", required, inputClassName = "auth-page__input" }) {
     const [aberto,      setAberto]      = useState(false);
     const [anoAtual,    setAnoAtual]    = useState(new Date().getFullYear() - 20);
     const [mesAtual,    setMesAtual]    = useState(new Date().getMonth());
@@ -127,7 +127,7 @@ export default function DatePicker({ value, onChange, placeholder = "Data de nas
     return (
         <div className="datepicker" ref={ref}>
             <input
-                className="auth-page__input datepicker__input"
+                className={`${inputClassName} datepicker__input`}
                 type="text"
                 readOnly
                 value={textoExibido}

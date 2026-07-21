@@ -315,7 +315,7 @@
     }
 
     // --- MONTA O HTML DOS CAMPOS DE DOCUMENTO ---
-    function htmlCamposDoc(campos, montarAttrs, valores) {
+    function htmlCamposDocumento(campos, montarAttrs, valores) {
         let html = "";
         for (let k = 0; k < campos.length; k += 2) {
             html += '<div class="form-grid">';
@@ -338,7 +338,7 @@
     }
 
     // --- COLETA OS DOCUMENTOS DA MEIA DO COMPRADOR ---
-    function coletarDocsComprador() {
+    function coletarDocumentosComprador() {
         const docs = {};
         docsComprador.querySelectorAll("input[data-doc-comprador]").forEach((input) => {
             docs[input.dataset.docChave] = input.value.trim();
@@ -354,13 +354,13 @@
         }
         const sub = selSubtipo.value;
         const campos = CATALOGO_MEIA[sub] || [];
-        const valores = coletarDocsComprador();
+        const valores = coletarDocumentosComprador();
 
         let html = '<h3 class="secao-subtitulo">Documentos da meia — Ingresso 1</h3>';
         if (campos.length === 0) {
             html += '<p class="painel-subtitulo">Informe a data de nascimento acima (deve ser menor de 18 anos).</p>';
         } else {
-            html += htmlCamposDoc(
+            html += htmlCamposDocumento(
                 campos,
                 (c) => `data-doc-comprador="1" data-doc-chave="${c.chave}"`,
                 valores
@@ -506,7 +506,7 @@
         }
 
         const meiaComSubtipo = tipoEntradaSelecionado() === "MEIA" && selSubtipo.value;
-        const camposDocAcomp = meiaComSubtipo ? (CATALOGO_MEIA[selSubtipo.value] || []) : [];
+        const camposDocumentoAcompanhante = meiaComSubtipo ? (CATALOGO_MEIA[selSubtipo.value] || []) : [];
         let html = "";
         for (let i = 0; i < totalAcompanhantes; i++) {
             const dados = anteriores[i] || {};
@@ -590,9 +590,9 @@
                 </div>
             `;
 
-            if (camposDocAcomp.length > 0) {
-                html += htmlCamposDoc(
-                    camposDocAcomp,
+            if (camposDocumentoAcompanhante.length > 0) {
+                html += htmlCamposDocumento(
+                    camposDocumentoAcompanhante,
                     (c) => `data-acomp="${i}" data-doc-chave="${c.chave}"`,
                     dados.documentos || {}
                 );

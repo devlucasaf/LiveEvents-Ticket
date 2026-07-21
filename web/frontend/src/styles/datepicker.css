@@ -5,7 +5,7 @@
 
 .datepicker__input {
     cursor: pointer;
-    padding-right: 2.5rem !important;
+    padding-right: 2.9rem !important;
 }
 
 .datepicker__icone {
@@ -13,8 +13,8 @@
     right: 0.85rem;
     top: 50%;
     transform: translateY(-50%);
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.25rem;
+    height: 1.25rem;
     color: var(--muted);
     cursor: pointer;
     pointer-events: auto;
@@ -24,13 +24,15 @@
     position: absolute;
     top: calc(100% + 0.5rem);
     left: 0;
-    right: 0;
+    right: auto;
+    width: max(330px, 100%);
+    max-width: min(92vw, 420px);
     z-index: 100;
     background: var(--panel);
     border: 1.5px solid var(--line);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
-    padding: 1rem;
+    padding: 1.1rem;
     animation: datepicker-fadeIn 0.15s ease;
 }
 
@@ -50,7 +52,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.95rem;
 }
 
 .datepicker__titulo {
@@ -75,12 +77,12 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.45rem 0.7rem;
+    padding: 0.5rem 0.85rem;
     border: 1.5px solid var(--line);
     border-radius: var(--radius-md);
     background-color: var(--bg-secondary);
     color: var(--ink);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
@@ -123,9 +125,9 @@
 }
 
 .datepicker__opcao {
-    padding: 0.45rem 0.7rem;
+    padding: 0.52rem 0.8rem;
     border-radius: var(--radius-sm);
-    font-size: 0.82rem;
+    font-size: 0.88rem;
     font-weight: 500;
     color: var(--ink);
     cursor: pointer;
@@ -171,11 +173,11 @@
     background: none;
     border: none;
     color: var(--brand);
-    font-size: 1.3rem;
+    font-size: 1.45rem;
     font-weight: 700;
     cursor: pointer;
-    width: 2rem;
-    height: 2rem;
+    width: 2.2rem;
+    height: 2.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -190,23 +192,23 @@
 .datepicker__semana {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    margin-bottom: 0.25rem;
+    gap: 4px;
+    margin-bottom: 0.4rem;
 }
 
 .datepicker__dia-semana {
     text-align: center;
-    font-size: 0.7rem;
+    font-size: 0.76rem;
     font-weight: 600;
     color: var(--muted);
-    padding: 0.25rem 0;
+    padding: 0.3rem 0;
     text-transform: uppercase;
 }
 
 .datepicker__grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
+    gap: 4px;
 }
 
 .datepicker__dia {
@@ -214,11 +216,11 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    aspect-ratio: 1;
+    min-height: 2.25rem;
     border: none;
     background: none;
-    font-size: 0.82rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-weight: 600;
     color: var(--ink);
     border-radius: var(--radius-sm);
     cursor: pointer;

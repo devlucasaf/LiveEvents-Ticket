@@ -5,47 +5,47 @@ namespace PontoVenda.Backend.Exception;
 
 public class GlobalExceptionMiddleware
 {
-    private readonly RequestDelegate _next;
+    private readonly RequestDelegate _proximo;
 
     // --- INJEÇÃO DO PRÓXIMO MIDDLEWARE DO PIPELINE ---
-    public GlobalExceptionMiddleware(RequestDelegate next)
+    public GlobalExceptionMiddleware(RequestDelegate proximo)
     {
-        _next = next;
+        _proximo = proximo;
     }
 
     // --- INTERCEPTAR REQUISIÇÕES E CAPTURAR EXCEÇÕES NÃO TRATADAS ---
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext contexto)
     {
         try
         {
-            await _next(context);
+            await _proximo(contexto);
         }
-        catch (System.Exception ex)
+        catch (System.Exception excecao)
         {
-            await HandleExceptionAsync(context, ex);
+            await TratarExcecaoAsync(contexto, excecao);
         }
     }
 
     // --- MAPEAR EXCEÇÃO PARA RESPOSTA HTTP ESTRUTURADA ---
-    private static Task HandleExceptionAsync(HttpContext context, System.Exception ex)
+    private static Task TratarExcecaoAsync(HttpContext contexto, System.Exception excecao)
     {
-        var (statusCode, message) = ex switch
+        var (codigoStatus, mensagem) = excecao switch
         {
-            KeyNotFoundException => (HttpStatusCode.NotFound, ex.Message),
-            InvalidOperationException => (HttpStatusCode.BadRequest, ex.Message),
-            UnauthorizedAccessException => (HttpStatusCode.Unauthorized, ex.Message),
+            KeyNotFoundException => (HttpStatusCode.NotFound, excecao.Message),
+            InvalidOperationException => (HttpStatusCode.BadRequest, excecao.Message),
+            UnauthorizedAccessException => (HttpStatusCode.Unauthorized, excecao.Message),
             _ => (HttpStatusCode.InternalServerError, "Erro interno do servidor.")
         };
 
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)statusCode;
+        contexto.Response.ContentType = "application/json";
+        contexto.Response.StatusCode = (int)codigoStatus;
 
-        var payload = JsonSerializer.Serialize(new ErrorResponse
+        var conteudo = JsonSerializer.Serialize(new ErrorResponse
         {
-            Message = message,
-            StatusCode = context.Response.StatusCode
+            Message = mensagem,
+            StatusCode = contexto.Response.StatusCode
         });
 
-        return context.Response.WriteAsync(payload);
+        return contexto.Response.WriteAsync(conteudo);
     }
 }

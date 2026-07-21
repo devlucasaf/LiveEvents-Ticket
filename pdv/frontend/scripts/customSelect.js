@@ -2,84 +2,85 @@
     "use strict";
 
     // --- TRANSFORMA UM SELECT NATIVO EM DROPDOWN CUSTOMIZADO ---
-    function enhanceSelect(select) {
+    function transformarSelect(select) {
         if (select.dataset.enhanced === "true") {
             return;
         }
         select.dataset.enhanced = "true";
 
-        const wrap = document.createElement("div");
-        wrap.className = "cselect";
-        select.parentNode.insertBefore(wrap, select);
-        wrap.appendChild(select);
+        const involucro = document.createElement("div");
+        involucro.className = "cselect";
+        select.parentNode.insertBefore(involucro, select);
+        involucro.appendChild(select);
         select.classList.add("cselect__native");
 
-        // --- BOTAO GATILHO ---
-        const trigger = document.createElement("button");
+        const botaoGatilho = document.createElement("button");
 
-        trigger.type = "button";
-        trigger.className = "cselect__trigger";
-        trigger.innerHTML =
+        botaoGatilho.type = "button";
+        botaoGatilho.className = "cselect__trigger";
+        botaoGatilho.innerHTML =
             "<span class='cselect__label'></span><span class='cselect__arrow' aria-hidden='true'></span>";
-            
-        wrap.appendChild(trigger);
 
-        const list = document.createElement("ul");
+        involucro.appendChild(botaoGatilho);
 
-        list.className = "cselect__list oculto";
-        list.setAttribute("role", "listbox");
+        const lista = document.createElement("ul");
 
-        wrap.appendChild(list);
+        lista.className = "cselect__list oculto";
+        lista.setAttribute("role", "listbox");
 
-        const labelEl = trigger.querySelector(".cselect__label");
+        involucro.appendChild(lista);
+
+        const elementoRotulo = botaoGatilho.querySelector(".cselect__label");
 
         // --- RECONSTROI A LISTA A PARTIR DAS <option> DO SELECT ---
-        function buildOptions() {
-            list.innerHTML = "";
+        function construirOpcoes() {
+            lista.innerHTML = "";
 
-            Array.from(select.options).forEach(function (opt) {
-                const li = document.createElement("li");
-                li.className = "cselect__option";
-                li.setAttribute("role", "option");
-                li.dataset.value = opt.value;
-                li.textContent = opt.textContent;
+            Array.from(select.options).forEach(function (opcao) {
+                const item = document.createElement("li");
 
-                if (opt.disabled) {
-                    li.classList.add("cselect__option--disabled");
+                item.className = "cselect__option";
+                item.setAttribute("role", "option");
+                item.dataset.value = opcao.value;
+                item.textContent = opcao.textContent;
+
+                // MARCA VISUALMENTE AS OPCOES DESABILITADAS
+                if (opcao.disabled) {
+                    item.classList.add("cselect__option--disabled");
                 }
 
-                li.addEventListener("click", function () {
-                    if (opt.disabled) {
+                item.addEventListener("click", function () {
+                    if (opcao.disabled) {
                         return;
                     }
-                    setValue(opt.value);
+                    definirValor(opcao.value);
                     fechar();
                 });
 
-                list.appendChild(li);
+                lista.appendChild(item);
             });
         }
 
         // --- ESPELHA O ESTADO DO SELECT NATIVO NA UI CUSTOMIZADA ---
-        function syncFromNative() {
-            const selecionada = select.options[select.selectedIndex];
-            labelEl.textContent = selecionada ? selecionada.textContent : "";
+        function sincronizarComNativo() {
+            const opcaoSelecionada = select.options[select.selectedIndex];
+            elementoRotulo.textContent = opcaoSelecionada ? opcaoSelecionada.textContent : "";
 
-            Array.from(list.children).forEach(function (li) {
-                li.classList.toggle("cselect__option--ativa", li.dataset.value === select.value);
+            Array.from(lista.children).forEach(function (item) {
+                item.classList.toggle("cselect__option--ativa", item.dataset.value === select.value);
             });
 
-            trigger.classList.toggle("cselect__trigger--placeholder", !select.value);
+            botaoGatilho.classList.toggle("cselect__trigger--placeholder", !select.value);
 
-            trigger.disabled = select.disabled;
-            wrap.classList.toggle("cselect--disabled", select.disabled);
+            botaoGatilho.disabled = select.disabled;
+            involucro.classList.toggle("cselect--disabled", select.disabled);
         }
 
         // --- APLICA O VALOR NO SELECT NATIVO E DISPARA "change" ---
-        function setValue(value) {
-            select.value = value;
+        function definirValor(valor) {
+            select.value = valor;
             select.dispatchEvent(new Event("change", { bubbles: true }));
-            syncFromNative();
+            sincronizarComNativo();
         }
 
         // --- EXIBE A LISTA ---
@@ -87,25 +88,28 @@
             if (select.disabled) {
                 return;
             }
-            document.querySelectorAll(".cselect__list").forEach(function (l) {
-                l.classList.add("oculto");
+            
+            document.querySelectorAll(".cselect__list").forEach(function (outraLista) {
+                outraLista.classList.add("oculto");
             });
-            document.querySelectorAll(".cselect").forEach(function (c) {
-                c.classList.remove("cselect--aberto");
+
+            document.querySelectorAll(".cselect").forEach(function (outroComponente) {
+                outroComponente.classList.remove("cselect--aberto");
             });
-            list.classList.remove("oculto");
-            wrap.classList.add("cselect--aberto");
+
+            lista.classList.remove("oculto");
+            involucro.classList.add("cselect--aberto");
         }
 
         // --- OCULTA A LISTA ---
         function fechar() {
-            list.classList.add("oculto");
-            wrap.classList.remove("cselect--aberto");
+            lista.classList.add("oculto");
+            involucro.classList.remove("cselect--aberto");
         }
 
         // --- ALTERNA ABRIR/FECHAR ---
-        function toggle() {
-            if (list.classList.contains("oculto")) {
+        function alternar() {
+            if (lista.classList.contains("oculto")) {
                 abrir();
             } else {
                 fechar();
@@ -113,56 +117,57 @@
         }
 
         // ABRE/FECHA AO CLICAR NO GATILHO
-        trigger.addEventListener("click", function (e) {
-            e.stopPropagation();
-            toggle();
+        botaoGatilho.addEventListener("click", function (evento) {
+            evento.stopPropagation();
+            alternar();
         });
 
         // FECHA AO CLICAR FORA DO COMPONENTE
-        document.addEventListener("click", function (e) {
-            if (!wrap.contains(e.target)) {
+        document.addEventListener("click", function (evento) {
+            if (!involucro.contains(evento.target)) {
                 fechar();
             }
         });
 
         // FECHA COM A TECLA ESC
-        document.addEventListener("keydown", function (e) {
-            if (e.key === "Escape") {
+        document.addEventListener("keydown", function (evento) {
+            if (evento.key === "Escape") {
                 fechar();
             }
         });
 
-        select.addEventListener("change", syncFromNative);
+        select.addEventListener("change", sincronizarComNativo);
 
         // --- OBSERVA MUDANCAS ---
-        const observer = new MutationObserver(function () {
-            buildOptions();
-            syncFromNative();
+        const observador = new MutationObserver(function () {
+            construirOpcoes();
+            sincronizarComNativo();
         });
-        observer.observe(select, {
+        observador.observe(select, {
             childList: true,
             attributes: true,
             attributeFilter: ["disabled"]
         });
 
+        // RESINCRONIZA APOS O RESET DO FORMULARIO
         if (select.form) {
             select.form.addEventListener("reset", function () {
-                setTimeout(syncFromNative, 0);
+                setTimeout(sincronizarComNativo, 0);
             });
         }
 
-        buildOptions();
-        syncFromNative();
+        construirOpcoes();
+        sincronizarComNativo();
     }
 
     // --- APLICA O DROPDOWN CUSTOMIZADO A TODOS OS <select> DA PAGINA ---
-    function init() {
-        document.querySelectorAll("select").forEach(enhanceSelect);
+    function inicializar() {
+        document.querySelectorAll("select").forEach(transformarSelect);
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", init);
+        document.addEventListener("DOMContentLoaded", inicializar);
     } else {
-        init();
+        inicializar();
     }
 })();

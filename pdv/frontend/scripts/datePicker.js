@@ -138,13 +138,15 @@
                     <div class="datepicker__seletores">
                         <div class="datepicker__select-wrap">
                             <button type="button" class="datepicker__select" data-sel="mes">
-                                ${MESES[mesAtual]}<span class="datepicker__select-seta">▾</span>
+                                ${MESES[mesAtual]}
+                                <span class="datepicker__select-seta">▾</span>
                             </button>
                             <ul class="datepicker__opcoes${seletorAberto === "mes" ? "" : " oculto"}" data-lista="mes">${mesesHtml}</ul>
                         </div>
                         <div class="datepicker__select-wrap">
                             <button type="button" class="datepicker__select" data-sel="ano">
-                                ${anoAtual}<span class="datepicker__select-seta">▾</span>
+                                ${anoAtual}
+                                <span class="datepicker__select-seta">▾</span>
                             </button>
                             <ul class="datepicker__opcoes${seletorAberto === "ano" ? "" : " oculto"}" data-lista="ano">${anosHtml}</ul>
                         </div>

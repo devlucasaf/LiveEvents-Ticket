@@ -1,6 +1,8 @@
 const API_BASE_URL = "/api";
 
+// --- CENTRALIZA AS CHAMADAS HTTP AO BACKEND ---
 const Api = {
+    // --- MONTA E EXECUTA A REQUISICAO HTTP ---
     async _request(metodo, caminho, corpo = null, { autenticar = true } = {}) {
         const headers = { "Content-Type": "application/json" };
 
@@ -12,6 +14,7 @@ const Api = {
         }
 
         const opcoes = { method: metodo, headers };
+
         if (corpo !== null) {
             opcoes.body = JSON.stringify(corpo);
         }
@@ -23,6 +26,7 @@ const Api = {
             throw new Error("Não foi possível conectar ao servidor. Verifique se o backend está rodando.");
         }
 
+        // --- SESSAO EXPIRADA: LIMPA E REDIRECIONA AO LOGIN ---
         if (resposta.status === 401 && autenticar) {
             Auth.encerrarSessao();
             window.location.href = Rotas.login;
@@ -33,6 +37,7 @@ const Api = {
             return null;
         }
 
+        // --- LE O CORPO CONFORME O TIPO DE CONTEUDO ---
         let dados = null;
         const tipoConteudo = resposta.headers.get("content-type") || "";
         if (tipoConteudo.includes("application/json")) {
@@ -52,19 +57,22 @@ const Api = {
         return dados;
     },
 
-    // --- ATALHOS ---
+    // --- REQUISICAO DE LEITURA SEM CORPO ---
     get(caminho, opcoes) { 
         return this._request("GET", caminho, null,  opcoes); 
     },
 
+    // --- CRIA RECURSO ENVIANDO CORPO ---
     post(caminho, corpo, opcoes) { 
         return this._request("POST", caminho, corpo, opcoes); 
     },
 
+    // --- ATUALIZA RECURSO ENVIANDO CORPO ---
     put(caminho, corpo, opcoes) { 
         return this._request("PUT", caminho, corpo, opcoes); 
     },
     
+    // --- REMOVE RECURSO SEM CORPO ---
     delete(caminho, opcoes) { 
         return this._request("DELETE", caminho, null,  opcoes); 
     }

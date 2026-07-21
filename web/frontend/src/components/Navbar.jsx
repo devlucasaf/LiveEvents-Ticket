@@ -172,6 +172,15 @@ export default function Navbar() {
                     Funcionários
                   </Link>
                 )}
+                {usuario.role === "ADMIN" && (
+                  <Link to="/admin/checkin" className="navbar__dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M4 7h16M7 3v8M17 3v8M5 11h14a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2z"/>
+                      <path d="M9 16l2 2 4-4"/>
+                    </svg>
+                    Check-in Portaria
+                  </Link>
+                )}
                 <div className="navbar__dropdown-divider" />
                 <button className="navbar__dropdown-item" onClick={handleLogout}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

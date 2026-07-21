@@ -30,8 +30,8 @@
     gap: 1rem;
     align-items: center;
     padding: 1rem;
-    background: var(--surface, #fff);
-    border: 1px solid var(--line-light, #eee);
+    background: var(--panel);
+    border: 1px solid var(--line-light);
     border-radius: 14px;
 }
 
@@ -68,7 +68,7 @@
 
 .carrinho-item__modalidade {
     font-size: 0.8rem;
-    color: var(--brand, #6c5ce7);
+    color: var(--brand);
     font-weight: 600;
 }
 
@@ -83,7 +83,7 @@
     width: 30px;
     height: 30px;
     border-radius: 8px;
-    border: 1px solid var(--line-light, #ddd);
+    border: 1px solid var(--line-light);
     background: transparent;
     color: var(--ink);
     font-size: 1.1rem;
@@ -92,7 +92,7 @@
 }
 
 .carrinho-item__qtd button:hover {
-    background: var(--line-light, #eee);
+    background: var(--line-light);
 }
 
 .carrinho-item__qtd span {
@@ -138,8 +138,8 @@
     position: sticky;
     top: 90px;
     padding: 1.25rem;
-    background: var(--surface, #fff);
-    border: 1px solid var(--line-light, #eee);
+    background: var(--panel);
+    border: 1px solid var(--line-light);
     border-radius: 14px;
 }
 
@@ -158,7 +158,7 @@
 .carrinho-resumo__total {
     margin-top: 0.5rem;
     padding-top: 0.75rem;
-    border-top: 1px solid var(--line-light, #eee);
+    border-top: 1px solid var(--line-light);
     color: var(--ink);
     font-size: 1.1rem;
 }
@@ -169,7 +169,7 @@
     padding: 0.85rem;
     border: none;
     border-radius: 10px;
-    background: var(--brand, #6c5ce7);
+    background: var(--brand);
     color: #fff;
     font-weight: 600;
     cursor: pointer;
@@ -207,7 +207,7 @@
     width: 64px;
     height: 64px;
     margin-bottom: 1rem;
-    color: var(--line, #ccc);
+    color: var(--line);
 }
 
 .carrinho-page__vazio h2 {
@@ -219,7 +219,7 @@
     margin-top: 1.5rem;
     padding: 0.75rem 1.5rem;
     border-radius: 10px;
-    background: var(--brand, #6c5ce7);
+    background: var(--brand);
     color: #fff;
     text-decoration: none;
     font-weight: 600;

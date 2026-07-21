@@ -1,7 +1,6 @@
 (function () {
     Auth.exigirLogin();
 
-    // --- ELEMENTOS DO DOM ---
     const corpoTabela            = document.getElementById("corpo-tabela");
     const corpoTabelaEvento      = document.getElementById("corpo-tabela-evento");
     const corpoTabelaAtendente   = document.getElementById("corpo-tabela-atendente");
@@ -21,16 +20,18 @@
     let cacheEventos   = [];
     let cacheAtendentes = [];
 
-    // --- FORMATADORES ---
+    // --- FORMATADOR DE MOEDA NO PADRAO BRASILEIRO ---
     const formatadorBRL = new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL"
     });
 
+    // --- FORMATA UM VALOR NUMERICO COMO MOEDA ---
     function formatarMoeda(valor) {
         return formatadorBRL.format(Number(valor) || 0);
     }
 
+    // --- FORMATA UMA DATA ISO COMO DATA + HORA CURTAS ---
     function formatarDataHora(iso) {
         if (!iso) {
             return "--";
@@ -39,6 +40,7 @@
         return new Date(iso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
     }
 
+    // --- FORMATA UMA DATA ISO APENAS COMO DATA ---
     function formatarData(iso) {
         if (!iso) {
             return "--";
@@ -47,13 +49,13 @@
         return new Date(iso).toLocaleDateString("pt-BR");
     }
 
-    // --- ROTULOS AMIGAVEIS DAS FORMAS DE PAGAMENTO ---
     const ROTULOS_PAGAMENTO = {
         CREDITO: "Crédito",
         DEBITO: "Débito",
         PIX: "Pix"
     };
 
+    // --- MONTA O BADGE DA FORMA DE PAGAMENTO ---
     function tagPagamento(metodo) {
         const chave = (metodo || "").toUpperCase();
         const rotulo = ROTULOS_PAGAMENTO[chave] || metodo || "—";
@@ -61,17 +63,19 @@
         return `<span class="${classe}">${rotulo}</span>`;
     }
 
+    // --- EXIBE UM ALERTA DE ERRO/SUCESSO ---
     function exibirFeedback(tipo, mensagem) {
         msgFeedback.className = `alerta alerta-${tipo}`;
         msgFeedback.textContent = mensagem;
         msgFeedback.classList.remove("oculto");
     }
 
+    // --- OCULTA A MENSAGEM DE FEEDBACK ---
     function limparFeedback() {
         msgFeedback.classList.add("oculto");
     }
 
-    // --- ABAS ---
+    // --- TROCA A ABA ATIVA E RECARREGA O RELATORIO CORRESPONDENTE ---
     function trocarAba(nome) {
         abaAtiva = nome;
 
@@ -88,7 +92,7 @@
 
     abas.forEach((a) => a.addEventListener("click", () => trocarAba(a.dataset.aba)));
 
-    // --- CARREGAMENTO POR ABA ---
+    // --- DECIDE QUAL RELATORIO CARREGAR CONFORME A ABA ATIVA ---
     async function carregar() {
         limparFeedback();
         if (abaAtiva === "todas") {
@@ -104,6 +108,7 @@
         }
     }
 
+    // --- CARREGA A LISTA DE TODAS AS VENDAS DE BALCAO ---
     async function carregarVendas() {
         corpoTabela.innerHTML = "<tr><td colspan='7' class='celula-vazia'>Carregando...</td></tr>";
 
@@ -118,6 +123,7 @@
         }
     }
 
+    // --- CARREGA O RELATORIO AGREGADO POR EVENTO ---
     async function carregarPorEvento() {
         corpoTabelaEvento.innerHTML = "<tr><td colspan='6' class='celula-vazia'>Carregando...</td></tr>";
 
@@ -132,6 +138,7 @@
         }
     }
 
+    // --- CARREGA O RELATORIO AGREGADO POR ATENDENTE ---
     async function carregarPorAtendente() {
         corpoTabelaAtendente.innerHTML = "<tr><td colspan='5' class='celula-vazia'>Carregando...</td></tr>";
 
@@ -197,12 +204,12 @@
         corpoTabela.innerHTML = html;
     }
 
+    // --- FORMATA A COLUNA "SETOR / TIPO" DE UMA VENDA ---
     function formatarSetor(v) {
         if (!v.setor) {
             return "--";
         }
 
-        // --- MONTA "SETOR • TIPO" ---
         const setor = (v.setor || "").replace(/_/g, " ");
         const tipo = v.tipoEntrada ? capitalizar(v.tipoEntrada) : "";
         const qtd = Number(v.quantidade) > 1 ? ` (x${v.quantidade})` : "";
@@ -215,6 +222,7 @@
         return t.charAt(0).toUpperCase() + t.slice(1);
     }
 
+    // --- CALCULA E EXIBE OS TOTAIS A PARTIR DA LISTA DE VENDAS ---
     function renderizarTotaisVendas(vendas) {
         const qtd = vendas.length;
         const faturamento = vendas.reduce((acc, v) => acc + (Number(v.valor) || 0), 0);
@@ -225,6 +233,7 @@
         totalTicketLbl.textContent = formatarMoeda(ticket);
     }
 
+    // --- CALCULA E EXIBE OS TOTAIS A PARTIR DE LINHAS JA AGREGADAS ---
     function renderizarTotaisAgregado(linhas) {
         const qtd = linhas.reduce((acc, l) => acc + (Number(l.quantidadeVendas) || 0), 0);
         const faturamento = linhas.reduce((acc, l) => acc + (Number(l.faturamentoTotal) || 0), 0);
@@ -235,13 +244,14 @@
         totalTicketLbl.textContent = formatarMoeda(ticket);
     }
 
-    // --- RENDERIZAÇÃO ---
+    // --- MONTA A TABELA DO RELATORIO POR EVENTO ---
     function renderizarEvento() {
         if (cacheEventos.length === 0) {
             corpoTabelaEvento.innerHTML = "<tr><td colspan='6' class='celula-vazia'>Nenhum evento com vendas.</td></tr>";
             return;
         }
 
+        // MONTA UMA LINHA PARA CADA EVENTO AGREGADO
         const html = cacheEventos.map((r) => `
             <tr>
                 <td>    
@@ -309,7 +319,7 @@
         corpoTabelaAtendente.innerHTML = html;
     }
 
-    // --- HANDLERS ---
+    // --- AO MUDAR O FILTRO, RE-RENDERIZA APENAS A ABA "TODAS" ---
     filtroPagamento.addEventListener("change", () => {
         if (abaAtiva === "todas") {
             renderizarTodas();

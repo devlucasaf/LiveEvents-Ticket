@@ -1,4 +1,5 @@
 using System.Text;
+
 using LiveEventsTicket.Backend.Exception;
 using LiveEventsTicket.Backend.Infra.Config;
 using LiveEventsTicket.Backend.Infra.Security;
@@ -14,10 +15,14 @@ using LiveEventsTicket.Backend.Modules.Admin.Service;
 using LiveEventsTicket.Backend.Modules.Usuario.Repository;
 using LiveEventsTicket.Backend.Modules.Usuario.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<JwtTokenService>();

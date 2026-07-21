@@ -66,7 +66,8 @@ Arquitetura **cliente-servidor (Client-Server)** com separação clara entre fro
 │   │   │   ├── 📂 pagination            # PagedResult genérico
 │   │   │   └── 📂 security              # JWT, CurrentUserService
 │   │   └── 📂 modules
-│   │       ├── 📂 evento                # CRUD de eventos
+│   │       ├── 📂 admin                 # Administração: eventos, ingressos e funcionários (ADMIN)
+│   │       ├── 📂 evento                # Listagem e consulta de eventos
 │   │       ├── 📂 ingresso              # Gestão de ingressos por setor
 │   │       ├── 📂 pagamento             # Processamento de pagamentos
 │   │       ├── 📂 pedido                # Pedidos de compra
@@ -77,19 +78,25 @@ Arquitetura **cliente-servidor (Client-Server)** com separação clara entre fro
 │   └── 📄 LiveEvents-Ticket.Backend.csproj
 └── 📂 frontend
     ├── 📂 src
-    │   ├── 📂 components                # Navbar, CardEvento, DatePicker
+    │   ├── 📂 assets                    # Imagens e recursos estáticos
+    │   ├── 📂 components                # Navbar, Footer, CardEvento, DatePicker, ModalCarrinho, Select, SelectCustom
+    │   ├── 📂 context                   # CarrinhoContext (estado global do carrinho)
     │   ├── 📂 pages
-    │   │   ├── 📂 admin                 # Dashboard administrativo
+    │   │   ├── 📂 admin                 # Dashboard, Criar Evento, Funcionários
     │   │   ├── 📂 auth                  # Login, Cadastro, Recuperar Senha
     │   │   ├── 📂 busca                 # Busca de eventos com filtros
+    │   │   ├── 📂 carrinho              # Carrinho de compras
     │   │   ├── 📂 evento                # Listagem + Detalhe do evento
     │   │   ├── 📂 ingresso              # Seleção de assentos
+    │   │   ├── 📂 institucional         # FAQ, Sobre, Acessibilidade, Suporte, Termos, Políticas, Licença
     │   │   ├── 📂 meus-eventos          # Meus ingressos (Em breve / Passados)
     │   │   ├── 📂 pedido                # Checkout e pagamento
     │   │   ├── 📂 salvos                # Eventos salvos (favoritos)
     │   │   └── 📂 usuario               # Perfil do usuário
-    │   ├── 📂 services                  # api.js, authService, eventoService, pedidoService
-    │   └── 📂 styles                    # CSS modular por página
+    │   ├── 📂 services                  # api, authService, carrinhoService, eventoService, funcionarioService, pedidoService
+    │   ├── 📂 styles                    # CSS modular por página
+    │   ├── 📄 App.jsx                   # Rotas da aplicação
+    │   └── 📄 main.jsx                  # Ponto de entrada + tema
     └── 📄 package.json
 ```
 
@@ -243,6 +250,8 @@ npm run dev
 | 🔍 **Busca** | Filtros por título, categoria e localização |
 | 💾 **Favoritos** | Salvar eventos para ver depois (localStorage) |
 | 🌙 **Tema** | Alternância entre tema claro e escuro |
+| 📄 **Páginas institucionais** | FAQ, Sobre, Acessibilidade, Suporte ao Fã, Termos de Uso, Políticas e Licença |
+| 🦶 **Footer global** | Rodapé com acesso rápido, links institucionais e redes sociais |
 
 ---
 
