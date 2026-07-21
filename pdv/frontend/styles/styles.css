@@ -1301,7 +1301,7 @@ select:focus {
     color: var(--muted);
 }
 
-/* ESTADO DESABILITADO (EX: FILTRO DO RELATORIO EM ABAS AGREGADAS) */
+/* --- ESTADO DESABILITADO --- */
 .cselect--disabled {
     opacity: 0.55;
 }
@@ -1310,7 +1310,7 @@ select:focus {
     cursor: not-allowed;
 }
 
-/* SCROLLBAR DA LISTA */
+/* --- SCROLLBAR DA LISTA --- */
 .cselect__list::-webkit-scrollbar {
     width: 6px;
 }

@@ -85,7 +85,6 @@ public class UsuarioService
             usuario.Sobrenome = dto.Sobrenome;
         }
 
-        // --- VALIDAR EMAIL DUPLICADO AO ALTERAR ---
         if (!string.IsNullOrWhiteSpace(dto.Email) && dto.Email != usuario.Email)
         {
             var existente = await _repository.BuscarPorEmailAsync(dto.Email, cancellationToken);

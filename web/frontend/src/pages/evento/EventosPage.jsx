@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CardEvento from '../../components/CardEvento';
-import { eventoService } from '../../services/eventoService';
-import '../../styles/eventos.css';
+import { useEffect, useState }  from "react";
+import { useNavigate }          from "react-router-dom";
+import CardEvento               from "../../components/CardEvento";
+import { eventoService }        from "../../services/eventoService";
+import "../../styles/eventos.css";
 
 export default function EventosPage() {
   const [eventos, setEventos] = useState([]);
-  const [erro,    setErro]    = useState('');
+  const [erro,    setErro]    = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { eventoService } from "../../services/eventoService";
-import { useCarrinho } from "../../context/CarrinhoContext";
-import SelectCustom from "../../components/SelectCustom";
-import ModalCarrinho from "../../components/ModalCarrinho";
-import "../../styles/evento-detalhe.css";
+import { useEffect, useState }          from  "react";
+import { Link, useParams, useNavigate } from  "react-router-dom";
+import { eventoService }                from  "../../services/eventoService";
+import { useCarrinho }                  from  "../../context/CarrinhoContext";
+import SelectCustom                     from  "../../components/SelectCustom";
+import ModalCarrinho                    from  "../../components/ModalCarrinho";
+import                                        "../../styles/evento-detalhe.css";
 
 // --- FORMATA UM VALOR NUMERICO COMO MOEDA BRASILEIRA ---
 function formatarMoeda(valor) {
@@ -158,7 +158,7 @@ function SetorCard({ ingresso, evento, modalidades }) {
         </button>
       </div>
 
-      {/* --- MODAL: IR PARA O CARRINHO OU CONTINUAR COMPRANDO --- */}
+      {/* --- IR PARA O CARRINHO OU CONTINUAR COMPRANDO --- */}
       <ModalCarrinho
         aberto={modalAberto}
         item={itemModal}

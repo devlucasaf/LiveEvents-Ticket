@@ -1,19 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import "../styles/select.css";
 
-// --- SELECT: DROPDOWN CUSTOMIZADO NO PADRAO DO SISTEMA ---
-// PROPS: value (VALOR ATUAL), onChange (CALLBACK), options (ARRAY DE STRINGS OU {value,label}),
-// placeholder (TEXTO QUANDO VAZIO), required (VALIDACAO NATIVA DO FORM)
+// --- DROPDOWN CUSTOMIZADO ---
 export default function Select({ value, onChange, options = [], placeholder = "Selecione...", required }) {
     const [aberto, setAberto] = useState(false);
     const ref = useRef(null);
 
-    // --- NORMALIZA AS OPCOES PARA O FORMATO {value, label} ---
     const itens = options.map((opt) =>
         typeof opt === "string" ? { value: opt, label: opt } : opt
     );
 
-    // --- ENCONTRA O LABEL DA OPCAO SELECIONADA ---
     const selecionado = itens.find((item) => item.value === value);
 
     // --- FECHA O DROPDOWN AO CLICAR FORA ---
@@ -27,7 +23,7 @@ export default function Select({ value, onChange, options = [], placeholder = "S
         return () => document.removeEventListener("mousedown", handleClickFora);
     }, []);
 
-    // --- SELECIONAR: APLICA O VALOR E FECHA A LISTA ---
+    // --- APLICA O VALOR E FECHA A LISTA ---
     function selecionar(valor) {
         onChange(valor);
         setAberto(false);
@@ -45,7 +41,7 @@ export default function Select({ value, onChange, options = [], placeholder = "S
                 <span className={`select__seta ${aberto ? "select__seta--aberta" : ""}`}>▾</span>
             </button>
 
-            {/* --- INPUT OCULTO PARA MANTER A VALIDACAO NATIVA (required) --- */}
+            {/* --- INPUT OCULTO PARA MANTER A VALIDACAO NATIVA --- */}
             {required && (
                 <input
                     className="select__hidden-input"

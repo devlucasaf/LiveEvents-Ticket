@@ -140,7 +140,7 @@
     border-color: var(--brand);
 }
 
-/* Form de edição */
+/* --- FORM DE EDIÇÃO --- */
 .perfil-page__form {
     display: flex;
     flex-direction: column;

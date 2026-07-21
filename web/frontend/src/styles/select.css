@@ -49,7 +49,7 @@
     transform: rotate(180deg);
 }
 
-/* --- INPUT OCULTO PARA VALIDACAO NATIVA (required) --- */
+/* --- INPUT OCULTO PARA VALIDACAO NATIVA --- */
 .select__hidden-input {
     position: absolute;
     bottom: 0;
@@ -82,8 +82,15 @@
 }
 
 @keyframes select-fadeIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { 
+        opacity: 0; 
+        transform: translateY(-4px); 
+    }
+
+    to   { 
+        opacity: 1; 
+        transform: translateY(0);
+    }
 }
 
 .select__opcao {

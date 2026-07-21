@@ -16,7 +16,7 @@
     text-align: center;
 }
 
-/* Step indicator */
+/* --- STEP INDICATOR --- */
 .checkout-page__step-indicator {
     display: flex;
     gap: 1rem;
@@ -41,7 +41,7 @@
     color: var(--ink-secondary);
 }
 
-/* Headers */
+/* --- HEADERS --- */
 .checkout-page__card h2 {
     font-size: 1.3rem;
     font-weight: 700;
@@ -63,7 +63,7 @@
     text-decoration: underline;
 }
 
-/* Item do carrinho */
+/* --- ITEM DO CARRINHO --- */
 .checkout-page__item {
     display: flex;
     justify-content: space-between;
@@ -103,7 +103,7 @@
     white-space: nowrap;
 }
 
-/* Seguro */
+/* --- SEGURO --- */
 .checkout-page__seguro {
     margin-bottom: 1.25rem;
 }
@@ -154,7 +154,7 @@
     white-space: nowrap;
 }
 
-/* Resumo */
+/* --- RESUMO --- */
 .checkout-page__resumo {
     background: var(--bg-secondary);
     border: 1px solid var(--line);
@@ -205,7 +205,7 @@
     font-size: 1.1rem;
 }
 
-/* Métodos de pagamento */
+/* --- MÉTODOS DE PAGAMENTO --- */
 .checkout-page__metodos {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -244,7 +244,7 @@
     color: var(--brand);
 }
 
-/* Form cartão */
+/* --- FORM CARTÃO --- */
 .checkout-page__form-cartao {
     margin-bottom: 1rem;
 }
@@ -287,7 +287,7 @@
     box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-/* PIX info */
+/* --- PIX INFO --- */
 .checkout-page__pix-info {
     padding: 1rem 1.25rem;
     background: var(--bg-secondary);
@@ -298,7 +298,7 @@
     color: var(--ink-secondary);
 }
 
-/* Botão principal */
+/* --- BOTÃO PRINCIPAL --- */
 .checkout-page__btn {
     width: 100%;
     padding: 0.9rem;
@@ -325,7 +325,7 @@
     cursor: not-allowed;
 }
 
-/* Etapa de documentos da meia entrada */
+/* --- ETAPA DE DOCUMENTOS DA MEIA ENTRADA --- */
 .checkout-page__doc-intro {
     font-size: 0.9rem;
     color: var(--ink-secondary);
@@ -397,7 +397,7 @@
     }
 }
 
-/* Confirmação */
+/* --- CONFIRMAÇÃO --- */
 .checkout-page__sucesso-icone {
     width: 3.5rem;
     height: 3.5rem;

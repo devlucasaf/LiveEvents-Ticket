@@ -1,5 +1,3 @@
-// --- SERVICO DO CARRINHO: PERSISTE OS ITENS NO localStorage (FUNCIONA SEM LOGIN) ---
-
 const CHAVE = "carrinho";
 
 // --- LE OS ITENS ATUAIS DO CARRINHO A PARTIR DO localStorage ---

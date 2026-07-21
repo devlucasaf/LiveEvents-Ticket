@@ -36,7 +36,7 @@
 }
 
 .busca-page__input::placeholder {
-  color: var(--muted);
+    color: var(--muted);
 }
 
 .busca-page__results {

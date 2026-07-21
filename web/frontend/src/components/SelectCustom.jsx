@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/select-custom.css";
 
-// --- DROPDOWN CUSTOMIZADO (SUBSTITUI O <select> NATIVO, CONTROLADO POR JS) ---
-// PROPS: value (VALOR ATUAL), onChange (RECEBE O NOVO VALOR), options [{ value, label }], placeholder, disabled
+// --- DROPDOWN CUSTOMIZADO ---
 export default function SelectCustom({ value, onChange, options = [], placeholder = "Selecione...", disabled = false }) {
     const [aberto, setAberto] = useState(false);
     const raizRef = useRef(null);
 
-    // --- ENCONTRA A OPCAO SELECIONADA PARA EXIBIR O ROTULO ---
     const selecionada = options.find((op) => op.value === value);
 
     // --- FECHA O DROPDOWN AO CLICAR FORA DELE ---
@@ -34,7 +32,6 @@ export default function SelectCustom({ value, onChange, options = [], placeholde
 
     // --- SELECIONA UMA OPCAO E FECHA O MENU ---
     function selecionar(op) {
-        // --- REPASSA O NOVO VALOR PARA O COMPONENTE PAI E FECHA ---
         onChange(op.value);
         setAberto(false);
     }
@@ -60,7 +57,7 @@ export default function SelectCustom({ value, onChange, options = [], placeholde
                 </svg>
             </button>
 
-            {/* --- LISTA DE OPCOES (SO RENDERIZA QUANDO ABERTO) --- */}
+            {/* --- LISTA DE OPÇÕES --- */}
             {aberto && (
                 <ul className="select-custom__menu" role="listbox">
                     {options.map((op) => (

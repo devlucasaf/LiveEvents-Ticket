@@ -16,7 +16,6 @@ public class RelatorioService
     // --- GERAR RELATÓRIO DE VENDAS ---
     public async Task<RelatorioVendasDto> GerarVendasAsync(CancellationToken cancellationToken = default)
     {
-        // --- BUSCAR TODOS OS PEDIDOS COM STATUS PAGO ---
         var pedidosPagos = await _context.Pedidos
             .Include(p => p.Itens)
             .Where(p => p.Status == "PAGO")

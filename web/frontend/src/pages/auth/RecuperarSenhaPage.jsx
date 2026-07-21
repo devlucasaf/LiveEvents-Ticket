@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import '../../styles/auth.css';
+import { useState } from "react";
+import "../../styles/auth.css";
 
 export default function RecuperarSenhaPage() {
-  const [email,     setEmail]     = useState('');
-  const [mensagem,  setMensagem]  = useState('');
+  const [email,     setEmail]     = useState("");
+  const [mensagem,  setMensagem]  = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();

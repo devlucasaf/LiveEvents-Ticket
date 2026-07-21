@@ -48,7 +48,7 @@ function calcularIdade(dataIso) {
     return idade;
 }
 
-// --- TELA DE CHECKOUT: FINALIZA A COMPRA DO CARRINHO ---
+// --- FINALIZA A COMPRA DO CARRINHO ---
 export default function CheckoutPage() {
     const navigate = useNavigate();
     const { itens, limpar } = useCarrinho();
@@ -110,7 +110,7 @@ export default function CheckoutPage() {
 
     const maxParcelas = Math.min(12, Math.floor(total / 10) || 1);
 
-    // --- ITENS QUE EXIGEM DOCUMENTOS (MEIA ENTRADA) ---
+    // --- ITENS QUE EXIGEM DOCUMENTOS ---
     const itensComDocumento = itens
         .map((item, idx) => ({ item, idx }))
         .filter(({ item }) => item.modalidade === "MEIA");
@@ -161,7 +161,7 @@ export default function CheckoutPage() {
         return true;
     }
 
-    // --- AVANCA DO CARRINHO: VAI PARA DOCUMENTOS SE HOUVER MEIA, SENAO PARA PAGAMENTO ---
+    // --- AVANÇA DO CARRINHO ---
     function avancarDoCarrinho() {
         if (itensComDocumento.length > 0) {
             setEtapa("documentos");
@@ -170,7 +170,7 @@ export default function CheckoutPage() {
         }
     }
 
-    // --- MONTA O ARRAY DE DOCUMENTOS (UM POR UNIDADE) DE UM ITEM ---
+    // --- MONTA O ARRAY DE DOCUMENTOS DE UM ITEM ---
     function documentosDoItem(idxItem, item) {
         if (item.modalidade !== "MEIA") {
             return null;
@@ -301,19 +301,34 @@ export default function CheckoutPage() {
                 <div className="checkout-page__resumo">
                     <h4>Resumo</h4>
                     <div className="checkout-page__resumo-linha">
-                        <span>Ingressos</span>
-                        <span>{formatarMoeda(subtotalIngressos)}</span>
+                        <span>
+                            Ingressos
+                        </span>
+
+                        <span>
+                            {formatarMoeda(subtotalIngressos)}
+                        </span>
                     </div>
 
                     <div className="checkout-page__resumo-linha">
-                        <span>Taxa de serviço (10%)</span>
-                        <span>{formatarMoeda(taxaServico)}</span>
+                        <span>
+                            Taxa de serviço (10%)
+                        </span>
+
+                        <span>
+                            {formatarMoeda(taxaServico)}
+                        </span>
                     </div>
 
                     {seguro && (
                         <div className="checkout-page__resumo-linha">
-                            <span>Seguro Ingresso Protegido (3%)</span>
-                            <span>{formatarMoeda(valorSeguro)}</span>
+                            <span>
+                                Seguro Ingresso Protegido (3%)
+                            </span>
+
+                            <span>
+                                {formatarMoeda(valorSeguro)}
+                            </span>
                         </div>
                     )}
                     <div className="checkout-page__resumo-linha checkout-page__resumo-total">

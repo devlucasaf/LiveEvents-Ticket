@@ -13,7 +13,7 @@ export default function CarrinhoPage() {
 
     const logado = !!localStorage.getItem("token");
 
-    // --- ENCAMINHA PARA O CHECKOUT OU PARA O LOGIN (COM RETORNO AO CARRINHO) ---
+    // --- ENCAMINHA PARA O CHECKOUT OU PARA O LOGIN ---
     function finalizar() {
         if (!logado) {
             navigate("/auth/login?retorno=/carrinho");
@@ -47,7 +47,7 @@ export default function CarrinhoPage() {
                     <h2 className="carrinho-page__titulo">Meu carrinho</h2>
 
                     {itens.map((item) => {
-                        // --- CHAVE UNICA DA LINHA (INGRESSO + MODALIDADE + SUBTIPO) ---
+                        // --- CHAVE UNICA DA LINHA ---
                         const chave = chaveDe(item);
                         return (
                             <div key={chave} className="carrinho-item">

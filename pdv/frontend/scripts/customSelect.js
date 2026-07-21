@@ -8,7 +8,6 @@
         }
         select.dataset.enhanced = "true";
 
-        // --- MONTA O CONTAINER E MOVE O SELECT NATIVO PARA DENTRO ---
         const wrap = document.createElement("div");
         wrap.className = "cselect";
         select.parentNode.insertBefore(wrap, select);
@@ -17,16 +16,19 @@
 
         // --- BOTAO GATILHO ---
         const trigger = document.createElement("button");
+
         trigger.type = "button";
         trigger.className = "cselect__trigger";
         trigger.innerHTML =
             "<span class='cselect__label'></span><span class='cselect__arrow' aria-hidden='true'></span>";
+            
         wrap.appendChild(trigger);
 
-        // --- LISTA DE OPCOES CUSTOMIZADA ---
         const list = document.createElement("ul");
+
         list.className = "cselect__list oculto";
         list.setAttribute("role", "listbox");
+
         wrap.appendChild(list);
 
         const labelEl = trigger.querySelector(".cselect__label");

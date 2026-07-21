@@ -129,7 +129,7 @@
     border-radius: 999px;
 }
 
-/* Perfil Icon / Login Button */
+/* --- PERFIL ICON / LOGIN BUTTON --- */
 .navbar__profile-btn {
     display: flex;
     align-items: center;
@@ -172,7 +172,7 @@
     height: 18px;
 }
 
-/* Dropdown Perfil */
+/* --- DROPDOWN PERFIL --- */
 .navbar__dropdown {
     position: absolute;
     top: 58px;

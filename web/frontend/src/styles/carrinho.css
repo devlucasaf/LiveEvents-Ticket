@@ -242,8 +242,21 @@
             "qtd valores";
     }
 
-    .carrinho-item__img { grid-area: img; width: 64px; height: 64px; }
-    .carrinho-item__info { grid-area: info; }
-    .carrinho-item__qtd { grid-area: qtd; }
-    .carrinho-item__valores { grid-area: valores; }
+    .carrinho-item__img { 
+        grid-area: img; 
+        width: 64px; 
+        height: 64px; 
+    }
+
+    .carrinho-item__info { 
+        grid-area: info; 
+    }
+
+    .carrinho-item__qtd { 
+        grid-area: qtd; 
+    }
+
+    .carrinho-item__valores { 
+        grid-area: valores; 
+    }
 }

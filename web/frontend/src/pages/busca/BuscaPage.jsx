@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CardEvento from '../../components/CardEvento';
-import { eventoService } from '../../services/eventoService';
-import '../../styles/busca.css';
+import { useEffect, useState }  from "react";
+import { useNavigate }          from "react-router-dom";
+import { eventoService }        from "../../services/eventoService";
+import CardEvento               from "../../components/CardEvento";
+import "../../styles/busca.css";
 
 export default function BuscaPage() {
-  const [termo,       setTermo]       = useState('');
+  const [termo,       setTermo]       = useState("");
   const [eventos,     setEventos]     = useState([]);
   const [resultados,  setResultados]  = useState([]);
   const navigate = useNavigate();

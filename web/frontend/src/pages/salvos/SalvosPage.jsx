@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CardEvento from '../../components/CardEvento';
-import { eventoService } from '../../services/eventoService';
-import '../../styles/salvos.css';
+import { useEffect, useState }  from "react";
+import { useNavigate }          from "react-router-dom";
+import { eventoService }        from "../../services/eventoService";
+import CardEvento               from "../../components/CardEvento";
+import "../../styles/salvos.css";
 
 export default function SalvosPage() {
   const [eventos, setEventos] = useState([]);
@@ -10,7 +10,7 @@ export default function SalvosPage() {
   const navigate = useNavigate();
 
   function loadSalvos() {
-    const ids = JSON.parse(localStorage.getItem('eventosSalvos') || '[]');
+    const ids = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
     setSalvos(ids);
   }
 
@@ -19,8 +19,8 @@ export default function SalvosPage() {
     loadSalvos();
 
     function handleUpdate() { loadSalvos(); }
-    window.addEventListener('salvosUpdated', handleUpdate);
-    return () => window.removeEventListener('salvosUpdated', handleUpdate);
+    window.addEventListener("salvosUpdated", handleUpdate);
+    return () => window.removeEventListener("salvosUpdated", handleUpdate);
   }, []);
 
   const eventosSalvos = eventos.filter((e) => salvos.includes(e.id));

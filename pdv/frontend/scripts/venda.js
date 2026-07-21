@@ -285,9 +285,11 @@
         if (isNaN(nasc.getTime())) {
             return 0;
         }
+
         const hoje = new Date();
         let idade = hoje.getFullYear() - nasc.getFullYear();
         const mes = hoje.getMonth() - nasc.getMonth();
+        
         if (mes < 0 || (mes === 0 && hoje.getDate() < nasc.getDate())) {
             idade--;
         }
@@ -514,31 +516,76 @@
                 <div class="form-grid">
                     <div class="campo">
                         <label for="acomp-nome-${i}">Nome</label>
-                        <input type="text" id="acomp-nome-${i}" data-acomp="${i}" data-campo="nome" placeholder="João" value="${dados.nome || ""}" />
+                        <input 
+                            type="text" 
+                            id="acomp-nome-${i}" 
+                            data-acomp="${i}" 
+                            data-campo="nome" 
+                            placeholder="João" 
+                            value="${dados.nome || ""}" 
+                        />
                     </div>
+
                     <div class="campo">
                         <label for="acomp-sobrenome-${i}">Sobrenome</label>
-                        <input type="text" id="acomp-sobrenome-${i}" data-acomp="${i}" data-campo="sobrenome" placeholder="Silva" value="${dados.sobrenome || ""}" />
+                        <input 
+                            type="text" 
+                            id="acomp-sobrenome-${i}" 
+                            data-acomp="${i}" 
+                            data-campo="sobrenome" 
+                            placeholder="Silva" 
+                            value="${dados.sobrenome || ""}" 
+                        />
                     </div>
                 </div>
                 <div class="form-grid">
                     <div class="campo">
                         <label for="acomp-email-${i}">E-mail</label>
-                        <input type="email" id="acomp-email-${i}" data-acomp="${i}" data-campo="email" placeholder="cliente@email.com" value="${dados.email || ""}" />
+                        <input 
+                            type="email" 
+                            id="acomp-email-${i}"
+                            data-acomp="${i}" 
+                            data-campo="email" 
+                            placeholder="cliente@email.com" 
+                            value="${dados.email || ""}" 
+                        />
                     </div>
                     <div class="campo">
                         <label for="acomp-cpf-${i}">CPF</label>
-                        <input type="text" id="acomp-cpf-${i}" data-acomp="${i}" data-campo="cpf" data-mascara="cpf" placeholder="000.000.000-00" maxlength="14" value="${dados.cpf || ""}" />
+                        <input 
+                            type="text"
+                            id="acomp-cpf-${i}" 
+                            data-acomp="${i}" 
+                            data-campo="cpf" 
+                            data-mascara="cpf" 
+                            placeholder="000.000.000-00" 
+                            maxlength="14" 
+                            value="${dados.cpf || ""}" 
+                        />
                     </div>
                 </div>
                 <div class="form-grid">
                     <div class="campo">
                         <label for="acomp-telefone-${i}">Telefone</label>
-                        <input type="text" id="acomp-telefone-${i}" data-acomp="${i}" data-campo="telefone" data-mascara="telefone" placeholder="(00) 00000-0000" value="${dados.telefone || ""}" />
+                        <input 
+                            type="text" 
+                            id="acomp-telefone-${i}" 
+                            data-acomp="${i}" 
+                            data-campo="telefone"
+                            data-mascara="telefone" 
+                            placeholder="(00) 00000-0000" 
+                            value="${dados.telefone || ""}" 
+                        />
                     </div>
                     <div class="campo">
                         <label for="acomp-dataNascimento-${i}">Data de nascimento</label>
-                        <input type="date" id="acomp-dataNascimento-${i}" data-acomp="${i}" data-campo="dataNascimento" value="${dados.dataNascimento || ""}" />
+                        <input 
+                            type="date" 
+                            id="acomp-dataNascimento-${i}" 
+                            data-acomp="${i}" 
+                            data-campo="dataNascimento" 
+                            value="${dados.dataNascimento || ""}" 
+                        />
                     </div>
                 </div>
             `;
@@ -654,17 +701,27 @@
         if (venda.contaCriada) {
             html += `
                 <div class="aviso-conta">
-                    <strong>Conta criada para o cliente!</strong>
+                    <strong>
+                        Conta criada para o cliente!
+                    </strong>
                     <p>Acesse o site com:</p>
                     <div class="linha">
-                        <span class="label">Login</span>
-                        <span class="valor">${venda.clienteEmail}</span>
+                        <span class="label">
+                            Login
+                        </span>
+                        <span class="valor">
+                            ${venda.clienteEmail}
+                        </span>
                     </div>
                     <div class="linha">
                         <span class="label">Senha inicial</span>
-                        <span class="valor codigo-curto">${venda.senhaInicial}</span>
+                        <span class="valor codigo-curto">
+                            ${venda.senhaInicial}
+                        </span>
                     </div>
-                    <small>Oriente o cliente a alterar a senha após o primeiro acesso.</small>
+                    <small>
+                        Oriente o cliente a alterar a senha após o primeiro acesso.
+                    </small>
                 </div>
             `;
         }
@@ -677,8 +734,12 @@
                         src="data:image/png;base64,${venda.qrCodeBase64}" 
                         alt="QR Code do ingresso" 
                     />
-                    <div class="ticket-codigo">${venda.codigoTicket}</div>
-                    <small class="qr-dica">O ingresso já está disponível na conta do cliente, na seção "Ingressos".</small>
+                    <div class="ticket-codigo">
+                        ${venda.codigoTicket}
+                    </div>
+                    <small class="qr-dica">
+                        O ingresso já está disponível na conta do cliente, na seção "Ingressos".
+                    </small>
                 </div>
             `;
         }
@@ -820,7 +881,7 @@
         evento.preventDefault();
         limparFeedback();
 
-        const eventoId   = selEvento.value;
+        const eventoId = selEvento.value;
         const ingressoId = selIngresso.value;
         const quantidade = parseInt(inputQtd.value, 10) || 0;
 

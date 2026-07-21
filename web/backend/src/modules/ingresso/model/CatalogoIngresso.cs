@@ -107,7 +107,7 @@ public static class CatalogoIngresso
         return MeiaSubtipos.Any(s => s.Codigo == sub);
     }
 
-    // --- RETORNA OS CAMPOS DE DOCUMENTO EXIGIDOS PARA UM SUBTIPO (COMUNS + ESPECIFICOS) ---
+    // --- RETORNA OS CAMPOS DE DOCUMENTO EXIGIDOS PARA UM SUBTIPO ---
     public static List<DocumentoCampoInfo> CamposDocumento(string? subtipo)
     {
         var sub = (subtipo ?? string.Empty).Trim().ToUpperInvariant();
@@ -131,14 +131,13 @@ public static class CatalogoIngresso
         return idade;
     }
 
-    // --- VALIDA OS DOCUMENTOS DE UMA MEIA ENTRADA (CAMPOS OBRIGATORIOS + REGRA DE IDADE) ---
+    // --- VALIDA OS DOCUMENTOS DE UMA MEIA ENTRADA ---
     public static void ValidarDocumentos(string subtipo, IReadOnlyDictionary<string, string?>? documentos)
     {
         var sub = (subtipo ?? string.Empty).Trim().ToUpperInvariant();
         var campos = CamposDocumento(sub);
         documentos ??= new Dictionary<string, string?>();
 
-        // --- CONFERE OS CAMPOS OBRIGATORIOS ---
         foreach (var campo in campos.Where(c => c.Obrigatorio))
         {
             documentos.TryGetValue(campo.Chave, out var valor);

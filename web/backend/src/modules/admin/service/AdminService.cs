@@ -11,9 +11,9 @@ namespace LiveEventsTicket.Backend.Modules.Admin.Service;
 
 public class AdminService
 {
-    private readonly EventoService      _eventoService;
-    private readonly IngressoService    _ingressoService;
-    private readonly RelatorioService   _relatorioService;
+    private readonly EventoService _eventoService;
+    private readonly IngressoService _ingressoService;
+    private readonly RelatorioService _relatorioService;
     private readonly IUsuarioRepository _usuarioRepository;
 
     // --- CONSTRUTOR COM INJEÇÃO DE DEPENDÊNCIA ---

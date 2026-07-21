@@ -28,7 +28,6 @@ export default function CardEvento({ evento, onSelecionar }) {
   // --- RENDERIZAÇÃO DO CARD ---
   return (
     <button className="card-evento" onClick={() => onSelecionar(evento.id)}>
-      {/* --- IMAGEM DO EVENTO --- */}
       {evento.imagemUrl && (
         <img 
           className="card-evento__img" 

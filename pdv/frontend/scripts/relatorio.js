@@ -16,7 +16,6 @@
     const wrapperEvento          = document.getElementById("tabela-evento");
     const wrapperAtendente       = document.getElementById("tabela-atendente");
 
-    // --- ESTADO ---
     let abaAtiva       = "todas";
     let cacheVendas    = [];
     let cacheEventos   = [];
@@ -203,14 +202,14 @@
             return "--";
         }
 
-        // --- MONTA "SETOR • TIPO (xQTD)" ---
+        // --- MONTA "SETOR • TIPO" ---
         const setor = (v.setor || "").replace(/_/g, " ");
         const tipo = v.tipoEntrada ? capitalizar(v.tipoEntrada) : "";
         const qtd = Number(v.quantidade) > 1 ? ` (x${v.quantidade})` : "";
         return tipo ? `${setor} • ${tipo}${qtd}` : `${setor}${qtd}`;
     }
 
-    // --- CAPITALIZA A PRIMEIRA LETRA (INTEIRA -> Inteira) ---
+    // --- CAPITALIZA A PRIMEIRA LETRA ---
     function capitalizar(texto) {
         const t = (texto || "").toLowerCase();
         return t.charAt(0).toUpperCase() + t.slice(1);
@@ -274,7 +273,7 @@
         corpoTabelaEvento.innerHTML = html;
     }
 
-    // --- RENDERIZAÇÃO: POR ATENDENTE ---
+    // --- RENDERIZAÇÃO POR ATENDENTE ---
     function renderizarAtendente() {
         if (cacheAtendentes.length === 0) {
             corpoTabelaAtendente.innerHTML = "<tr><td colspan='5' class='celula-vazia'>Nenhum atendente com vendas.</td></tr>";

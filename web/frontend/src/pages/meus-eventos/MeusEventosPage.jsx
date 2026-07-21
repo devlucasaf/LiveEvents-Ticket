@@ -74,11 +74,18 @@ export default function MeusEventosPage() {
                 />
               )}
               <div className="meus-eventos-page__item-info">
-                <span className="meus-eventos-page__item-title">{item.evento.titulo || `Pedido #${item.id}`}</span>
+                <span className="meus-eventos-page__item-title">
+                  {item.evento.titulo || `Pedido #${item.id}`}
+                </span>
+
                 <span className="meus-eventos-page__item-detail">
                   {item.evento.local} • {item.evento.dataEvento && new Date(item.evento.dataEvento).toLocaleDateString("pt-BR")}
                 </span>
-                <span className="meus-eventos-page__item-detail">R$ {item.valorTotal?.toFixed(2)}</span>
+
+                <span className="meus-eventos-page__item-detail">
+                  R$ {item.valorTotal?.toFixed(2)}
+                </span>
+                
                 <span className={`meus-eventos-page__item-status meus-eventos-page__item-status--${tab === "upcoming" ? "upcoming" : "past"}`}>
                   {tab === "upcoming" ? "Em breve" : "Realizado"}
                 </span>

@@ -20,7 +20,6 @@ public class IngressoService
     {
         var ingressos = await GarantirSetoresPadraoAsync(eventoId, cancellationToken);
 
-        // --- MONTA A LISTA APENAS COM OS SETORES CANONICOS, NA ORDEM DO CATALOGO ---
         var resultado = new List<IngressoDisponivelDto>();
         foreach (var setor in CatalogoIngresso.Setores)
         {

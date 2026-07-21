@@ -126,7 +126,6 @@
                 anosHtml += `<li class="datepicker__opcao${ativa}" data-ano="${a}">${a}</li>`;
             }
 
-            // GERA A LISTA DE MESES
             let mesesHtml = "";
             MESES.forEach((m, i) => {
                 const ativa = i === mesAtual ? " datepicker__opcao--ativa" : "";

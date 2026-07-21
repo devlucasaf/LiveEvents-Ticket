@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { authService } from '../../services/authService';
-import '../../styles/auth.css';
+import { useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { authService } from "../../services/authService";
+import "../../styles/auth.css";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [erro,  setErro]  = useState('');
-  // --- CONTROLA SE A SENHA ESTA VISIVEL OU OCULTA ---
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro,  setErro]  = useState("");
+  
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const retorno = searchParams.get('retorno') || '/';
+  const retorno = searchParams.get("retorno") || "/";
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setErro('');
+    setErro("");
     try {
       await authService.login({ 
         email, 
@@ -45,7 +45,7 @@ export default function LoginPage() {
           <div className="auth-page__senha-wrap">
             <input
               className="auth-page__input auth-page__input--senha"
-              type={mostrarSenha ? 'text' : 'password'}
+              type={mostrarSenha ? "text" : "password"}
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               placeholder="Senha"
@@ -56,8 +56,8 @@ export default function LoginPage() {
               type="button"
               className="auth-page__toggle-senha"
               onClick={() => setMostrarSenha((v) => !v)}
-              aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
-              title={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
+              aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+              title={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
             >
               {mostrarSenha ? (
                 // --- ICONE DE OLHO CORTADO ---

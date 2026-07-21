@@ -37,7 +37,7 @@ export default function DatePicker({ value, onChange, placeholder = "Data de nas
     const [aberto,      setAberto]      = useState(false);
     const [anoAtual,    setAnoAtual]    = useState(new Date().getFullYear() - 20);
     const [mesAtual,    setMesAtual]    = useState(new Date().getMonth());
-    const [seletorAberto, setSeletorAberto] = useState(null); // "mes" | "ano" | null
+    const [seletorAberto, setSeletorAberto] = useState(null); 
     const ref = useRef(null);
     const refListaAno = useRef(null);
 
@@ -117,7 +117,7 @@ export default function DatePicker({ value, onChange, placeholder = "Data de nas
         ? formatarData(new Date(value + "T00:00:00"))
         : "";
 
-    // --- GERAR LISTA DE ANOS (100 ANOS PARA TRÁS ATÉ ANO ATUAL) ---
+    // --- GERAR LISTA DE ANOS ---
     const anoCorrente = new Date().getFullYear();
     const anosDisponiveis = [];
     for (let a = anoCorrente; a >= anoCorrente - 100; a--) {
