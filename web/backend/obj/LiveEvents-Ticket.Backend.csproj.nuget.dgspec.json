@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lucas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\LiveEvents-Ticket.Backend.csproj": {}
+    "C:\\Users\\lucasfreitas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\LiveEvents-Ticket.Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lucas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\LiveEvents-Ticket.Backend.csproj": {
+    "C:\\Users\\lucasfreitas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\LiveEvents-Ticket.Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lucas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\LiveEvents-Ticket.Backend.csproj",
+        "projectUniqueName": "C:\\Users\\lucasfreitas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\LiveEvents-Ticket.Backend.csproj",
         "projectName": "LiveEvents-Ticket.Backend",
-        "projectPath": "C:\\Users\\lucas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\LiveEvents-Ticket.Backend.csproj",
-        "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lucas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\obj\\",
+        "projectPath": "C:\\Users\\lucasfreitas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\LiveEvents-Ticket.Backend.csproj",
+        "packagesPath": "C:\\Users\\lucasfreitas\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lucasfreitas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\lucasfreitas\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -76,6 +69,10 @@
               "target": "Package",
               "version": "[1.4.3, )"
             },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2024.7.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
@@ -100,7 +97,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.421/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PontoVenda.Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c79a85b8d332c26e9b556528815e1c6282c3e0c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9d2f4afe0b863e544ff3baa9ee745f4448d0a8b1")]
 [assembly: System.Reflection.AssemblyProductAttribute("PontoVenda.Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PontoVenda.Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
