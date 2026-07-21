@@ -13,12 +13,13 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<Usuario>       Usuarios    => Set<Usuario>();
-    public DbSet<Evento>        Eventos     => Set<Evento>();
-    public DbSet<Ingresso>      Ingressos   => Set<Ingresso>();
-    public DbSet<Pedido>        Pedidos     => Set<Pedido>();
-    public DbSet<ItemPedido>    ItensPedido => Set<ItemPedido>();
-    public DbSet<Pagamento>     Pagamentos  => Set<Pagamento>();
+    public DbSet<Usuario>           Usuarios    => Set<Usuario>();
+    public DbSet<Evento>            Eventos     => Set<Evento>();
+    public DbSet<Ingresso>          Ingressos   => Set<Ingresso>();
+    public DbSet<Pedido>            Pedidos     => Set<Pedido>();
+    public DbSet<ItemPedido>        ItensPedido => Set<ItemPedido>();
+    public DbSet<PedidoCheckinLog>  PedidoCheckinLogs => Set<PedidoCheckinLog>();
+    public DbSet<Pagamento>         Pagamentos  => Set<Pagamento>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -43,5 +44,19 @@ public class AppDbContext : DbContext
             .WithOne()
             .HasForeignKey(i => i.PedidoId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PedidoCheckinLog>()
+            .Property(c => c.TokenInformado)
+            .HasMaxLength(300);
+
+        modelBuilder.Entity<PedidoCheckinLog>()
+            .Property(c => c.Mensagem)
+            .HasMaxLength(500);
+
+        modelBuilder.Entity<PedidoCheckinLog>()
+            .HasOne<Pedido>()
+            .WithMany()
+            .HasForeignKey(c => c.PedidoId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
