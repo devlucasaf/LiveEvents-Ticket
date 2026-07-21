@@ -1,3 +1,45 @@
+.meus-eventos-page {
+    --me-card-bg: var(--panel);
+    --me-card-bg-hover: color-mix(in srgb, var(--panel) 84%, var(--bg-secondary));
+    --me-card-border: var(--line);
+    --me-card-border-active: var(--brand);
+    --me-card-shadow: var(--shadow-sm);
+    --me-card-shadow-hover: var(--shadow-md);
+    --me-item-title: var(--ink);
+    --me-item-detail: var(--ink-secondary);
+    --me-status-upcoming-bg: var(--accent-light);
+    --me-status-upcoming-text: var(--accent);
+    --me-status-past-bg: var(--bg-secondary);
+    --me-status-past-text: var(--muted);
+    --me-status-refund-bg: #e8f5e9;
+    --me-status-refund-text: #1f8f4a;
+    --me-panel-bg: var(--panel);
+    --me-panel-border: var(--line);
+    --me-refund-btn-bg: color-mix(in srgb, var(--brand) 12%, var(--panel));
+    --me-refund-btn-text: var(--brand);
+}
+
+[data-theme="dark"] .meus-eventos-page {
+    --me-card-bg: #1f1f1f;
+    --me-card-bg-hover: #262626;
+    --me-card-border: #3a3a3a;
+    --me-card-border-active: #ff6d67;
+    --me-card-shadow: 0 2px 6px rgba(0, 0, 0, 0.32);
+    --me-card-shadow-hover: 0 8px 18px rgba(0, 0, 0, 0.5);
+    --me-item-title: #f4f4f4;
+    --me-item-detail: #b8b8b8;
+    --me-status-upcoming-bg: rgba(255, 138, 101, 0.16);
+    --me-status-upcoming-text: #ffb294;
+    --me-status-past-bg: rgba(255, 255, 255, 0.08);
+    --me-status-past-text: #c0c0c0;
+    --me-status-refund-bg: rgba(76, 175, 80, 0.2);
+    --me-status-refund-text: #8fd19e;
+    --me-panel-bg: #1f1f1f;
+    --me-panel-border: #3a3a3a;
+    --me-refund-btn-bg: rgba(239, 83, 80, 0.16);
+    --me-refund-btn-text: #ff8f8c;
+}
+
 .meus-eventos-page h2 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -45,18 +87,42 @@
     gap: 1rem;
 }
 
+.meus-eventos-page__layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(320px, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
 .meus-eventos-page__item {
     display: flex;
     gap: 1rem;
+    width: 100%;
     padding: 1rem;
-    border: 1px solid var(--line);
+    border: 1px solid var(--me-card-border);
     border-radius: var(--radius-md);
-    background: var(--panel);
-    transition: box-shadow 0.2s;
+    background: var(--me-card-bg);
+    color: var(--me-item-title);
+    box-shadow: var(--me-card-shadow);
+    transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+    text-align: left;
+    cursor: pointer;
 }
 
 .meus-eventos-page__item:hover {
-    box-shadow: var(--shadow-md);
+    background: var(--me-card-bg-hover);
+    box-shadow: var(--me-card-shadow-hover);
+    transform: translateY(-1px);
+}
+
+.meus-eventos-page__item:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.meus-eventos-page__item--active {
+    border-color: var(--me-card-border-active);
+    box-shadow: var(--me-card-shadow-hover);
 }
 
 .meus-eventos-page__item-img {
@@ -78,11 +144,12 @@
 .meus-eventos-page__item-title {
     font-weight: 600;
     font-size: 0.95rem;
+    color: var(--me-item-title);
 }
 
 .meus-eventos-page__item-detail {
     font-size: 0.8rem;
-    color: var(--muted);
+    color: var(--me-item-detail);
 }
 
 .meus-eventos-page__item-status {
@@ -96,12 +163,285 @@
 }
 
 .meus-eventos-page__item-status--upcoming {
-    background: var(--accent-light);
-    color: var(--accent);
+    background: var(--me-status-upcoming-bg);
+    color: var(--me-status-upcoming-text);
 }
 
 .meus-eventos-page__item-status--past {
-    background: var(--bg-secondary);
+    background: var(--me-status-past-bg);
+    color: var(--me-status-past-text);
+}
+
+.meus-eventos-page__item-status--reembolsado {
+    background: var(--me-status-refund-bg);
+    color: var(--me-status-refund-text);
+}
+
+.meus-eventos-page__details {
+    border: 1px solid var(--me-panel-border);
+    border-radius: var(--radius-md);
+    background: var(--me-panel-bg);
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.meus-eventos-page__details-title {
+    margin: 0 0 1rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.meus-eventos-page__details-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 0.55rem;
+    column-gap: 1rem;
+    font-size: 0.88rem;
+}
+
+.meus-eventos-page__details-grid span {
+    color: var(--muted);
+}
+
+.meus-eventos-page__details-grid strong {
+    color: var(--ink);
+    text-align: right;
+}
+
+.meus-eventos-page__refund {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--me-panel-border);
+}
+
+.meus-eventos-page__actions {
+    margin-bottom: 0.7rem;
+}
+
+.meus-eventos-page__ticket-btn {
+    width: 100%;
+    border: 1px solid color-mix(in srgb, var(--brand) 50%, var(--me-card-border));
+    border-radius: var(--radius-sm);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--brand) 12%, var(--me-panel-bg)) 0%, var(--me-panel-bg) 100%);
+    color: var(--brand);
+    font-weight: 700;
+    padding: 0.68rem 0.8rem;
+    transition: filter 0.2s, opacity 0.2s, transform 0.15s;
+}
+
+.meus-eventos-page__ticket-btn:hover {
+    filter: brightness(0.98);
+}
+
+.meus-eventos-page__ticket-btn:active {
+    transform: scale(0.99);
+}
+
+.meus-eventos-page__ticket-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.meus-eventos-page__refund-text {
+    margin: 0 0 0.65rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.meus-eventos-page__refund-btn {
+    width: 100%;
+    border: 1px solid var(--me-card-border);
+    border-radius: var(--radius-sm);
+    background: var(--me-refund-btn-bg);
+    color: var(--me-refund-btn-text);
+    font-weight: 600;
+    padding: 0.65rem 0.8rem;
+    transition: filter 0.2s, opacity 0.2s;
+}
+
+.meus-eventos-page__refund-btn:hover {
+    filter: brightness(0.96);
+}
+
+.meus-eventos-page__refund-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
+.meus-eventos-page__refund-feedback {
+    margin: 0.6rem 0 0;
+    font-size: 0.82rem;
+    color: var(--success, #1f8f4a);
+}
+
+.meus-eventos-page__refund-rule {
+    margin: 0.45rem 0 0;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.meus-eventos-page__refund-motivo-box {
+    margin-top: 0.75rem;
+    display: grid;
+    gap: 0.4rem;
+}
+
+.meus-eventos-page__refund-label {
+    font-size: 0.78rem;
+    color: var(--me-item-detail);
+    font-weight: 600;
+}
+
+.meus-eventos-page__refund-select,
+.meus-eventos-page__refund-textarea {
+    width: 100%;
+    border: 1px solid var(--me-card-border);
+    border-radius: var(--radius-sm);
+    background: var(--panel);
+    color: var(--ink);
+    padding: 0.58rem 0.65rem;
+    font-size: 0.84rem;
+}
+
+.meus-eventos-page__refund-textarea {
+    resize: vertical;
+    min-height: 74px;
+}
+
+.meus-eventos-page__timeline {
+    margin-top: 0.9rem;
+    border: 1px solid var(--me-panel-border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    background: color-mix(in srgb, var(--me-panel-bg) 90%, var(--bg-secondary));
+}
+
+.meus-eventos-page__timeline-title {
+    margin: 0 0 0.55rem;
+    font-weight: 700;
+    font-size: 0.84rem;
+}
+
+.meus-eventos-page__timeline-item {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    gap: 0.5rem;
+    align-items: start;
+    margin-bottom: 0.45rem;
+}
+
+.meus-eventos-page__timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.meus-eventos-page__timeline-dot {
+    width: 10px;
+    height: 10px;
+    margin-top: 0.28rem;
+    border-radius: 999px;
+    border: 1px solid var(--me-card-border);
+    background: color-mix(in srgb, var(--me-panel-bg) 80%, var(--bg-secondary));
+}
+
+.meus-eventos-page__timeline-item--done .meus-eventos-page__timeline-dot {
+    border-color: color-mix(in srgb, var(--success, #1f8f4a) 60%, var(--me-card-border));
+    background: color-mix(in srgb, var(--success, #1f8f4a) 80%, white);
+}
+
+.meus-eventos-page__timeline-item strong {
+    font-size: 0.8rem;
+    color: var(--ink);
+}
+
+.meus-eventos-page__timeline-item p {
+    margin: 0.1rem 0 0;
+    font-size: 0.76rem;
+    color: var(--muted);
+}
+
+.meus-eventos-page__share {
+    margin-top: 0.85rem;
+    border: 1px dashed var(--me-panel-border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    background: color-mix(in srgb, var(--me-panel-bg) 82%, var(--bg-secondary));
+}
+
+.meus-eventos-page__share-btn,
+.meus-eventos-page__share-copy-btn,
+.meus-eventos-page__share-revoke-btn {
+    border-radius: var(--radius-sm);
+    padding: 0.58rem 0.7rem;
+    font-weight: 600;
+    font-size: 0.82rem;
+    transition: opacity 0.2s, filter 0.2s;
+}
+
+.meus-eventos-page__share-btn {
+    width: 100%;
+    border: 1px solid color-mix(in srgb, var(--brand) 55%, var(--me-card-border));
+    color: var(--brand);
+    background: color-mix(in srgb, var(--brand) 9%, var(--me-panel-bg));
+}
+
+.meus-eventos-page__share-btn:hover,
+.meus-eventos-page__share-copy-btn:hover,
+.meus-eventos-page__share-revoke-btn:hover {
+    filter: brightness(0.98);
+}
+
+.meus-eventos-page__share-btn:disabled,
+.meus-eventos-page__share-revoke-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.meus-eventos-page__share-box {
+    margin-top: 0.7rem;
+    display: grid;
+    gap: 0.38rem;
+}
+
+.meus-eventos-page__share-box p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--me-item-detail);
+}
+
+.meus-eventos-page__share-box a {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--brand);
+    overflow-wrap: anywhere;
+}
+
+.meus-eventos-page__share-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.45rem;
+    margin-top: 0.2rem;
+}
+
+.meus-eventos-page__share-copy-btn {
+    border: 1px solid var(--me-card-border);
+    color: var(--ink);
+    background: var(--panel);
+}
+
+.meus-eventos-page__share-revoke-btn {
+    border: 1px solid color-mix(in srgb, var(--danger, #d54f4f) 55%, var(--me-card-border));
+    color: var(--danger, #d54f4f);
+    background: color-mix(in srgb, var(--danger, #d54f4f) 10%, var(--panel));
+}
+
+.meus-eventos-page__share-feedback {
+    margin: 0.55rem 0 0;
+    font-size: 0.78rem;
+    color: var(--success, #1f8f4a);
+}
+
+.meus-eventos-page__share-revoked-at {
+    font-size: 0.75rem;
     color: var(--muted);
 }
 
@@ -112,6 +452,10 @@
 }
 
 @media (max-width: 768px) {
+    .meus-eventos-page__layout {
+        grid-template-columns: 1fr;
+    }
+
     .meus-eventos-page__item {
         flex-direction: column;
     }
@@ -119,5 +463,19 @@
     .meus-eventos-page__item-img {
         width: 100%;
         height: 120px;
+    }
+
+    .meus-eventos-page__details-grid {
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+    }
+
+    .meus-eventos-page__details-grid strong {
+        text-align: left;
+        margin-bottom: 0.35rem;
+    }
+
+    .meus-eventos-page__share-actions {
+        grid-template-columns: 1fr;
     }
 }
