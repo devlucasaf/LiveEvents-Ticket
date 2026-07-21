@@ -21,6 +21,13 @@ function mascaraTelefone(value) {
     .replace(/(\d{5})(\d{1,4})$/, "$1-$2");
 }
 
+function mascaraCep(value) {
+  return value
+    .replace(/\D/g, "")
+    .slice(0, 8)
+    .replace(/(\d{5})(\d)/, "$1-$2");
+}
+
 export default function CadastroPage() {
   const [nome,            setNome]            = useState("");
   const [sobrenome,       setSobrenome]       = useState("");
@@ -28,11 +35,52 @@ export default function CadastroPage() {
   const [cpf,             setCpf]             = useState("");
   const [telefone,        setTelefone]        = useState("");
   const [dataNascimento,  setDataNascimento]  = useState("");
+  const [cep,             setCep]             = useState("");
+  const [logradouro,      setLogradouro]      = useState("");
+  const [numero,          setNumero]          = useState("");
+  const [complemento,     setComplemento]     = useState("");
+  const [bairro,          setBairro]          = useState("");
+  const [cidade,          setCidade]          = useState("");
+  const [estado,          setEstado]          = useState("");
   const [senha,           setSenha]           = useState("");
   const [mostrarSenha,    setMostrarSenha]    = useState(false);
   const [erro,            setErro]            = useState("");
   const [sucesso,         setSucesso]         = useState("");
   const navigate = useNavigate();
+
+  // --- BUSCA ENDERECO NO VIACEP E PREENCHE CAMPOS AUTOMATICAMENTE ---
+  async function buscarEnderecoPorCep(cepValor) {
+    const cepNumerico = String(cepValor || "").replace(/\D/g, "");
+    if (cepNumerico.length !== 8) {
+      return;
+    }
+
+    try {
+      const resposta = await fetch(`https://viacep.com.br/ws/${cepNumerico}/json/`);
+      const dados = await resposta.json();
+
+      if (!dados || dados.erro) {
+        return;
+      }
+
+      setLogradouro(dados.logradouro || "");
+      setBairro(dados.bairro || "");
+      setCidade(dados.localidade || "");
+      setEstado((dados.uf || "").toUpperCase());
+    } catch {
+      // --- EM CASO DE FALHA DE REDE, MANTEM PREENCHIMENTO MANUAL ---
+    }
+  }
+
+  // --- APLICA MASCARA NO CEP E DISPARA AUTOPREENCHIMENTO ---
+  function aoAlterarCep(valor) {
+    const cepMascarado = mascaraCep(valor);
+    setCep(cepMascarado);
+
+    if (cepMascarado.replace(/\D/g, "").length === 8) {
+      buscarEnderecoPorCep(cepMascarado);
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -46,6 +94,13 @@ export default function CadastroPage() {
         cpf, 
         telefone, 
         dataNascimento, 
+        cep,
+        logradouro,
+        numero,
+        complemento,
+        bairro,
+        cidade,
+        estado,
         senha 
       });
       setSucesso("Cadastro realizado com sucesso!");
@@ -102,6 +157,56 @@ export default function CadastroPage() {
             value={dataNascimento}
             onChange={(val) => setDataNascimento(val)}
             placeholder="Data de nascimento"
+            required
+          />
+          <input
+            className="auth-page__input"
+            value={cep}
+            onChange={(e) => aoAlterarCep(e.target.value)}
+            placeholder="CEP"
+            maxLength={9}
+            required
+          />
+          <input
+            className="auth-page__input"
+            value={logradouro}
+            onChange={(e) => setLogradouro(e.target.value)}
+            placeholder="Logradouro"
+            required
+          />
+          <input
+            className="auth-page__input"
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
+            placeholder="Número"
+            required
+          />
+          <input
+            className="auth-page__input"
+            value={complemento}
+            onChange={(e) => setComplemento(e.target.value)}
+            placeholder="Complemento (opcional)"
+          />
+          <input
+            className="auth-page__input"
+            value={bairro}
+            onChange={(e) => setBairro(e.target.value)}
+            placeholder="Bairro"
+            required
+          />
+          <input
+            className="auth-page__input"
+            value={cidade}
+            onChange={(e) => setCidade(e.target.value)}
+            placeholder="Cidade"
+            required
+          />
+          <input
+            className="auth-page__input"
+            value={estado}
+            onChange={(e) => setEstado(e.target.value.replace(/[^a-zA-Z]/g, "").slice(0, 2).toUpperCase())}
+            placeholder="UF"
+            maxLength={2}
             required
           />
           {/* --- CAMPO DE SENHA COM BOTÃO DE VISUALIZAR --- */}

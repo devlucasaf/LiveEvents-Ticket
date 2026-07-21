@@ -15,7 +15,13 @@ export default function RecuperarSenhaPage() {
       <div className="auth-page__card">
         <h2>Recuperar senha</h2>
         <form className="auth-page__form" onSubmit={handleSubmit}>
-          <input className="auth-page__input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" type="email" required />
+          <input 
+            className="auth-page__input" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            placeholder="E-mail" 
+            type="email" required 
+          />
           <button className="auth-page__btn" type="submit">Enviar instruções</button>
         </form>
         {mensagem && <p className="success">{mensagem}</p>}

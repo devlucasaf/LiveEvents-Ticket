@@ -33,6 +33,13 @@ public class UsuarioService
             Cpf = dto.Cpf,
             Telefone = dto.Telefone,
             DataNascimento = dto.DataNascimento,
+            Cep = SomenteDigitos(dto.Cep),
+            Logradouro = dto.Logradouro.Trim(),
+            Numero = dto.Numero.Trim(),
+            Complemento = string.IsNullOrWhiteSpace(dto.Complemento) ? null : dto.Complemento.Trim(),
+            Bairro = dto.Bairro.Trim(),
+            Cidade = dto.Cidade.Trim(),
+            Estado = dto.Estado.Trim().ToUpperInvariant(),
             SenhaHash = BCrypt.Net.BCrypt.HashPassword(dto.Senha),
             Role = dto.Email.EndsWith("@liveevents.com", StringComparison.OrdinalIgnoreCase) ? "ADMIN" : "CLIENTE"
         };
@@ -105,6 +112,41 @@ public class UsuarioService
             usuario.Cpf = dto.Cpf;
         }
 
+        if (!string.IsNullOrWhiteSpace(dto.Cep))
+        {
+            usuario.Cep = SomenteDigitos(dto.Cep);
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.Logradouro))
+        {
+            usuario.Logradouro = dto.Logradouro.Trim();
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.Numero))
+        {
+            usuario.Numero = dto.Numero.Trim();
+        }
+
+        if (dto.Complemento is not null)
+        {
+            usuario.Complemento = string.IsNullOrWhiteSpace(dto.Complemento) ? null : dto.Complemento.Trim();
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.Bairro))
+        {
+            usuario.Bairro = dto.Bairro.Trim();
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.Cidade))
+        {
+            usuario.Cidade = dto.Cidade.Trim();
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.Estado))
+        {
+            usuario.Estado = dto.Estado.Trim().ToUpperInvariant();
+        }
+
         // --- TROCA DE SENHA ---
         if (!string.IsNullOrWhiteSpace(dto.NovaSenha))
         {
@@ -128,6 +170,19 @@ public class UsuarioService
         Email = usuario.Email,
         Telefone = usuario.Telefone,
         Cpf = usuario.Cpf,
+        Cep = usuario.Cep,
+        Logradouro = usuario.Logradouro,
+        Numero = usuario.Numero,
+        Complemento = usuario.Complemento,
+        Bairro = usuario.Bairro,
+        Cidade = usuario.Cidade,
+        Estado = usuario.Estado,
         Role = usuario.Role
     };
+
+    // --- REMOVE CARACTERES NAO NUMERICOS DE UM TEXTO ---
+    private static string SomenteDigitos(string? valor)
+    {
+        return new string((valor ?? string.Empty).Where(char.IsDigit).ToArray());
+    }
 }

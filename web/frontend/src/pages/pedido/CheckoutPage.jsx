@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { pedidoService } from "../../services/pedidoService";
-import { useCarrinho } from "../../context/CarrinhoContext";
+import { useState }         from "react";
+import { useNavigate }      from "react-router-dom";
+import { pedidoService }    from "../../services/pedidoService";
+import { useCarrinho }      from "../../context/CarrinhoContext";
+import DatePicker           from "../../components/DatePicker";
+import SelectCustom         from "../../components/SelectCustom";
 import "../../styles/checkout.css";
 
-// --- MASCARA PARA O NUMERO DO CARTAO ---
+// --- MÁSCARA PARA O NÚMERO DO CARTÃO ---
 function mascaraCartao(value) {
     return value
         .replace(/\D/g, "")
@@ -13,9 +15,49 @@ function mascaraCartao(value) {
         .trim();
 }
 
+// --- MÁSCARA PARA CPF ---
+function mascaraCpf(value) {
+    return value
+        .replace(/\D/g, "")
+        .slice(0, 11)
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d)/, "$1.$2")
+        .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+
+// --- MÁSCARA PARA TELEFONE ---
+function mascaraTelefone(value) {
+    return value
+        .replace(/\D/g, "")
+        .slice(0, 11)
+        .replace(/(\d{2})(\d)/, "($1) $2")
+        .replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+}
+
+// --- MÁSCARA PARA CEP ---
+function mascaraCep(value) {
+    return value
+        .replace(/\D/g, "")
+        .slice(0, 8)
+        .replace(/(\d{5})(\d)/, "$1-$2");
+}
+
 // --- FORMATA UM VALOR COMO MOEDA BRASILEIRA ---
 function formatarMoeda(valor) {
     return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+// --- FORMATA DATA ISO PARA DD/MM/AAAA SEM FUSO ---
+function formatarDataIso(valor) {
+    if (!valor || typeof valor !== "string" || !valor.includes("-")) {
+        return "-";
+    }
+
+    const [ano, mes, dia] = valor.split("-");
+    if (!ano || !mes || !dia) {
+        return "-";
+    }
+    return `${dia}/${mes}/${ano}`;
 }
 
 // --- CAMPOS COMUNS EXIGIDOS EM QUALQUER MEIA ENTRADA ---
@@ -35,10 +77,12 @@ function calcularIdade(dataIso) {
     if (!dataIso) {
         return null;
     }
+
     const nasc = new Date(dataIso);
     if (Number.isNaN(nasc.getTime())) {
         return null;
     }
+
     const hoje = new Date();
     let idade = hoje.getFullYear() - nasc.getFullYear();
     const m = hoje.getMonth() - nasc.getMonth();
@@ -53,6 +97,9 @@ export default function CheckoutPage() {
     const navigate = useNavigate();
     const { itens, limpar } = useCarrinho();
     const token = localStorage.getItem("token");
+    const usuarioLocal = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const nomeCompletoUsuario = [usuarioLocal.nome, usuarioLocal.sobrenome].filter(Boolean).join(" ").trim();
+    const dataNascimentoUsuario = usuarioLocal.dataNascimento || usuarioLocal.data_nascimento || "";
 
     const [etapa,           setEtapa]           = useState("carrinho");
     const [seguro,          setSeguro]          = useState(false);
@@ -66,9 +113,25 @@ export default function CheckoutPage() {
     const [resultado,       setResultado]       = useState(null);
     const [compraSnapshot,  setCompraSnapshot]  = useState(null);
 
-    // --- DOCUMENTOS DA MEIA ENTRADA ---
-    const [documentos,      setDocumentos]      = useState({});
-    const [erroDoc,         setErroDoc]         = useState("");
+    // --- DADOS DO COMPRADOR ---
+    const [comprador, setComprador] = useState({
+        nome: nomeCompletoUsuario,
+        cpf: usuarioLocal.cpf || "",
+        email: usuarioLocal.email || "",
+        telefone: usuarioLocal.telefone || "",
+        dataNascimento: dataNascimentoUsuario,
+        cep: "",
+        logradouro: "",
+        numero: "",
+        complemento: "",
+        bairro: "",
+        cidade: "",
+        estado: ""
+    });
+    const [erroComprador, setErroComprador] = useState("");
+
+    const [documentos, setDocumentos]  = useState({});
+    const [erroDoc,    setErroDoc]     = useState("");
 
     if (!token) {
         return (
@@ -114,6 +177,7 @@ export default function CheckoutPage() {
     const itensComDocumento = itens
         .map((item, idx) => ({ item, idx }))
         .filter(({ item }) => item.modalidade === "MEIA");
+    const temDocumentosMeia = itensComDocumento.length > 0;
 
     // --- LE O VALOR DE UM DOCUMENTO NO ESTADO ---
     function valorDoc(idxItem, unidade, chave) {
@@ -134,6 +198,118 @@ export default function CheckoutPage() {
         });
     }
 
+    // --- ATUALIZA UM CAMPO DO COMPRADOR ---
+    function definirComprador(campo, valor) {
+        setErroComprador("");
+        setComprador((prev) => ({ ...prev, [campo]: valor }));
+    }
+
+    // --- BUSCA O ENDERECO PELO CEP NA BASE OFICIAL ---
+    async function buscarEnderecoPorCep(cepValor) {
+        const cep = String(cepValor || "").replace(/\D/g, "");
+
+        if (cep.length !== 8) {
+            return;
+        }
+
+        try {
+            const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const dados = await resposta.json();
+
+            if (!dados || dados.erro) {
+                return;
+            }
+
+            setComprador((prev) => ({
+                ...prev,
+                logradouro: dados.logradouro || prev.logradouro,
+                bairro: dados.bairro || prev.bairro,
+                cidade: dados.localidade || prev.cidade,
+                estado: dados.uf || prev.estado
+            }));
+        } catch { 
+            // FALHA DE REDE OU CEP INVALIDO 
+        }
+    }
+
+    // --- ATUALIZA O CEP E DISPARA A BUSCA AUTOMATICA DO ENDERECO ---
+    function aoAlterarCep(valorBruto) {
+        const cepMascarado = mascaraCep(valorBruto);
+        definirComprador("cep", cepMascarado);
+
+        if (cepMascarado.replace(/\D/g, "").length === 8) {
+            buscarEnderecoPorCep(cepMascarado);
+        }
+    }
+
+    // --- VALIDA DADOS OBRIGATÓRIOS DO COMPRADOR ---
+    function validarDadosComprador() {
+        const obrigatorios = [
+            ["nome", "Nome completo"],
+            ["cpf", "CPF"],
+            ["email", "E-mail"],
+            ["telefone", "Telefone"],
+            ["dataNascimento", "Data de nascimento"],
+            ["cep", "CEP"],
+            ["logradouro", "Logradouro"],
+            ["numero", "Número"],
+            ["bairro", "Bairro"],
+            ["cidade", "Cidade"],
+            ["estado", "Estado"]
+        ];
+
+        for (const [campo, rotulo] of obrigatorios) {
+            if (!String(comprador[campo] || "").trim()) {
+                setErroComprador(`Preencha o campo \"${rotulo}\".`);
+                return false;
+            }
+        }
+
+        const cpfNumerico = String(comprador.cpf || "").replace(/\D/g, "");
+        if (cpfNumerico.length !== 11) {
+            setErroComprador("Informe um CPF válido com 11 dígitos.");
+            return false;
+        }
+
+        const telefoneNumerico = String(comprador.telefone || "").replace(/\D/g, "");
+        if (telefoneNumerico.length < 10) {
+            setErroComprador("Informe um telefone válido com DDD.");
+            return false;
+        }
+
+        const cepNumerico = String(comprador.cep || "").replace(/\D/g, "");
+        if (cepNumerico.length !== 8) {
+            setErroComprador("Informe um CEP válido com 8 dígitos.");
+            return false;
+        }
+
+        const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(comprador.email || ""));
+        if (!emailValido) {
+            setErroComprador("Informe um e-mail válido.");
+            return false;
+        }
+
+        if (String(comprador.estado || "").trim().length !== 2) {
+            setErroComprador("Informe a UF com 2 letras (ex.: SP).");
+            return false;
+        }
+
+        const dataNascimento = new Date(String(comprador.dataNascimento || ""));
+        if (Number.isNaN(dataNascimento.getTime())) {
+            setErroComprador("Informe uma data de nascimento válida.");
+            return false;
+        }
+
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+        if (dataNascimento > hoje) {
+            setErroComprador("A data de nascimento não pode ser no futuro.");
+            return false;
+        }
+
+        return true;
+    }
+
     // --- VALIDA TODOS OS DOCUMENTOS ANTES DE AVANCAR PARA O PAGAMENTO ---
     function validarDocumentos() {
         for (const { item, idx } of itensComDocumento) {
@@ -146,7 +322,6 @@ export default function CheckoutPage() {
                     }
                 }
 
-                // --- REGRA DA MEIA MENOR DE 18 ANOS ---
                 if (item.subtipoMeia === "MENOR_18") {
                     const idade = calcularIdade(valorDoc(idx, u, "dataNascimento"));
                     if (idade !== null && idade >= 18) {
@@ -163,10 +338,10 @@ export default function CheckoutPage() {
 
     // --- AVANÇA DO CARRINHO ---
     function avancarDoCarrinho() {
-        if (itensComDocumento.length > 0) {
+        if (temDocumentosMeia) {
             setEtapa("documentos");
         } else {
-            setEtapa("pagamento");
+            setEtapa("comprador");
         }
     }
 
@@ -214,6 +389,20 @@ export default function CheckoutPage() {
                     subtipoMeia: i.subtipoMeia,
                     documentos: documentosDoItem(idx, i)
                 })),
+                comprador: {
+                    nome: comprador.nome.trim(),
+                    cpf: comprador.cpf.replace(/\D/g, ""),
+                    email: comprador.email.trim(),
+                    telefone: comprador.telefone.replace(/\D/g, ""),
+                    dataNascimento: comprador.dataNascimento,
+                    cep: comprador.cep.replace(/\D/g, ""),
+                    logradouro: comprador.logradouro.trim(),
+                    numero: comprador.numero.trim(),
+                    complemento: comprador.complemento.trim() || null,
+                    bairro: comprador.bairro.trim(),
+                    cidade: comprador.cidade.trim(),
+                    estado: comprador.estado.trim().toUpperCase()
+                },
                 pagamento: {
                     tipo: tipoPagamento === "cartao" ? "CARTAO" : "PIX",
                     numeroCartao: tipoPagamento === "cartao" ? numeroCartao.replace(/\s/g, "") : null,
@@ -230,7 +419,8 @@ export default function CheckoutPage() {
                 seguro,
                 tipoPagamento,
                 parcelas,
-                numeroCartao
+                numeroCartao,
+                comprador
             });
             setResultado(data);
             setEtapa("confirmado");
@@ -353,7 +543,8 @@ export default function CheckoutPage() {
                 <div className="checkout-page__step-indicator">
                     <span className="checkout-page__step checkout-page__step--done">1. Carrinho</span>
                     <span className="checkout-page__step checkout-page__step--active">2. Documentos</span>
-                    <span className="checkout-page__step">3. Pagamento</span>
+                    <span className="checkout-page__step">3. Dados</span>
+                    <span className="checkout-page__step">4. Pagamento</span>
                 </div>
 
                 <button className="checkout-page__voltar" onClick={() => setEtapa("carrinho")}>
@@ -405,7 +596,7 @@ export default function CheckoutPage() {
                     className="checkout-page__btn"
                     onClick={() => {
                         if (validarDocumentos()) {
-                            setEtapa("pagamento");
+                            setEtapa("comprador");
                         }
                     }}
                 >
@@ -416,17 +607,192 @@ export default function CheckoutPage() {
         );
     }
 
-    // --- PAGAMENTO ---
-    if (etapa === "pagamento") {
+    // --- DADOS DO COMPRADOR ---
+    if (etapa === "comprador") {
         return (
         <div className="checkout-page">
             <div className="checkout-page__card">
                 <div className="checkout-page__step-indicator">
                     <span className="checkout-page__step checkout-page__step--done">1. Carrinho</span>
-                    <span className="checkout-page__step checkout-page__step--active">2. Pagamento</span>
+                    {temDocumentosMeia && <span className="checkout-page__step checkout-page__step--done">2. Documentos</span>}
+                    <span className="checkout-page__step checkout-page__step--active">{temDocumentosMeia ? "3" : "2"}. Dados</span>
+                    <span className="checkout-page__step">{temDocumentosMeia ? "4" : "3"}. Pagamento</span>
                 </div>
 
-                <button className="checkout-page__voltar" onClick={() => setEtapa(itensComDocumento.length > 0 ? "documentos" : "carrinho")}>
+                <button className="checkout-page__voltar" onClick={() => setEtapa(temDocumentosMeia ? "documentos" : "carrinho") }>
+                    ← Voltar
+                </button>
+
+                <h2>Dados do comprador</h2>
+                <p className="checkout-page__doc-intro">
+                    Informe os dados para emissão e confirmação da compra.
+                </p>
+
+                <div className="checkout-page__doc-item">
+                    <div className="checkout-page__doc-grid checkout-page__doc-grid--comprador">
+                        <div className="checkout-page__field checkout-page__field--full">
+                            <label>Nome completo</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.nome}
+                                onChange={(e) => definirComprador("nome", e.target.value)}
+                                placeholder="Nome e sobrenome"
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>CPF</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.cpf}
+                                onChange={(e) => definirComprador("cpf", mascaraCpf(e.target.value))}
+                                placeholder="000.000.000-00"
+                                maxLength={14}
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>Telefone</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.telefone}
+                                onChange={(e) => definirComprador("telefone", mascaraTelefone(e.target.value))}
+                                placeholder="(00) 00000-0000"
+                                maxLength={15}
+                            />
+                        </div>
+
+                        <div className="checkout-page__field checkout-page__field--full">
+                            <label>E-mail</label>
+                            <input
+                                className="checkout-page__input"
+                                type="email"
+                                value={comprador.email}
+                                onChange={(e) => definirComprador("email", e.target.value)}
+                                placeholder="voce@email.com"
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>Data de nascimento</label>
+                            <DatePicker
+                                value={comprador.dataNascimento}
+                                onChange={(val) => definirComprador("dataNascimento", val)}
+                                placeholder="Data de nascimento"
+                                inputClassName="checkout-page__input"
+                                required
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>CEP</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.cep}
+                                onChange={(e) => aoAlterarCep(e.target.value)}
+                                placeholder="00000-000"
+                                maxLength={9}
+                            />
+                        </div>
+
+                        <div className="checkout-page__field checkout-page__field--full">
+                            <label>Logradouro</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.logradouro}
+                                onChange={(e) => definirComprador("logradouro", e.target.value)}
+                                placeholder="Rua, avenida, etc."
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>Número</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.numero}
+                                onChange={(e) => definirComprador("numero", e.target.value)}
+                                placeholder="123"
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>Complemento</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.complemento}
+                                onChange={(e) => definirComprador("complemento", e.target.value)}
+                                placeholder="Apto, bloco, referência"
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>Bairro</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.bairro}
+                                onChange={(e) => definirComprador("bairro", e.target.value)}
+                                placeholder="Bairro"
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>Cidade</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.cidade}
+                                onChange={(e) => definirComprador("cidade", e.target.value)}
+                                placeholder="Cidade"
+                            />
+                        </div>
+
+                        <div className="checkout-page__field">
+                            <label>UF</label>
+                            <input
+                                className="checkout-page__input"
+                                value={comprador.estado}
+                                onChange={(e) => definirComprador("estado", e.target.value.replace(/[^a-zA-Z]/g, "").slice(0, 2).toUpperCase())}
+                                placeholder="SP"
+                                maxLength={2}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {erroComprador && <p className="error">{erroComprador}</p>}
+
+                <button
+                    className="checkout-page__btn"
+                    onClick={() => {
+                        if (validarDadosComprador()) {
+                            setEtapa("pagamento");
+                        }
+                    }}
+                >
+                    Continuar para pagamento
+                </button>
+            </div>
+        </div>
+        );
+    }
+
+    // --- PAGAMENTO ---
+    if (etapa === "pagamento") {
+        const opcoesParcelamento = gerarOpcoesParcelas().map((op) => ({
+            value: op.parcelas,
+            label: `${op.parcelas}x de ${formatarMoeda(op.valor)}${op.parcelas === 1 ? " (à vista)" : ""}`
+        }));
+
+        return (
+        <div className="checkout-page">
+            <div className="checkout-page__card">
+                <div className="checkout-page__step-indicator">
+                    <span className="checkout-page__step checkout-page__step--done">1. Carrinho</span>
+                    {temDocumentosMeia && <span className="checkout-page__step checkout-page__step--done">2. Documentos</span>}
+                    <span className="checkout-page__step checkout-page__step--done">{temDocumentosMeia ? "3" : "2"}. Dados</span>
+                    <span className="checkout-page__step checkout-page__step--active">{temDocumentosMeia ? "4" : "3"}. Pagamento</span>
+                </div>
+
+                <button className="checkout-page__voltar" onClick={() => setEtapa("comprador")}>
                     ← Voltar
                 </button>
 
@@ -511,20 +877,13 @@ export default function CheckoutPage() {
                             </div>
                         </div>
 
-                        <div className="checkout-page__field">
+                        <div className="checkout-page__field checkout-page__field--parcelas">
                             <label>Parcelas</label>
-                            <select
-                                className="checkout-page__select"
+                            <SelectCustom
                                 value={parcelas}
-                                onChange={(e) => setParcelas(Number(e.target.value))}
-                                >
-                                {gerarOpcoesParcelas().map((op) => (
-                                    <option key={op.parcelas} value={op.parcelas}>
-                                        {op.parcelas}x de {formatarMoeda(op.valor)}
-                                        {op.parcelas === 1 ? " (à vista)" : ""}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={(valorSelecionado) => setParcelas(Number(valorSelecionado))}
+                                options={opcoesParcelamento}
+                            />
                         </div>
                     </div>
                 )}
@@ -601,6 +960,32 @@ export default function CheckoutPage() {
                 ))}
 
                 <div className="checkout-page__confirmado-detalhes">
+                <div className="checkout-page__confirmado-linha">
+                    <span>Comprador</span>
+                    <strong>{snap.comprador?.nome}</strong>
+                </div>
+                <div className="checkout-page__confirmado-linha">
+                    <span>CPF</span>
+                    <strong>{snap.comprador?.cpf}</strong>
+                </div>
+                <div className="checkout-page__confirmado-linha">
+                    <span>Data de nascimento</span>
+                    <strong>
+                        {formatarDataIso(snap.comprador?.dataNascimento)}
+                    </strong>
+                </div>
+                <div className="checkout-page__confirmado-linha">
+                    <span>Contato</span>
+                    <strong>{snap.comprador?.email} • {snap.comprador?.telefone}</strong>
+                </div>
+                <div className="checkout-page__confirmado-linha">
+                    <span>Endereço</span>
+                    <strong>
+                        {snap.comprador?.logradouro}, {snap.comprador?.numero}
+                        {snap.comprador?.complemento ? ` - ${snap.comprador.complemento}` : ""}
+                        {` • ${snap.comprador?.bairro} • ${snap.comprador?.cidade}/${snap.comprador?.estado} • CEP ${snap.comprador?.cep}`}
+                    </strong>
+                </div>
                 <div className="checkout-page__confirmado-linha">
                     <span>Taxa de serviço</span>
                     <strong>{formatarMoeda(snap.taxaServico)}</strong>
