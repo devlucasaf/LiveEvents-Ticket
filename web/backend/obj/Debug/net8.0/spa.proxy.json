@@ -3,7 +3,7 @@
 "ServerUrl": "http://localhost:5173",
 "RedirectUrl": "",
 "LaunchCommand": "npm run dev",
-"WorkingDirectory": "C:\\Users\\lucasfreitas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\..\\Frontend\\",
+"WorkingDirectory": "C:\\Users\\lucas\\.vscode\\LiveEvents-Ticket\\LiveEvents-Ticket\\web\\backend\\..\\Frontend\\",
 "MaxTimeoutInSeconds": "120",
 "KeepRunning": "false"
 }

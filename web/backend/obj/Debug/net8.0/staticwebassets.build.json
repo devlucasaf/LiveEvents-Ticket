@@ -1,11 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "yJu2MJsJ5nByXFTiyvUg02GILU3wk79n2zYM87e63Fw=",
-  "Source": "LiveEvents-Ticket.Backend",
-  "BasePath": "_content/LiveEvents-Ticket.Backend",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
-}
+{"Version":1,"Hash":"GC85MVXEiln0j5OgoV4P/sulrKtkCvh9A4MIZIeO0LM=","Source":"LiveEvents-Ticket.Backend","BasePath":"_content/LiveEvents-Ticket.Backend","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
