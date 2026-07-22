@@ -1,6 +1,6 @@
 import "../../styles/institucional.css";
 
-// --- PAGINA DE ACESSIBILIDADE ---
+// --- PÁGINA DE ACESSIBILIDADE ---
 export default function AcessibilidadePage() {
     return (
         <section className="institucional">

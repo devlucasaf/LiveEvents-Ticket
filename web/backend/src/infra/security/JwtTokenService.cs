@@ -11,11 +11,13 @@ public class JwtTokenService
 {
     private readonly JwtOptions _options;
 
+    // --- INJECAO DAS OPCOES DE CONFIGURACAO DO JWT ---
     public JwtTokenService(IOptions<JwtOptions> options)
     {
         _options = options.Value;
     }
 
+    // --- GERA UM TOKEN JWT ASSINADO PARA O USUARIO INFORMADO ---
     public string GenerateToken(Usuario usuario)
     {
         var claims = new List<Claim>

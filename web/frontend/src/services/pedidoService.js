@@ -2,6 +2,7 @@ import { apiRequest } from "./api";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
+// --- CHAMADAS DA API RELACIONADAS A PEDIDOS E POS-COMPRA ---
 export const pedidoService = {
     checkout(payload) {
         return apiRequest("/pedido/checkout", {
@@ -10,10 +11,12 @@ export const pedidoService = {
         });
     },
 
+    // --- LISTA OS PEDIDOS DO USUARIO AUTENTICADO ---
     meusPedidos() {
         return apiRequest("/pedido/meus");
     },
 
+    // --- SOLICITA REEMBOLSO COM MOTIVO E DETALHES ---
     solicitarReembolso(pedidoId, payload = {}) {
         const body = typeof payload === "string"
             ? { motivo: payload }
@@ -23,6 +26,7 @@ export const pedidoService = {
                 motivoDetalhe: payload.motivoDetalhe || ""
             };
 
+        // --- ENVIA A SOLICITACAO DE REEMBOLSO PARA O PEDIDO INFORMADO ---
         return apiRequest(`/pedido/${pedidoId}/reembolso/solicitar`, {
             method: "POST",
             body: JSON.stringify(body)
@@ -33,6 +37,7 @@ export const pedidoService = {
     async baixarIngressoPdf(pedidoId) {
         const token = localStorage.getItem("token");
 
+        // --- MONTA E EXECUTA O GET DO PDF DO INGRESSO ---
         const resposta = await fetch(`${API_BASE_URL}/pedido/${pedidoId}/ingresso/pdf`, {
             method: "GET",
             headers: {
@@ -65,6 +70,7 @@ export const pedidoService = {
     async baixarComprovanteEstornoPdf(pedidoId) {
         const token = localStorage.getItem("token");
 
+        // --- MONTA E EXECUTA O GET DO PDF DE COMPROVANTE DE ESTORNO ---
         const resposta = await fetch(`${API_BASE_URL}/pedido/${pedidoId}/reembolso/comprovante/pdf`, {
             method: "GET",
             headers: {
@@ -108,6 +114,7 @@ export const pedidoService = {
         });
     },
 
+    // --- OBTEM O RELATORIO DE VENDAS DO MODULO ADMIN ---
     relatorioVendas() {
         return apiRequest("/admin/relatorio/vendas");
     }

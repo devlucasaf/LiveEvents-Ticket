@@ -62,9 +62,24 @@ function formatarDataIso(valor) {
 
 // --- CAMPOS COMUNS EXIGIDOS EM QUALQUER MEIA ENTRADA ---
 const CAMPOS_COMUNS = [
-    { chave: "nome",           rotulo: "Nome completo",       tipo: "text", obrigatorio: true },
-    { chave: "cpf",            rotulo: "CPF",                 tipo: "text", obrigatorio: true },
-    { chave: "dataNascimento", rotulo: "Data de nascimento",  tipo: "date", obrigatorio: true }
+    { 
+        chave: "nome",          
+        rotulo: "Nome completo",       
+        tipo: "text", 
+        obrigatorio: true 
+    },
+    { 
+        chave: "cpf",            
+        rotulo: "CPF",                 
+        tipo: "text", 
+        obrigatorio: true 
+    },
+    { 
+        chave: "dataNascimento", 
+        rotulo: "Data de nascimento",  
+        tipo: "date", 
+        obrigatorio: true 
+    }
 ];
 
 // --- RETORNA OS CAMPOS DE DOCUMENTO DE UM ITEM DE MEIA ---
@@ -232,7 +247,7 @@ export default function CheckoutPage() {
         }
     }
 
-    // --- ATUALIZA O CEP E DISPARA A BUSCA AUTOMATICA DO ENDERECO ---
+    // --- ATUALIZA O CEP E DISPARA A BUSCA AUTOMÁTICA DO ENDEREÇO ---
     function aoAlterarCep(valorBruto) {
         const cepMascarado = mascaraCep(valorBruto);
         definirComprador("cep", cepMascarado);
@@ -310,7 +325,7 @@ export default function CheckoutPage() {
         return true;
     }
 
-    // --- VALIDA TODOS OS DOCUMENTOS ANTES DE AVANCAR PARA O PAGAMENTO ---
+    // --- VALIDA TODOS OS DOCUMENTOS ANTES DE AVANÇAR PARA O PAGAMENTO ---
     function validarDocumentos() {
         for (const { item, idx } of itensComDocumento) {
             const campos = camposDoItem(item);
@@ -357,7 +372,7 @@ export default function CheckoutPage() {
         return lista;
     }
 
-    // --- GERA AS OPCOES DE PARCELAMENTO ATE O MAXIMO PERMITIDO ---
+    // --- GERA AS OPÇÕES DE PARCELAMENTO ATÉ O MÁXIMO PERMITIDO ---
     function gerarOpcoesParcelas() {
         const opcoes = [];
         for (let i = 1; i <= maxParcelas; i++) {
@@ -390,18 +405,18 @@ export default function CheckoutPage() {
                     documentos: documentosDoItem(idx, i)
                 })),
                 comprador: {
-                    nome: comprador.nome.trim(),
-                    cpf: comprador.cpf.replace(/\D/g, ""),
-                    email: comprador.email.trim(),
-                    telefone: comprador.telefone.replace(/\D/g, ""),
+                    nome:           comprador.nome.trim(),
+                    cpf:            comprador.cpf.replace(/\D/g, ""),
+                    email:          comprador.email.trim(),
+                    telefone:       comprador.telefone.replace(/\D/g, ""),
                     dataNascimento: comprador.dataNascimento,
-                    cep: comprador.cep.replace(/\D/g, ""),
-                    logradouro: comprador.logradouro.trim(),
-                    numero: comprador.numero.trim(),
-                    complemento: comprador.complemento.trim() || null,
-                    bairro: comprador.bairro.trim(),
-                    cidade: comprador.cidade.trim(),
-                    estado: comprador.estado.trim().toUpperCase()
+                    cep:            comprador.cep.replace(/\D/g, ""),
+                    logradouro:     comprador.logradouro.trim(),
+                    numero:         comprador.numero.trim(),
+                    complemento:    comprador.complemento.trim() || null,
+                    bairro:         comprador.bairro.trim(),
+                    cidade:         comprador.cidade.trim(),
+                    estado:         comprador.estado.trim().toUpperCase()
                 },
                 pagamento: {
                     tipo: tipoPagamento === "cartao" ? "CARTAO" : "PIX",

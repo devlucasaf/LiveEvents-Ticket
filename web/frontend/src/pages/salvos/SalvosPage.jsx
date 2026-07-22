@@ -4,27 +4,36 @@ import { eventoService }        from "../../services/eventoService";
 import CardEvento               from "../../components/CardEvento";
 import "../../styles/salvos.css";
 
+// --- EXIBE A LISTA DE EVENTOS MARCADOS COMO SALVOS ---
 export default function SalvosPage() {
   const [eventos, setEventos] = useState([]);
   const [salvos,  setSalvos]  = useState([]);
+
   const navigate = useNavigate();
 
+  // --- CARREGA IDS SALVOS DO LOCALSTORAGE ---
   function loadSalvos() {
     const ids = JSON.parse(localStorage.getItem("eventosSalvos") || "[]");
     setSalvos(ids);
   }
 
+  // --- BUSCA EVENTOS, CARREGA SALVOS E ESCUTA ATUALIZAÇÕES ---
   useEffect(() => {
     eventoService.listar().then(setEventos).catch(() => {});
+
     loadSalvos();
 
-    function handleUpdate() { loadSalvos(); }
+    function handleUpdate() { 
+      loadSalvos(); 
+    }
     window.addEventListener("salvosUpdated", handleUpdate);
+
     return () => window.removeEventListener("salvosUpdated", handleUpdate);
   }, []);
 
   const eventosSalvos = eventos.filter((e) => salvos.includes(e.id));
 
+  // --- RENDERIZA TITULO E CONTEÚDO ---
   return (
     <section className="salvos-page">
       <h2>
@@ -34,6 +43,7 @@ export default function SalvosPage() {
         Eventos Salvos
       </h2>
 
+      {/* --- NENHUM EVENTO SALVO --- */}
       {eventosSalvos.length === 0 ? (
         <div className="salvos-page__empty">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -42,6 +52,7 @@ export default function SalvosPage() {
           <p>Você ainda não salvou nenhum evento.</p>
         </div>
       ) : (
+        // --- RENDERIZA GRADE DE EVENTOS SALVOS ---
         <div className="salvos-page__grid">
           {eventosSalvos.map((evento) => (
             <CardEvento key={evento.id} evento={evento} onSelecionar={(id) => navigate(`/evento/${id}`)} />

@@ -1,6 +1,6 @@
 import "../../styles/institucional.css";
 
-// --- PAGINA DE POLITICA DE COMPRA ---
+// --- PÁGINA DE POLÍTICA DE COMPRA ---
 export default function PoliticaCompraPage() {
     return (
         <section className="institucional">

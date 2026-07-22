@@ -7,11 +7,13 @@ public class GlobalExceptionMiddleware
 {
     private readonly RequestDelegate _next;
 
+    // --- RECEBE O PROXIMO MIDDLEWARE VIA INJECAO DE DEPENDENCIA ---
     public GlobalExceptionMiddleware(RequestDelegate next)
     {
         _next = next;
     }
 
+    // --- EXECUTA O PIPELINE E INTERCEPTA QUALQUER EXCECAO LANCADA ---
     public async Task InvokeAsync(HttpContext context)
     {
         try
@@ -24,6 +26,7 @@ public class GlobalExceptionMiddleware
         }
     }
 
+    // --- CONVERTE A EXCECAO EM STATUS HTTP E CORPO JSON DE ERRO ---
     private static Task HandleExceptionAsync(HttpContext context, System.Exception ex)
     {
         var (statusCode, message) = ex switch
@@ -36,6 +39,7 @@ public class GlobalExceptionMiddleware
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)statusCode;
 
+        // --- SERIALIZA O CORPO DE ERRO PADRONIZADO ---
         var payload = JsonSerializer.Serialize(new ErrorResponse
         {
             Message = message,

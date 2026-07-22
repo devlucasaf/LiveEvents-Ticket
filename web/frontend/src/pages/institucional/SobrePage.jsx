@@ -1,6 +1,6 @@
 import "../../styles/institucional.css";
 
-// --- PAGINA SOBRE A LIVEEVENTS ---
+// --- PÁGINA SOBRE A LIVEEVENTS ---
 export default function SobrePage() {
     return (
         <section className="institucional">

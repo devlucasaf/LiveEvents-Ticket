@@ -148,9 +148,18 @@
     const ICONE_PIX = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2 20.8 12 12 20.8 3.2 12z"/><path d="M12 8.2 15.8 12 12 15.8 8.2 12z"/></svg>';
 
     const FORMAS_PAGAMENTO = {
-        CREDITO: { rotulo: "Crédito", icone: ICONE_CREDITO },
-        DEBITO:  { rotulo: "Débito",  icone: ICONE_DEBITO },
-        PIX:     { rotulo: "Pix",     icone: ICONE_PIX }
+        CREDITO: { 
+            rotulo: "Crédito", 
+            icone: ICONE_CREDITO 
+        },
+        DEBITO: { 
+            rotulo: "Débito",  
+            icone: ICONE_DEBITO 
+        },
+        PIX: { 
+            rotulo: "Pix",     
+            icone: ICONE_PIX 
+        }
     };
 
     // --- UTILITARIOS DE FORMATACAO ---

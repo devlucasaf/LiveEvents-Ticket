@@ -1,24 +1,29 @@
-import { useState, useRef, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useCarrinho } from "../context/CarrinhoContext";
+import { useState, useRef, useEffect }      from "react";
+import { Link, useLocation, useNavigate }   from "react-router-dom";
+import { useCarrinho }                      from "../context/CarrinhoContext";
 import "../styles/navbar.css";
 
+// --- BARRA DE NAVEGAÇÃO PRINCIPAL DO FRONTEND ---
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { contador } = useCarrinho();
+
   const [dropdownOpen,  setDropdownOpen]  = useState(false);
   const [theme,         setTheme]         = useState(() => localStorage.getItem("theme") || "light");
+
   const dropdownRef = useRef(null);
 
   const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
   const loggedIn = !!usuario;
 
+  // --- SINCRONIZA O TEMA NO HTML ROOT E PERSISTE NO LOCALSTORAGE ---
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+  // --- FECHA O DROPDOWN QUANDO O USUÁRIO CLICA FORA DO MENU ---
   useEffect(() => {
     function handleClick(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -29,10 +34,12 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  // --- ALTERNA ENTRE TEMA CLARO E ESCURO ---
   function toggleTheme() {
     setTheme(prev => prev === "light" ? "dark" : "light");
   }
 
+  // --- LIMPA SESSÃO, FECHA DROPDOWN E REDIRECIONA ---
   function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
@@ -41,10 +48,12 @@ export default function Navbar() {
     window.location.reload();
   }
 
+  // --- RETORNA A CLASSE DE LINK ATIVO CONFORME A ROTA ---
   function isActive(path) {
     return location.pathname === path ? "navbar__link--active" : "";
   }
 
+  // --- RENDERIZA A ESTRUTURA DA NAVBAR ---
   return (
     <nav className="navbar">
       {/* --- LOGO --- */}
@@ -92,6 +101,7 @@ export default function Navbar() {
 
       {/* --- DIREITA --- */}
       <div className="navbar__right">
+        {/* --- BOTÃO DO CARRINHO COM BADGE DE QUANTIDADE --- */}
         <Link to="/carrinho" className="navbar__cart-btn" title="Meu carrinho">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
@@ -100,6 +110,7 @@ export default function Navbar() {
           {contador > 0 && <span className="navbar__cart-badge">{contador}</span>}
         </Link>
 
+        {/* --- BOTÃO DE ALTERNAÇÃO DE TEMA --- */}
         <button className="navbar__theme-btn" onClick={toggleTheme} title="Alternar tema">
           {theme === "light" ? (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -113,6 +124,7 @@ export default function Navbar() {
           )}
         </button>
 
+        {/* --- EXIBE BOTÃO DE PERFIL E DROPDOWN --- */}
         {loggedIn ? (
           <div ref={dropdownRef} style={{ position: "relative" }}>
             <button
@@ -123,6 +135,7 @@ export default function Navbar() {
               {usuario.nome?.charAt(0).toUpperCase() || "U"}
             </button>
 
+            {/* --- DROPDOWN COM ACESSOS DE PERFIL E OPÇÕES ADMIN --- */}
             {dropdownOpen && (
               <div className="navbar__dropdown">
                 <Link to="/usuario/perfil" className="navbar__dropdown-item" onClick={() => setDropdownOpen(false)}>
@@ -192,6 +205,7 @@ export default function Navbar() {
             )}
           </div>
         ) : (
+          // --- EXIBE BOTAO ENTRAR --- 
           <Link to="/auth/login" className="navbar__login-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4m-5-4l5-5-5-5m5 5H3"/>

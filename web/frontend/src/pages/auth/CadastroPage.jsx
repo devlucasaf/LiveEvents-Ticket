@@ -4,6 +4,7 @@ import { authService }        from "../../services/authService";
 import DatePicker             from "../../components/DatePicker";
 import "../../styles/auth.css";
 
+// --- FORMATA CPF NO PADRAO 000.000.000-00 ---
 function mascaraCpf(value) {
   return value
     .replace(/\D/g, "")
@@ -13,6 +14,7 @@ function mascaraCpf(value) {
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
 
+// --- FORMATA TELEFONE NO PADRAO (00) 00000-0000 ---
 function mascaraTelefone(value) {
   return value
     .replace(/\D/g, "")
@@ -21,6 +23,7 @@ function mascaraTelefone(value) {
     .replace(/(\d{5})(\d{1,4})$/, "$1-$2");
 }
 
+// --- FORMATA CEP NO PADRAO 00000-000 ---
 function mascaraCep(value) {
   return value
     .replace(/\D/g, "")
@@ -28,6 +31,7 @@ function mascaraCep(value) {
     .replace(/(\d{5})(\d)/, "$1-$2");
 }
 
+// --- TELA DE CRIACAO DE CONTA COM DADOS PESSOAIS E ENDERECO ---
 export default function CadastroPage() {
   const [nome,            setNome]            = useState("");
   const [sobrenome,       setSobrenome]       = useState("");
@@ -46,11 +50,13 @@ export default function CadastroPage() {
   const [mostrarSenha,    setMostrarSenha]    = useState(false);
   const [erro,            setErro]            = useState("");
   const [sucesso,         setSucesso]         = useState("");
+
   const navigate = useNavigate();
 
   // --- BUSCA ENDERECO NO VIACEP E PREENCHE CAMPOS AUTOMATICAMENTE ---
   async function buscarEnderecoPorCep(cepValor) {
     const cepNumerico = String(cepValor || "").replace(/\D/g, "");
+
     if (cepNumerico.length !== 8) {
       return;
     }
@@ -82,10 +88,12 @@ export default function CadastroPage() {
     }
   }
 
+  // --- ENVIA O FORMULARIO DE CADASTRO PARA A API ---
   async function handleSubmit(event) {
     event.preventDefault();
     setErro("");
     setSucesso("");
+
     try {
       await authService.cadastro({ 
         nome, 
@@ -103,6 +111,7 @@ export default function CadastroPage() {
         estado,
         senha 
       });
+
       setSucesso("Cadastro realizado com sucesso!");
       setTimeout(() => navigate("/auth/login"), 1200);
     } catch (e) {
@@ -110,11 +119,13 @@ export default function CadastroPage() {
     }
   }
 
+  // --- RENDERIZA O FORMULÁRIO DE CADASTRO COM DADOS PESSOAIS E ENDEREÇO ---
   return (
     <div className="auth-page">
       <div className="auth-page__card">
         <h2>Criar conta</h2>
         <form className="auth-page__form" onSubmit={handleSubmit}>
+          {/* --- CAMPO NOME --- */}
           <input 
             className="auth-page__input" 
             value={nome} 
@@ -122,6 +133,7 @@ export default function CadastroPage() {
             placeholder="Nome" 
             required 
           />
+          {/* --- CAMPO SOBRENOME --- */}
           <input 
             className="auth-page__input" 
             value={sobrenome} 
@@ -129,6 +141,7 @@ export default function CadastroPage() {
             placeholder="Sobrenome" 
             required 
           />
+          {/* --- CAMPO EMAIL --- */}
           <input 
             className="auth-page__input" 
             value={email} 
@@ -137,6 +150,7 @@ export default function CadastroPage() {
             type="email" 
             required 
           />
+          {/* --- CAMPO CPF COM MASCARA --- */}
           <input 
             className="auth-page__input" 
             value={cpf} 
@@ -145,6 +159,7 @@ export default function CadastroPage() {
             maxLength={14}
             required 
           />
+          {/* --- CAMPO TELEFONE COM MASCARA --- */}
           <input 
             className="auth-page__input" 
             value={telefone} 
@@ -153,12 +168,14 @@ export default function CadastroPage() {
             maxLength={15}
             required 
           />
+          {/* --- CAMPO DATA DE NASCIMENTO --- */}
           <DatePicker
             value={dataNascimento}
             onChange={(val) => setDataNascimento(val)}
             placeholder="Data de nascimento"
             required
           />
+          {/* --- CAMPOS DE ENDERECO COM CEP E AUTOPREENCHIMENTO --- */}
           <input
             className="auth-page__input"
             value={cep}
@@ -242,10 +259,13 @@ export default function CadastroPage() {
               )}
             </button>
           </div>
+          {/* --- BOTAO DE ENVIO DO CADASTRO --- */}
           <button className="auth-page__btn" type="submit">Cadastrar</button>
         </form>
+        {/* --- FEEDBACKS DE ERRO E SUCESSO DA OPERACAO --- */}
         {erro && <p className="error">{erro}</p>}
         {sucesso && <p className="success">{sucesso}</p>}
+        {/* --- LINK PARA USUARIO QUE JA POSSUI CONTA --- */}
         <p className="auth-page__footer">
           Já possui conta? <Link to="/auth/login">Entrar</Link>
         </p>

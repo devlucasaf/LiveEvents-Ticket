@@ -23,13 +23,13 @@ export function CarrinhoProvider({ children }) {
     // --- MONTA O VALOR EXPOSTO PELO CONTEXTO ---
     const valor = useMemo(() => ({
         itens,
-        contador: itens.reduce((total, item) => total + item.quantidade, 0),
-        total: itens.reduce((total, item) => total + item.precoUnitario * item.quantidade, 0),
-        adicionar: (item) => setItens(carrinhoService.adicionar(item)),
-        atualizarQuantidade: (chave, qtd) => setItens(carrinhoService.atualizarQuantidade(chave, qtd)),
-        remover: (chave) => setItens(carrinhoService.remover(chave)),
-        limpar: () => setItens(carrinhoService.limpar()),
-        chaveDe: (item) => carrinhoService.chaveDe(item)
+        contador:               itens.reduce((total, item)  => total + item.quantidade, 0),
+        total:                  itens.reduce((total, item)  => total + item.precoUnitario * item.quantidade, 0),
+        adicionar:              (item)                      => setItens(carrinhoService.adicionar(item)),
+        atualizarQuantidade:    (chave, qtd)                => setItens(carrinhoService.atualizarQuantidade(chave, qtd)),
+        remover:                (chave)                     => setItens(carrinhoService.remover(chave)),
+        limpar:                 ()                          => setItens(carrinhoService.limpar()),
+        chaveDe:                (item)                      => carrinhoService.chaveDe(item)
     }), [itens]);
 
     return <CarrinhoContext.Provider value={valor}>{children}</CarrinhoContext.Provider>;

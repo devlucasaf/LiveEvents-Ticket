@@ -76,8 +76,8 @@ public static class CatalogoIngresso
     };
 
     public const string ModalidadeInteira = "INTEIRA";
-    public const string ModalidadeMeia    = "MEIA";
-    public const string ModalidadeSocial  = "SOCIAL";
+    public const string ModalidadeMeia = "MEIA";
+    public const string ModalidadeSocial = "SOCIAL";
 
     // --- CALCULA O PRECO UNITARIO CONFORME A MODALIDADE ESCOLHIDA ---
     public static decimal CalcularPreco(decimal precoInteira, string? modalidade)

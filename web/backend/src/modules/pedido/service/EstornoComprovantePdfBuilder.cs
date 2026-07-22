@@ -9,6 +9,7 @@ public static class EstornoComprovantePdfBuilder
     // --- GERA O PDF DE COMPROVANTE DE ESTORNO DO PEDIDO ---
     public static byte[] Gerar(EstornoComprovantePdfDados dados)
     {
+        // --- CRIA O DOCUMENTO E CONFIGURA A PÁGINA ---
         return Document.Create(container =>
         {
             container.Page(page =>
@@ -17,6 +18,7 @@ public static class EstornoComprovantePdfBuilder
                 page.Margin(26);
                 page.DefaultTextStyle(x => x.FontSize(11).FontColor(Colors.Grey.Darken3));
 
+                // --- TÍTULO, IDENTIFICACAO DO PEDIDO E LINHA DIVISORIA ---
                 page.Header().Column(coluna =>
                 {
                     coluna.Item().Text("LiveEvents Ticket").FontSize(22).SemiBold().FontColor(Colors.Green.Darken2);
@@ -24,10 +26,12 @@ public static class EstornoComprovantePdfBuilder
                     coluna.Item().PaddingTop(8).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                 });
 
+                // --- BLOCOS DE RESUMO, COMPRADOR, PEDIDO E MOTIVO ---
                 page.Content().PaddingVertical(10).Column(coluna =>
                 {
                     coluna.Spacing(8);
 
+                    // --- RESUMO DO ESTORNO ---
                     coluna.Item().Text("Resumo do estorno").SemiBold().FontSize(13);
                     coluna.Item().Text($"Protocolo: {dados.ProtocoloEstorno}").SemiBold();
                     coluna.Item().Text($"Valor estornado: {dados.ValorEstornadoFormatado}").SemiBold();
@@ -35,12 +39,14 @@ public static class EstornoComprovantePdfBuilder
                     coluna.Item().Text($"Data da aprovação: {FormatarDataHora(dados.DataAprovacao)}");
                     coluna.Item().Text($"Data do estorno: {FormatarDataHora(dados.DataEstorno)}");
 
+                    // --- DADOS DO COMPRADOR ---
                     coluna.Item().PaddingTop(6).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                     coluna.Item().Text("Dados do comprador").SemiBold().FontSize(13);
                     coluna.Item().Text($"Nome: {dados.NomeComprador}");
                     coluna.Item().Text($"CPF: {dados.DocumentoComprador}");
                     coluna.Item().Text($"E-mail: {dados.EmailComprador}");
 
+                    // --- DADOS DO PEDIDO REEMBOLSADO ---
                     coluna.Item().PaddingTop(6).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                     coluna.Item().Text("Dados do pedido reembolsado").SemiBold().FontSize(13);
                     coluna.Item().Text($"Evento: {dados.EventoTitulo}");
@@ -48,6 +54,7 @@ public static class EstornoComprovantePdfBuilder
                     coluna.Item().Text($"Setor: {dados.Setor ?? "Não informado"}");
                     coluna.Item().Text($"Quantidade de ingressos: {dados.QuantidadeIngressos}");
 
+                    // --- MOTIVO DO ESTORNO E REGRA APLICADA ---
                     coluna.Item().PaddingTop(6).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                     coluna.Item().Text("Motivo do estorno").SemiBold().FontSize(13);
                     coluna.Item().Text($"Código: {dados.MotivoCodigo}");

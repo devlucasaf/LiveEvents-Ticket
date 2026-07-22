@@ -9,6 +9,7 @@ public static class IngressoPdfBuilder
     // --- GERA O PDF FINAL DO INGRESSO/COMPROVANTE ---
     public static byte[] Gerar(IngressoPdfDados dados)
     {
+        // --- CRIA O DOCUMENTO E CONFIGURA A PÁGINA ---
         return Document.Create(container =>
         {
             container.Page(page =>
@@ -17,6 +18,7 @@ public static class IngressoPdfBuilder
                 page.Margin(26);
                 page.DefaultTextStyle(x => x.FontSize(11).FontColor(Colors.Grey.Darken3));
 
+                // --- TÍTULO, IDENTIFICAÇÃO DO PEDIDO E LINHA DIVISORIA ---
                 page.Header().Column(coluna =>
                 {
                     coluna.Item().Text("LiveEvents Ticket").FontSize(22).SemiBold().FontColor(Colors.Red.Darken2);
@@ -24,10 +26,12 @@ public static class IngressoPdfBuilder
                     coluna.Item().PaddingTop(8).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                 });
 
+                // --- DADOS DO COMPRADOR, LISTA DE INGRESSOS E QR CODE ---
                 page.Content().PaddingVertical(10).Column(coluna =>
                 {
                     coluna.Spacing(10);
 
+                    // --- DADOS DO COMPRADOR E VALOR TOTAL ---
                     coluna.Item().Text("Dados do comprador").SemiBold().FontSize(13);
                     coluna.Item().Text($"Nome: {dados.NomeComprador}");
                     coluna.Item().Text($"CPF: {dados.DocumentoComprador}");
@@ -36,9 +40,11 @@ public static class IngressoPdfBuilder
                     coluna.Item().Text($"Data da compra: {dados.DataCompra}");
                     coluna.Item().Text($"Valor total: {dados.ValorTotalFormatado}").SemiBold();
 
+                    // --- LISTA DE INGRESSOS DO PEDIDO ---
                     coluna.Item().PaddingTop(6).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                     coluna.Item().Text("Ingressos").SemiBold().FontSize(13);
 
+                    // --- MONTA UM CARD PARA CADA ITEM/INGRESSO ---
                     foreach (var item in dados.Itens)
                     {
                         coluna.Item().Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Column(card =>
@@ -54,6 +60,7 @@ public static class IngressoPdfBuilder
                         });
                     }
 
+                    // --- QR CODE DE VALIDAÇÃO ---
                     if (!string.IsNullOrWhiteSpace(dados.QrCodeBase64))
                     {
                         try
@@ -69,7 +76,7 @@ public static class IngressoPdfBuilder
                         }
                         catch
                         {
-                            // --- IGNORA QR CODE INVALIDO E SEGUE COM O PDF ---
+                            // --- IGNORA QR CODE INVÁLIDO E SEGUE COM O PDF ---
                         }
                     }
                 });

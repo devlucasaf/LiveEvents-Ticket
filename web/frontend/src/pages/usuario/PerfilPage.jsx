@@ -30,7 +30,7 @@ function mascaraCep(value) {
     .replace(/(\d{5})(\d)/, "$1-$2");
 }
 
-// --- PERFILPAGE: EXIBE E EDITA DADOS DO USUARIO E HISTORICO DE PEDIDOS ---
+// --- EXIBE E EDITA DADOS DO USUARIO E HISTORICO DE PEDIDOS ---
 export default function PerfilPage() {
   const [pedidos,     setPedidos]     = useState([]);
   const [erro,        setErro]        = useState("");
@@ -110,7 +110,7 @@ export default function PerfilPage() {
       setCidade(dados.localidade || "");
       setEstado((dados.uf || "").toUpperCase());
     } catch {
-      // --- FALHA DE REDE: MANTEM DIGITACAO MANUAL DO USUARIO ---
+      // --- MANTÉM DIGITAÇÃO MANUAL DO USUÁRIO ---
     }
   }
 
@@ -165,7 +165,7 @@ export default function PerfilPage() {
 
   return (
     <section className="perfil-page">
-      {/* --- CABECALHO COM AVATAR, NOME E EMAIL --- */}
+      {/* --- CABEÇALHO COM AVATAR, NOME E EMAIL --- */}
       <div className="perfil-page__header">
         <div className="perfil-page__avatar">
           {usuario.nome?.charAt(0).toUpperCase() || "U"}

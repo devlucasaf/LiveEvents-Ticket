@@ -1,4 +1,5 @@
 using LiveEventsTicket.Backend.Modules.Relatorio.Service;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +12,13 @@ public class RelatorioController : ControllerBase
 {
     private readonly RelatorioService _service;
 
+    // --- RECEBE O SERVICO DE RELATORIO VIA INJECAO DE DEPENDENCIA ---
     public RelatorioController(RelatorioService service)
     {
         _service = service;
     }
 
+    // --- RETORNA O RELATORIO DE VENDAS ---
     [HttpGet("vendas")]
     public async Task<IActionResult> Vendas(CancellationToken cancellationToken)
     {

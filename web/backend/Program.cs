@@ -24,11 +24,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 QuestPDF.Settings.License = LicenseType.Community;
 
+// --- REGISTRA OPCOES E SERVICOS DE SEGURANCA ---
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddHttpContextAccessor();
 
+// --- CONTEXTO PRINCIPAL DA APLICACAO ---
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -36,11 +38,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDbContext<PdvDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// --- REGISTRA OS REPOSITORIOS DE CADA MODULO ---
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IIngressoRepository, IngressoRepository>();
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 
+// --- REGISTRA OS SERVICOS DE CADA MODULO ---
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<EventoService>();
 builder.Services.AddScoped<IngressoService>();
@@ -50,13 +54,16 @@ builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<FuncionarioService>();
 
+// --- HABILITA CONTROLLERS E DOCUMENTACAO SWAGGER ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// --- CARREGA AS CONFIGURACOES DO JWT E MONTA A CHAVE DE ASSINATURA ---
 var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret));
 
+// --- CONFIGURA A AUTENTICACAO JWT BEARER E OS PARAMETROS DE VALIDACAO DO TOKEN ---
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -75,6 +82,7 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+// --- CONFIGURA O CORS LIBERANDO O FRONTEND NA PORTA 5173 ---
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
@@ -89,11 +97,13 @@ var app = builder.Build();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
+// --- EM DESENVOLVIMENTO: HABILITA SWAGGER E SOBE O FRONTEND ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 
+    // --- INICIA O SERVIDOR DE DESENVOLVIMENTO DO FRONTEND EM PROCESSO SEPARADO ---
     var frontendPath = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, "..", "Frontend"));
     var npmProcess = new System.Diagnostics.Process
     {
@@ -122,6 +132,7 @@ const string urlBackend = "http://localhost:5000";
 const string urlFrontend = "http://localhost:5173";
 const string urlSwagger  = "http://localhost:5000/swagger";
 
+// --- AO INICIAR A APLICACAO, EXIBE O BANNER E OS DADOS DO AMBIENTE ---
 app.Lifetime.ApplicationStarted.Register(() =>
 {
     Console.ForegroundColor = ConsoleColor.Green;

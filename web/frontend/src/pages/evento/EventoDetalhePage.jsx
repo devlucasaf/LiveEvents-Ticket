@@ -6,7 +6,7 @@ import SelectCustom                     from  "../../components/SelectCustom";
 import ModalCarrinho                    from  "../../components/ModalCarrinho";
 import                                        "../../styles/evento-detalhe.css";
 
-// --- FORMATA UM VALOR NUMERICO COMO MOEDA BRASILEIRA ---
+// --- FORMATA UM VALOR NUMÉRICO COMO MOEDA BRASILEIRA ---
 function formatarMoeda(valor) {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
@@ -75,10 +75,8 @@ function SetorCard({ ingresso, evento, modalidades }) {
       quantidade
     };
 
-    // --- INSERE NO CARRINHO ---
     adicionar(linha);
 
-    // --- ABRE O MODAL PERGUNTANDO IR AO CARRINHO OU CONTINUAR --- 
     setItemModal(linha);
     setModalAberto(true);
   }
@@ -221,7 +219,13 @@ export default function EventoDetalhePage() {
           </span>
           <span className="evento-detalhe__meta-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <rect 
+                x="3" 
+                y="4" 
+                width="18" 
+                height="18" 
+                rx="2"
+              />
               <path d="M16 2v4M8 2v4M3 10h18"/>
             </svg>
             {new Date(evento.dataEvento).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}

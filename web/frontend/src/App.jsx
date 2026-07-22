@@ -34,30 +34,30 @@ export default function App() {
         <Navbar />
         <main className="container">
           <Routes>
-            <Route path="/"                     element={<EventosPage />} />
-            <Route path="/auth/login"           element={<LoginPage />} />
-            <Route path="/auth/cadastro"        element={<CadastroPage />} />
-            <Route path="/auth/recuperar-senha" element={<RecuperarSenhaPage />} />
-            <Route path="/evento/:id"           element={<EventoDetalhePage />} />
-            <Route path="/busca"                element={<BuscaPage />} />
-            <Route path="/meus-eventos"         element={<MeusEventosPage />} />
-            <Route path="/salvos"               element={<SalvosPage />} />
-            <Route path="/ingresso/selecao"     element={<SelecaoAssentoPage />} />
-            <Route path="/carrinho"             element={<CarrinhoPage />} />
-            <Route path="/pedido/checkout"      element={<CheckoutPage />} />
-            <Route path="/usuario/perfil"       element={<PerfilPage />} />
-            <Route path="/admin/dashboard"      element={<DashboardAdminPage />} />
-            <Route path="/admin/criar-evento"   element={<CriarEventoPage />} />
-            <Route path="/admin/funcionarios"   element={<FuncionariosPage />} />
-            <Route path="/admin/checkin"        element={<CheckinPortariaPage />} />
-            <Route path="/faq"                   element={<FaqPage />} />
-            <Route path="/sobre"                 element={<SobrePage />} />
-            <Route path="/acessibilidade"        element={<AcessibilidadePage />} />
-            <Route path="/suporte"               element={<SuportePage />} />
-            <Route path="/termos"                element={<TermosPage />} />
-            <Route path="/politica-compra"       element={<PoliticaCompraPage />} />
-            <Route path="/politica-privacidade"  element={<PoliticaPrivacidadePage />} />
-            <Route path="/licenca"               element={<LicencaPage />} />
+            <Route path="/"                     	element={<EventosPage />} />
+            <Route path="/auth/login"           	element={<LoginPage />} />
+            <Route path="/auth/cadastro"        	element={<CadastroPage />} />
+            <Route path="/auth/recuperar-senha" 	element={<RecuperarSenhaPage />} />
+            <Route path="/evento/:id"           	element={<EventoDetalhePage />} />
+            <Route path="/busca"                	element={<BuscaPage />} />
+            <Route path="/meus-eventos"         	element={<MeusEventosPage />} />
+            <Route path="/salvos"               	element={<SalvosPage />} />
+            <Route path="/ingresso/selecao"     	element={<SelecaoAssentoPage />} />
+            <Route path="/carrinho"             	element={<CarrinhoPage />} />
+            <Route path="/pedido/checkout"      	element={<CheckoutPage />} />
+            <Route path="/usuario/perfil"       	element={<PerfilPage />} />
+            <Route path="/admin/dashboard"      	element={<DashboardAdminPage />} />
+            <Route path="/admin/criar-evento"   	element={<CriarEventoPage />} />
+            <Route path="/admin/funcionarios"   	element={<FuncionariosPage />} />
+            <Route path="/admin/checkin"        	element={<CheckinPortariaPage />} />
+            <Route path="/faq"                   	element={<FaqPage />} />
+            <Route path="/sobre"                 	element={<SobrePage />} />
+            <Route path="/acessibilidade"        	element={<AcessibilidadePage />} />
+            <Route path="/suporte"               	element={<SuportePage />} />
+            <Route path="/termos"                	element={<TermosPage />} />
+            <Route path="/politica-compra"       	element={<PoliticaCompraPage />} />
+            <Route path="/politica-privacidade"  	element={<PoliticaPrivacidadePage />} />
+            <Route path="/licenca"               	element={<LicencaPage />} />
           </Routes>
         </main>
         <Footer />

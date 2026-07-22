@@ -898,6 +898,7 @@ public class PedidoService
 
         string? eventoTitulo = null;
         string? setor = null;
+        
         if (pedido is not null && pedido.Itens.Count > 0)
         {
             var primeiroItem = pedido.Itens[0];

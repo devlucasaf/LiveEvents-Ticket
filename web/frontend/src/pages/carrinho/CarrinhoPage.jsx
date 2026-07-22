@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useCarrinho } from "../../context/CarrinhoContext";
+import { Link, useNavigate }    from "react-router-dom";
+import { useCarrinho }          from "../../context/CarrinhoContext";
 import "../../styles/carrinho.css";
 
 function formatarMoeda(valor) {
@@ -28,7 +28,8 @@ export default function CarrinhoPage() {
             <div className="carrinho-page">
                 <div className="carrinho-page__vazio">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
                         <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
                     </svg>
                     <h2>Seu carrinho está vazio</h2>
@@ -91,10 +92,12 @@ export default function CarrinhoPage() {
                         <span>Itens</span>
                         <span>{itens.reduce((t, i) => t + i.quantidade, 0)}</span>
                     </div>
+
                     <div className="carrinho-resumo__linha carrinho-resumo__total">
                         <strong>Total</strong>
                         <strong>{formatarMoeda(total)}</strong>
                     </div>
+                    
                     <button className="carrinho-resumo__btn" onClick={finalizar}>
                         {logado ? "Finalizar compra" : "Entrar para finalizar"}
                     </button>

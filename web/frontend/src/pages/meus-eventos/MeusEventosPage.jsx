@@ -1,31 +1,49 @@
-import { useEffect, useState } from "react";
-import { pedidoService } from "../../services/pedidoService";
-import { eventoService } from "../../services/eventoService";
+import { useEffect, useState }  from "react";
+import { pedidoService }        from "../../services/pedidoService";
+import { eventoService }        from "../../services/eventoService";
 import "../../styles/meus-eventos.css";
 
+// --- LISTA DE MOTIVOS PADRONIZADOS PARA SOLICITACAO DE REEMBOLSO ---
 const MOTIVOS_REEMBOLSO = [
-  { codigo: "ARREPENDIMENTO_7_DIAS", rotulo: "Arrependimento (7 dias)" },
-  { codigo: "IMPEDIMENTO_PESSOAL", rotulo: "Impedimento pessoal" },
-  { codigo: "ALTERACAO_DE_PLANOS", rotulo: "Alteração de planos" },
-  { codigo: "ERRO_NA_COMPRA", rotulo: "Erro na compra" },
-  { codigo: "OUTRO", rotulo: "Outro motivo" }
+  { 
+    codigo: "ARREPENDIMENTO_7_DIAS", 
+    rotulo: "Arrependimento (7 dias)" 
+  },
+  { 
+    codigo: "IMPEDIMENTO_PESSOAL", 
+    rotulo: "Impedimento pessoal" 
+  },
+  { 
+    codigo: "ALTERACAO_DE_PLANOS", 
+    rotulo: "Alteração de planos" 
+  },
+  { 
+    codigo: "ERRO_NA_COMPRA", 
+    rotulo: "Erro na compra" 
+  },
+  { 
+    codigo: "OUTRO", 
+    rotulo: "Outro motivo" 
+  }
 ];
 
+// --- PAINEL DO USUARIO PARA GERENCIAR INGRESSOS E REEMBOLSOS ---
 export default function MeusEventosPage() {
-  const [tab,     setTab]     = useState("upcoming");
-  const [pedidos, setPedidos] = useState([]);
-  const [eventos, setEventos] = useState([]);
-  const [erro,    setErro]    = useState("");
-  const [ingressoSelecionadoId, setIngressoSelecionadoId] = useState(null);
-  const [mensagemReembolso, setMensagemReembolso] = useState("");
-  const [processandoReembolsoId, setProcessandoReembolsoId] = useState(null);
-  const [processandoDownloadId, setProcessandoDownloadId] = useState(null);
-  const [processandoComprovanteId, setProcessandoComprovanteId] = useState(null);
+  const [tab,                           setTab]                           = useState("upcoming");
+  const [pedidos,                       setPedidos]                       = useState([]);
+  const [eventos,                       setEventos]                       = useState([]);
+  const [erro,                          setErro]                          = useState("");
+  const [ingressoSelecionadoId,         setIngressoSelecionadoId]         = useState(null);
+  const [mensagemReembolso,             setMensagemReembolso]             = useState("");
+  const [processandoReembolsoId,        setProcessandoReembolsoId]        = useState(null);
+  const [processandoDownloadId,         setProcessandoDownloadId]         = useState(null);
+  const [processandoComprovanteId,      setProcessandoComprovanteId]      = useState(null);
   const [processandoCompartilhamentoId, setProcessandoCompartilhamentoId] = useState(null);
-  const [copiado, setCopiado] = useState("");
-  const [motivoCodigo, setMotivoCodigo] = useState("ARREPENDIMENTO_7_DIAS");
-  const [motivoDetalhe, setMotivoDetalhe] = useState("");
+  const [copiado,                       setCopiado]                       = useState("");
+  const [motivoCodigo,                  setMotivoCodigo]                  = useState("ARREPENDIMENTO_7_DIAS");
+  const [motivoDetalhe,                 setMotivoDetalhe]                 = useState("");
 
+  // --- CARREGA PEDIDOS DO USUARIO E CATALOGO DE EVENTOS ---
   useEffect(() => {
     Promise.all([pedidoService.meusPedidos(), eventoService.listar()])
       .then(([pedidosData, eventosData]) => {
@@ -37,6 +55,7 @@ export default function MeusEventosPage() {
 
   const now = new Date();
 
+  // --- ENRIQUECE CADA PEDIDO COM O EVENTO CORRESPONDENTE ---
   const meusEventos = pedidos
     .filter((p) => p.status === "PAGO" || p.status === "REEMBOLSADO")
     .map((p) => {
@@ -50,6 +69,7 @@ export default function MeusEventosPage() {
   const displayed = tab === "upcoming" ? upcoming : past;
   const ingressoSelecionado = displayed.find((item) => item.id === ingressoSelecionadoId) || displayed[0] || null;
 
+  // --- GARANTE UM ITEM SELECIONADO VÁLIDO AO TROCAR DE ABA/LISTA ---
   useEffect(() => {
     if (!displayed.length) {
       setIngressoSelecionadoId(null);
@@ -62,6 +82,7 @@ export default function MeusEventosPage() {
     }
   }, [tab, displayed, ingressoSelecionadoId]);
 
+  // --- EXIBE VALOR MONETÁRIO NO PADRÃO BRL ---
   function formatarMoeda(valor) {
     return Number(valor || 0).toLocaleString("pt-BR", {
       style: "currency",
@@ -69,6 +90,7 @@ export default function MeusEventosPage() {
     });
   }
 
+  // --- CONVERTE DATA PARA EXIBIÇÃO AMIGÁVEL ---
   function formatarData(data) {
     if (!data) {
       return "Data não informada";
@@ -96,6 +118,7 @@ export default function MeusEventosPage() {
     });
   }
 
+  // --- DEFINE A CLASSE CSS DO BADGE CONFORME STATUS/DATA ---
   function classeStatus(item) {
     if (item.status === "REEMBOLSADO") {
       return "meus-eventos-page__item-status--reembolsado";
@@ -132,6 +155,7 @@ export default function MeusEventosPage() {
     ];
   }
 
+  // --- DEFINE O TEXTO DO STATUS EXIBIDO PARA O USUÁRIO ---
   function rotuloStatus(item) {
     if (item.status === "REEMBOLSADO") {
       return "Reembolsado";
@@ -140,6 +164,7 @@ export default function MeusEventosPage() {
     return new Date(item.evento.dataEvento) >= now ? "Em breve" : "Realizado";
   }
 
+  // --- VALIDA DADOS, CHAMA API E ATUALIZA O PEDIDO LOCAL ---
   async function solicitarReembolso(pedidoId) {
     setMensagemReembolso("");
     setErro("");
@@ -163,6 +188,7 @@ export default function MeusEventosPage() {
         motivo: motivoCodigo === "OUTRO" ? motivoDetalhe.trim() : ""
       });
 
+      // --- SINCRONIZA O PEDIDO LOCAL COM O RETORNO DO BACKEND ---
       setPedidos((prev) => prev.map((pedido) => {
         if (pedido.id !== pedidoId) {
           return pedido;
@@ -202,15 +228,18 @@ export default function MeusEventosPage() {
     setProcessandoComprovanteId(pedidoId);
 
     try {
+      
       const { blob, nomeArquivo } = await pedidoService.baixarComprovanteEstornoPdf(pedidoId);
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
+
       link.href = url;
       link.download = nomeArquivo;
       document.body.appendChild(link);
       link.click();
       link.remove();
+
       window.URL.revokeObjectURL(url);
     } catch (e) {
       setErro(e.message);
@@ -219,6 +248,7 @@ export default function MeusEventosPage() {
     }
   }
 
+  // --- GERA E BAIXA O PDF DO INGRESSO SELECIONADO ---
   async function baixarIngressoPdf(pedidoId) {
     setErro("");
     setProcessandoDownloadId(pedidoId);
@@ -228,11 +258,13 @@ export default function MeusEventosPage() {
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
+
       link.href = url;
       link.download = nomeArquivo;
       document.body.appendChild(link);
       link.click();
       link.remove();
+
       window.URL.revokeObjectURL(url);
     } catch (e) {
       setErro(e.message);
@@ -241,7 +273,7 @@ export default function MeusEventosPage() {
     }
   }
 
-  // --- GERA LINK TEMPORARIO DE COMPARTILHAMENTO PARA O PEDIDO ---
+  // --- GERA LINK TEMPORÁRIO DE COMPARTILHAMENTO PARA O PEDIDO ---
   async function gerarLinkCompartilhamento(pedidoId) {
     setErro("");
     setCopiado("");
@@ -253,6 +285,7 @@ export default function MeusEventosPage() {
         maxAcessos: 3
       });
 
+      // --- ATUALIZA O PEDIDO LOCAL COM OS DADOS DO COMPARTILHAMENTO ---
       setPedidos((prev) => prev.map((pedido) => {
         if (pedido.id !== pedidoId) {
           return pedido;
@@ -285,6 +318,7 @@ export default function MeusEventosPage() {
     try {
       const resposta = await pedidoService.revogarLinkCompartilhamento(pedidoId);
 
+      // --- ATUALIZA O PEDIDO LOCAL COM O ESTADO REVOGADO ---
       setPedidos((prev) => prev.map((pedido) => {
         if (pedido.id !== pedidoId) {
           return pedido;
@@ -308,7 +342,7 @@ export default function MeusEventosPage() {
     }
   }
 
-  // --- COPIA LINK DE COMPARTILHAMENTO PARA AREA DE TRANSFERÊNCIA ---
+  // --- COPIA LINK DE COMPARTILHAMENTO PARA ÁREA DE TRANSFERÊNCIA ---
   async function copiarLinkCompartilhamento(url) {
     try {
       await navigator.clipboard.writeText(url);
@@ -319,6 +353,7 @@ export default function MeusEventosPage() {
     }
   }
 
+  // --- RENDERIZA A PÁGINA COM LISTA DE INGRESSOS, DETALHES E AÇÕES ---
   return (
     <section className="meus-eventos-page">
       <h2>
@@ -331,12 +366,14 @@ export default function MeusEventosPage() {
       {erro && <p className="error">{erro}</p>}
 
       <div className="meus-eventos-page__tabs">
+        {/* --- EVENTOS EM BREVE --- */}
         <button
           className={`meus-eventos-page__tab ${tab === "upcoming" ? "meus-eventos-page__tab--active" : ""}`}
           onClick={() => setTab("upcoming")}
         >
           Em breve
         </button>
+        {/* --- EVENTOS PASSADOS --- */}
         <button
           className={`meus-eventos-page__tab ${tab === "past" ? "meus-eventos-page__tab--active" : ""}`}
           onClick={() => setTab("past")}
@@ -345,12 +382,14 @@ export default function MeusEventosPage() {
         </button>
       </div>
 
+      {/* --- ESTADO VAZIO QUANDO NAO HA ITENS NA ABA SELECIONADA --- */}
       {displayed.length === 0 ? (
         <div className="meus-eventos-page__empty">
           <p>{tab === "upcoming" ? "Nenhum evento em breve." : "Nenhum evento passado."}</p>
         </div>
       ) : (
         <div className="meus-eventos-page__layout">
+          {/* --- LISTA DE PEDIDOS/INGRESSOS --- */}
           <div className="meus-eventos-page__list" role="listbox" aria-label="Ingressos">
             {displayed.map((item) => {
               const selecionado = ingressoSelecionado?.id === item.id;
@@ -397,6 +436,7 @@ export default function MeusEventosPage() {
           </div>
 
           {ingressoSelecionado && (
+            /* --- DETALHES E AÇÕES DO ITEM SELECIONADO --- */
             <aside className="meus-eventos-page__details" aria-live="polite">
               <h3 className="meus-eventos-page__details-title">
                 {ingressoSelecionado.evento.titulo || `Pedido #${ingressoSelecionado.id}`}
@@ -424,6 +464,7 @@ export default function MeusEventosPage() {
 
               <div className="meus-eventos-page__refund">
                 <div className="meus-eventos-page__actions">
+                  {/* --- AÇÃO DE DOWNLOAD DO INGRESSO EM PDF --- */}
                   <button
                     type="button"
                     className="meus-eventos-page__ticket-btn"
@@ -440,6 +481,7 @@ export default function MeusEventosPage() {
                 </div>
 
                 <div className="meus-eventos-page__share">
+                  {/* --- AÇÃO DE GERAÇÃO DE LINK COMPARTILHÁVEL --- */}
                   <button
                     type="button"
                     className="meus-eventos-page__share-btn"
@@ -455,6 +497,7 @@ export default function MeusEventosPage() {
                   </button>
 
                   {ingressoSelecionado.compartilhamentoUrl && (
+                    /* --- BLOCO COM DADOS DO LINK GERADO E AÇÕES DE COPIAR/REVOGAR --- */
                     <div className="meus-eventos-page__share-box">
                       <p>
                         <strong>Link:</strong>
@@ -530,6 +573,7 @@ export default function MeusEventosPage() {
                 </button>
 
                 {ingressoSelecionado.status !== "REEMBOLSADO" && (
+                  /* --- FORMULÁRIO DE MOTIVO PARA SOLICITAR REEMBOLSO --- */
                   <div className="meus-eventos-page__refund-motivo-box">
                     <label htmlFor="motivo-padrao" className="meus-eventos-page__refund-label">
                       Motivo padronizado
@@ -580,6 +624,7 @@ export default function MeusEventosPage() {
                 )}
 
                 {ingressoSelecionado.status === "REEMBOLSADO" && (
+                  /* --- AÇÃO PARA BAIXAR COMPROVANTE DE ESTORNO --- */
                   <button
                     type="button"
                     className="meus-eventos-page__ticket-btn"
@@ -593,6 +638,7 @@ export default function MeusEventosPage() {
                 )}
 
                 <div className="meus-eventos-page__timeline">
+                  {/* --- LINHA DO TEMPO DO PROCESSO DE REEMBOLSO --- */}
                   <p className="meus-eventos-page__timeline-title">Linha do tempo do reembolso</p>
 
                   {obterLinhaDoTempoReembolso(ingressoSelecionado).map((etapa) => (

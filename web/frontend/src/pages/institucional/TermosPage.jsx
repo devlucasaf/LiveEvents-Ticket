@@ -1,6 +1,6 @@
 import "../../styles/institucional.css";
 
-// --- PAGINA DE TERMOS DE USO ---
+// --- PÁGINA DE TERMOS DE USO ---
 export default function TermosPage() {
     return (
         <section className="institucional">

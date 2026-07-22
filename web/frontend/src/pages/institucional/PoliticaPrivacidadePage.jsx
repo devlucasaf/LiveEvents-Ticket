@@ -1,6 +1,6 @@
 import "../../styles/institucional.css";
 
-// --- PAGINA DE POLITICA DE PRIVACIDADE ---
+// --- PÁGINA DE POLÍTICA DE PRIVACIDADE ---
 export default function PoliticaPrivacidadePage() {
     return (
         <section className="institucional">

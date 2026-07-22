@@ -10,6 +10,7 @@ namespace LiveEventsTicket.Backend.Infra.Config;
 
 public static class DataSeederExtensions
 {
+    // --- GARANTE O SCHEMA E INSERE OS DADOS DEMO NA INICIALIZACAO ---
     public static async Task SeedDataAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
@@ -17,6 +18,7 @@ public static class DataSeederExtensions
 
         await EnsureTablesCreatedAsync(context);
 
+        // --- APLICA AS ATUALIZACOES DE SCHEMA ---
         await EnsureItensPedidoColunasAsync(context);
         await EnsurePedidoCompradorColunasAsync(context);
         await EnsurePedidoReembolsoColunasAsync(context);
@@ -28,6 +30,7 @@ public static class DataSeederExtensions
         var pdvContext = scope.ServiceProvider.GetRequiredService<PdvDbContext>();
         await EnsureOperadoresTabelaAsync(pdvContext);
 
+        // --- CRIA O USUARIO ADMIN ---
         if (!await context.Usuarios.AnyAsync())
         {
             context.Usuarios.Add(new Usuario
@@ -39,6 +42,7 @@ public static class DataSeederExtensions
             });
         }
 
+        // --- CRIA OS EVENTOS ---
         if (!await context.Eventos.AnyAsync())
         {
             var evento1 = new Evento
@@ -362,6 +366,7 @@ public static class DataSeederExtensions
                 await creator.CreateAsync();
             }
 
+            // --- CRIA A TABELA DE OPERADORES ---
             await context.Database.ExecuteSqlRawAsync(
                 "IF OBJECT_ID('Operadores', 'U') IS NULL " +
                 "CREATE TABLE Operadores (" +
@@ -374,6 +379,7 @@ public static class DataSeederExtensions
                 "CreatedAt datetime2 NOT NULL DEFAULT SYSUTCDATETIME(), " +
                 "UpdatedAt datetime2 NULL);");
 
+            // --- GARANTE A COLUNA Ativo EM BASES ANTIGAS QUE NAO A POSSUEM ---
             await context.Database.ExecuteSqlRawAsync(
                 "IF COL_LENGTH('Operadores', 'Ativo') IS NULL " +
                 "ALTER TABLE Operadores ADD Ativo bit NOT NULL DEFAULT 1;");

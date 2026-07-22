@@ -3,10 +3,11 @@ namespace LiveEventsTicket.Backend.Modules.Pedido.Service;
 internal sealed class MotivoReembolsoResolvido
 {
     public MotivoReembolsoResolvido(
-        string codigo,
-        string descricao,
+        string 	codigo,
+        string 	descricao,
         string? detalhe,
-        string motivoPersistido)
+        string 	motivoPersistido
+	)
     {
         Codigo = codigo;
         Descricao = descricao;
@@ -14,8 +15,8 @@ internal sealed class MotivoReembolsoResolvido
         MotivoPersistido = motivoPersistido;
     }
 
-    public string Codigo { get; }
-    public string Descricao { get; }
-    public string? Detalhe { get; }
-    public string MotivoPersistido { get; }
+    public string 	Codigo 				{ get; }
+    public string 	Descricao 			{ get; }
+    public string? 	Detalhe 			{ get; }
+    public string 	MotivoPersistido 	{ get; }
 }
