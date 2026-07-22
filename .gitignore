@@ -1,12 +1,76 @@
-# .NET
-backend/bin/
-backend/obj/
+# ============================================================
+# .NET (build outputs, caches, tooling)
+# ============================================================
+**/bin/
+**/obj/
+**/out/
+**/publish/
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.cache
+*.log
 
-# Node
-Frontend/node_modules/
-Frontend/dist/
+# NuGet
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+.nuget/
+packages/
 
-# IDE
+# ============================================================
+# Node / Vite (Frontend)
+# ============================================================
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ============================================================
+# IDEs / Editors
+# ============================================================
 .vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
 *.user
 *.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# ============================================================
+# SO / Diversos
+# ============================================================
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.bak
+
+# ============================================================
+# Segredos / Configuracoes locais
+# ============================================================
+appsettings.Development.local.json
+appsettings.*.local.json
+*.local
+.env
+.env.*
+!.env.example
+
