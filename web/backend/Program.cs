@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.RateLimiting;
 
 using LiveEventsTicket.Backend.Exception;
 using LiveEventsTicket.Backend.Infra.Config;
@@ -16,8 +17,10 @@ using LiveEventsTicket.Backend.Modules.Usuario.Repository;
 using LiveEventsTicket.Backend.Modules.Usuario.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,13 +33,20 @@ builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddHttpContextAccessor();
 
+// --- INTERCEPTOR DE AUDITORIA  ---
+builder.Services.AddSingleton<AuditSaveChangesInterceptor>();
+
 // --- CONTEXTO PRINCIPAL DA APLICACAO ---
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>((sp, options) =>
+    options
+        .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>()));
 
 // --- CONTEXTO DA TABELA Operadores PARA GERENCIAR FUNCIONARIOS ---
-builder.Services.AddDbContext<PdvDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<PdvDbContext>((sp, options) =>
+    options
+        .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>()));
 
 // --- REGISTRA OS REPOSITORIOS DE CADA MODULO ---
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
@@ -49,15 +59,106 @@ builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<EventoService>();
 builder.Services.AddScoped<IngressoService>();
 builder.Services.AddScoped<PagamentoService>();
-builder.Services.AddScoped<PedidoService>();
 builder.Services.AddScoped<RelatorioService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<FuncionarioService>();
 
+// --- SERVICES DO MODULO DE PEDIDO ---
+builder.Services.AddScoped<PedidoCriacaoService>();
+builder.Services.AddScoped<PedidoConsultaService>();
+builder.Services.AddScoped<ReembolsoService>();
+builder.Services.AddScoped<IngressoPdfService>();
+builder.Services.AddScoped<IngressoCompartilhamentoService>();
+builder.Services.AddScoped<CheckinService>();
+builder.Services.AddScoped<PedidoService>();
+
 // --- HABILITA CONTROLLERS E DOCUMENTACAO SWAGGER ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// --- CONFIGURA O SWAGGER COM SUPORTE A JWT BEARER ---
+builder.Services.AddSwaggerGen(options =>
+{
+    // --- METADADOS DA API ---
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title       = "LiveEvents-Ticket API",
+        Version     = "v1",
+        Description = "API DE VENDA DE INGRESSOS PARA EVENTOS AO VIVO."
+    });
+
+    // --- DEFINE O ESQUEMA DE SEGURANCA (BOTAO Authorize DO SWAGGER UI) ---
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name         = "Authorization",
+        Type         = SecuritySchemeType.Http,
+        Scheme       = "bearer",
+        BearerFormat = "JWT",
+        In           = ParameterLocation.Header,
+        Description  = "INFORME O TOKEN JWT. EXEMPLO: 'eyJhbGciOi...'"
+    });
+
+    // --- EXIGE O ESQUEMA Bearer NAS ROTAS PROTEGIDAS ---
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id   = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+// --- REGISTRA VERIFICACOES DE SAUDE  ---
+builder.Services
+    .AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>(name: "app-db", tags: new[] { "ready", "db" })
+    .AddDbContextCheck<PdvDbContext>(name: "pdv-db", tags: new[] { "ready", "db" });
+
+// --- CONFIGURA O RATE LIMITER GLOBAL COM UMA POLITICA DEDICADA AO LOGIN ---
+builder.Services.AddRateLimiter(options =>
+{
+    // --- RESPOSTA PADRAO QUANDO O LIMITE E EXCEDIDO ---
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // --- POLITICA "login": ATE 5 TENTATIVAS POR IP A CADA 60 SEGUNDOS (FIXED WINDOW) ---
+    options.AddPolicy("login", httpContext =>
+    {
+        // --- IDENTIFICA O CLIENTE PELO IP; FALLBACK PARA "unknown" QUANDO INDISPONIVEL ---
+        var chave = httpContext.Connection.RemoteIpAddress?.ToString()
+                    ?? httpContext.Request.Headers.Host.ToString()
+                    ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(chave, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit             = 5,
+            Window                  = TimeSpan.FromSeconds(60),
+            QueueProcessingOrder    = QueueProcessingOrder.OldestFirst,
+            QueueLimit              = 0,
+            AutoReplenishment       = true
+        });
+    });
+
+    // --- CALLBACK EXECUTADO QUANDO A REQUISICAO E BLOQUEADA ---
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+        {
+            context.HttpContext.Response.Headers.RetryAfter = ((int)retryAfter.TotalSeconds).ToString();
+        }
+
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+            "{\"message\":\"Muitas tentativas. Tente novamente em instantes.\",\"statusCode\":429}",
+            cancellationToken);
+    };
+});
 
 // --- CARREGA AS CONFIGURACOES DO JWT E MONTA A CHAVE DE ASSINATURA ---
 var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
@@ -124,7 +225,25 @@ app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
+// --- ATIVA O RATE LIMITER (DEVE VIR APOS AUTH E ANTES DE MapControllers) ---
+app.UseRateLimiter();
+
 app.MapControllers();
+
+// --- ENDPOINTS DE HEALTH CHECK ---
+app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = _ => false
+});
+
+// --- VALIDA DEPENDENCIAS ---
+app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready")
+});
+
+// --- AGREGA TODAS AS VERIFICACOES ---
+app.MapHealthChecks("/health");
 
 await app.SeedDataAsync();
 

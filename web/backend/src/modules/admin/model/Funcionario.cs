@@ -1,6 +1,8 @@
+using LiveEventsTicket.Backend.Entity;
+
 namespace LiveEventsTicket.Backend.Modules.Admin.Model;
 
-public class Funcionario
+public class Funcionario : AuditEntity
 {
     public int          Id          { get; set; }
     public string       Nome        { get; set; } = string.Empty;
@@ -8,6 +10,4 @@ public class Funcionario
     public string       SenhaHash   { get; set; } = string.Empty;
     public string       Role        { get; set; } = "OPERADOR";
     public bool         Ativo       { get; set; } = true;
-    public DateTime     CreatedAt   { get; set; } = DateTime.UtcNow;
-    public DateTime?    UpdatedAt   { get; set; }
 }

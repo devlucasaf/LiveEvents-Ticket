@@ -3,6 +3,7 @@ using LiveEventsTicket.Backend.Modules.Usuario.Dto;
 using LiveEventsTicket.Backend.Modules.Usuario.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace LiveEventsTicket.Backend.Modules.Usuario.Rest;
 
@@ -27,6 +28,7 @@ public class UsuarioController : ControllerBase
 
     // --- LOGIN DO USUÁRIO ---
     [HttpPost("login")]
+    [EnableRateLimiting("login")]
     public async Task<IActionResult> Login([FromBody] UsuarioLoginDto dto, CancellationToken cancellationToken)
     {
         var token = await _service.LoginAsync(dto, cancellationToken);
