@@ -68,7 +68,7 @@ public static class EstornoComprovantePdfBuilder
         }).GeneratePdf();
     }
 
-    // --- FORMATA DATAS NO PADRAO PT-BR PARA EXIBICAO NO COMPROVANTE ---
+    // --- FORMATA DATAS NO PADRÃO PT-BR PARA EXIBICAO NO COMPROVANTE ---
     private static string FormatarDataHora(DateTime? data)
     {
         if (!data.HasValue)
