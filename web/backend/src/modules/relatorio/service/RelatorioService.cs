@@ -1,4 +1,5 @@
 using LiveEventsTicket.Backend.Infra.Config;
+using LiveEventsTicket.Backend.Modules.Pedido.Service;
 using LiveEventsTicket.Backend.Modules.Relatorio.Dto;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,7 @@ public class RelatorioService
     {
         var pedidosPagos = await _context.Pedidos
             .Include(p => p.Itens)
-            .Where(p => p.Status == "PAGO")
+            .Where(p => p.Status == StatusPedido.Pago)
             .ToListAsync(cancellationToken);
 
         var ingressos = await _context.Ingressos.ToListAsync(cancellationToken);
